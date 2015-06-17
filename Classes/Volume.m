@@ -299,6 +299,25 @@ classdef Volume <handle
                     
                     BB = [O;maxBB]';
                 end
+                
+                function exportNifti(obj)
+                    img = obj.VoxelArray;
+                    voxel_size = obj.VolumeInfo.Spacing;
+                    origin = obj.VolumeInfo.Origin;
+                    
+                    nii = make_nii(img, voxel_size, origin, 4, obj.VolumeInfo.patientID);
+%                     thisdir = pwd;
+                    
+                    exportfolder = obj.Session.ExportFolder;
+                    cd(exportfolder)
+                    name = ['nii_',obj.VolumeInfo.Id];
+                    [~,~]=mkdir(name)
+                    cd(name)
+                    save_nii(nii,name)
+
+                    
+                    
+                end
                     
                     
                 

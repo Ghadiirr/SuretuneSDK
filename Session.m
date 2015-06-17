@@ -11,7 +11,8 @@ classdef Session < handle
         Registerables
         Master
         NoLog = 0;
-        SureTune = 'C:/Suresuit/blue3/'
+        SureTune = 'C:\Suresuit\Blue3\' %'C:\GIT\SureSuite\Output'
+        ExportFolder = 'C:\MATLAB-Addons\Export\';
         
     end
     
@@ -67,6 +68,11 @@ classdef Session < handle
             obj.TherapyPlans.names = {};
             obj.Meshes.list = {};
             obj.Meshes.names = {};
+            
+            %Make export dir of not already exist
+            if ~exist(obj.ExportFolder,'dir')
+                mkdir(obj.ExportFolder);
+            end
         end
         
         function LoadXML(obj,pathName,fileName)
@@ -978,6 +984,49 @@ classdef Session < handle
             Session.Meshes.list{end+1} = ObjInstance;
             
         end
+        
+        function listVolumes(obj)
+            
+            for i = 1:numel(obj.Volumes.names)
+                fprintf(' %s) %s\n\tSize: %s\n\t%s\n\t%s\n',num2str(i),...
+                    obj.Volumes.names{i},...
+                    mat2str(obj.Volumes.list{i}.VolumeInfo.Dimensions),...
+                    obj.Volumes.list{i}.VolumeInfo.Modality,...
+                    obj.Volumes.list{i}.VolumeInfo.ScanDirection)
+            end
+        end
+        
+       function val=getVolume(obj,index)
+            
+ %There are three scenarios:
+            % 1. the user gives a name for a registerable
+            % 2. the user enters a number
+            % 3. the user does not enter anything at all.
+            
+            if nargin==1  %if the user gives not an index. show the options
+                obj.listVolumes
+                string = input('Choose volume index number: ','s');
+                index = str2num(string);
+                
+            end
+            
+
+            switch class(index)
+                case 'char'
+                    error('provide an index instead of a volume name')
+                    obj.listVolumes;
+            end
+            
+
+            if isempty(index) %does not exist
+                val = [];
+                return
+            end
+            
+            val = vertcat(obj.Volumes.list{index});
+            
+        end
+            
         
         
         
