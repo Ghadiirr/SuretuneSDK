@@ -7,6 +7,9 @@ classdef ImportedMeshPart < SessionComponent & Registerable
         color
         opacity
         obj
+        ambientLightingLevel
+        diffuseLightingLevel
+        specularLightingLevel
     end
     
     methods
@@ -25,6 +28,12 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.color = color;
             obj.opacity = opacity;
             
+            obj.ambientLightingLevel = 0.2;
+            obj.diffuseLightingLevel = 0.8;
+            obj.specularLightingLevel = 0.6;
+            
+            
+            
             
             %Try to find the obj file and add itself as a registerable:
             ind=find(ismember(obj.session.Meshes.names,meshId));
@@ -33,20 +42,20 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             end
             
             
-
             
             
-
+            
+            
         end
         
         function obj = set.meshId(obj,meshId)
-
-            %-- get the Session.
-            S = obj.session; 
             
-%             if S.NoLog;obj.meshId = meshId; return;end
-        
-
+            %-- get the Session.
+            S = obj.session;
+            
+            %             if S.NoLog;obj.meshId = meshId; return;end
+            
+            
             
             %change object
             obj.meshId = meshId;
@@ -56,16 +65,16 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             
         end
         
-       
+        
         
         function obj = set.color(obj,color)
-
-            %-- get the Session.
-            S = obj.session; 
             
-%             if S.NoLog;obj.color = color; return;end
-        
-
+            %-- get the Session.
+            S = obj.session;
+            
+            %             if S.NoLog;obj.color = color; return;end
+            
+            
             
             %change object
             obj.color = color;
@@ -76,14 +85,14 @@ classdef ImportedMeshPart < SessionComponent & Registerable
         end
         
         
-                function obj = set.opacity(obj,opacity)
-
+        function obj = set.opacity(obj,opacity)
+            
             %-- get the Session.
-            S = obj.session; 
+            S = obj.session;
             
             if S.NoLog;obj.opacity = opacity; return;end
-        
-
+            
+            
             
             %change object
             obj.opacity = opacity;
@@ -91,11 +100,62 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %update the XML;
             SDK_updateXML(S,obj,'.opacity.Attributes.value',opacity);
             
-                end
+        end
         
-                function obj = linkToObj(obj,objInstance)
-                    obj.obj = objInstance;
-                end
+        function obj = set.ambientLightingLevel(obj,ambient)
+            
+            %-- get the Session.
+            S = obj.session;
+            
+            %             if S.NoLog;obj.color = color; return;end
+            
+            
+            
+            %change object
+            obj.ambientLightingLevel = ambient;
+            
+            %update the XML;
+            SDK_updateXML(S,obj,'.ambientLightingLevel.Attributes.value',ambient);
+            
+        end
+        
+        function obj = set.diffuseLightingLevel(obj,diffuse)
+            
+            %-- get the Session.
+            S = obj.session;
+            
+            %             if S.NoLog;obj.color = color; return;end
+            
+            
+            
+            %change object
+            obj.diffuseLightingLevel = diffuse;
+            
+            %update the XML;
+            SDK_updateXML(S,obj,'.diffuseLightingLevel.Attributes.value',diffuse);
+            
+        end
+        
+        function obj = set.specularLightingLevel(obj,specular)
+            
+            %-- get the Session.
+            S = obj.session;
+            
+            %             if S.NoLog;obj.color = color; return;end
+            
+            
+            
+            %change object
+            obj.specularLightingLevel = specular;
+            
+            %update the XML;
+            SDK_updateXML(S,obj,'.specularLightingLevel.Attributes.value',specular);
+            
+        end
+        
+        function obj = linkToObj(obj,objInstance)
+            obj.obj = objInstance;
+        end
     end
     
 end

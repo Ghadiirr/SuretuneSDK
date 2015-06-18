@@ -21,7 +21,7 @@ classdef ManualStructureSegmentation < SessionComponent & Registerable
             obj.opacity = opacity;
             obj.color = color;
             obj.contourStacks = contourStacks;
-
+            
         end
     end
     

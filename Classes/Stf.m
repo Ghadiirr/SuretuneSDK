@@ -24,9 +24,9 @@ classdef Stf < handle
     end
     
     
-    methods 
-
-            
+    methods
+        
+        
     end
     
 end

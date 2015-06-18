@@ -1,26 +1,48 @@
-classdef Session < handle
-    %SESSION Summary of this class goes here
-    %   Detailed explanation goes here
+classdef Session < handle_hidden
+    % SESSION   A session object relates to exactly one SureTune2 session.
+    % A Session contains the raw SureTune data:
+    %   - Session Data (XML)
+    %   - Meshes (OBJ)
+    %   - Volumes (bin)
+    %
+    % This toolbox processes the raw Session Data into:
+    % A tree of Registerables, containing:
+    %   - DATASET
+    %       > Refers to a Volume instance describing the imagevolume
+    %   - Path
+    %   - ACPCIH
+    %   - Lead
+    %   - ImageBasedStructureSegmentation
+    %   - ManualStructureSegmentation
+    %   - ImportedStructure (with ImportedMeshPart)
+    %       > MeshPart refers to an OBJ instance describing the mesh
+    %   - Stf
+    %   - StimPlan
+    %       > Refers to a Volume Instance describing the VTA
+    %
+    %
+    
+    
     
     properties (Hidden = true)  %These properties are hidden to not bother the user.
-        OriginalSessionData
-        Directory
-        Log
-        ActiveSession = 1;
-        ActiveDataset = 1;
-        Registerables
-        Master
-        NoLog = 0;
-        SureTune = 'C:\Suresuit\Blue3\' %'C:\GIT\SureSuite\Output'
-        ExportFolder = 'C:\MATLAB-Addons\Export\';
+        OriginalSessionData %The original XML file
+        Directory %Directory of the loaded XML file
+        Log %Changes are logged
+        %         ActiveSession = 1;
+        %         ActiveDataset = 1;
+        Registerables %List of all Registerables
+        Master %Registerable tree starts with this dataset
+        NoLog = 0; %Flag if logging is done
+        SureTune = 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
+        ExportFolder = 'C:\MATLAB-Addons\Export\'; % Folder were sessions are exported.
         
     end
     
     properties
-        SessionData
-        Volumes
-        Meshes
-        TherapyPlans
+        SessionData %Imported SureTune2Session.xm
+        Volumes %list that contains all Volume Objects (the actual voxeldata)
+        Meshes %list that contains all Mesh Objects (the actual faces and vertices)
+        TherapyPlans %TBD
     end
     
     
@@ -56,6 +78,9 @@ classdef Session < handle
         
         
         function obj = Session(varargin)
+            % Constructor. No input is required. Creates an empty Session
+            % Instance
+            
             if nargin > 0
                 warning('No input arguments are required. Run LoadXML to populate session objects.')
             end
@@ -75,8 +100,12 @@ classdef Session < handle
             end
         end
         
+        
+        
         function LoadXML(obj,pathName,fileName)
+            %
             
+            %
             if nargin == 1
                 %read XML file
                 [fileName,pathName] = uigetfile('.xml');
@@ -178,7 +207,7 @@ classdef Session < handle
                 return
             end
             try
-            cd('Leads');
+                cd('Leads');
             catch
                 disp('No StimPlans')
                 return
@@ -337,7 +366,11 @@ classdef Session < handle
         
         function import2SureTune(obj)
             disp('Saving Files...')
-            %             importfilename =
+            
+            if isempty(obj.Directory)
+                warning('No Session was loaded')
+                return
+            end
             thisdir = pwd;
             cd(obj.Directory)
             
@@ -392,7 +425,7 @@ classdef Session < handle
             
             filename = 'MATLABinput.zip';
             
-
+            
             cd(obj.SureTune)
             try delete(filename);catch;end
             [~,~] = rmdir('MATLABinput','s') ;
@@ -940,15 +973,15 @@ classdef Session < handle
             A.label.Attributes.value = label;
             A.volumeId.text='';
             A.volumeId.Attributes.type='String';
-                 A.accepted.Attributes.type = 'Bool';
+            A.accepted.Attributes.type = 'Bool';
             
             A.parent.ref.Text = '';
             A.parent.ref.Attributes.id = parent;
             A.transform.Matrix3D.Text = '';
-
+            
             A.stf.Null.Text = [];
-       
-           
+            
+            
             A.Attributes.id = label;
             
             %add dummy elements
@@ -966,7 +999,7 @@ classdef Session < handle
             obj.Registerables.names{end+1} = label;
             obj.Registerables.list{end+1} = R;
             
-
+            
             
             
             
@@ -975,8 +1008,11 @@ classdef Session < handle
             
         end
         
-        function makeObj(Session,V,F,name)
-            
+        function ObjInstance = makeObj(Session,V,F,name)
+            if nargin==1
+                disp('Input Arguments are needed: V,F,name')
+                return
+            end
             ObjInstance = Obj(V,F,name);
             ObjInstance.LinkToSession(Session);
             
@@ -996,9 +1032,9 @@ classdef Session < handle
             end
         end
         
-       function val=getVolume(obj,index)
+        function val=getVolume(obj,index)
             
- %There are three scenarios:
+            %There are three scenarios:
             % 1. the user gives a name for a registerable
             % 2. the user enters a number
             % 3. the user does not enter anything at all.
@@ -1010,14 +1046,14 @@ classdef Session < handle
                 
             end
             
-
+            
             switch class(index)
                 case 'char'
                     error('provide an index instead of a volume name')
                     obj.listVolumes;
             end
             
-
+            
             if isempty(index) %does not exist
                 val = [];
                 return
@@ -1026,7 +1062,7 @@ classdef Session < handle
             val = vertcat(obj.Volumes.list{index});
             
         end
-            
+        
         
         
         

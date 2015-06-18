@@ -21,59 +21,59 @@ classdef Lead < SessionComponent & Registerable
             obj.stimplan = {};
             obj.label = label;
         end
-
-      
-
+        
+        
+        
     end
     
     
     methods
         function obj = set.leadtype(obj,leadtype)
-         if obj.noset;obj.leadtype = leadtype; return;end
-         
-         if not(ischar(leadtype));error('leadtype has to be a string');end
-         
-         possible_leadtypes = {'Medtronic3389','Medtronic3387','None','BostonScientific','StJudeMedical6142_6145','StJudeMedical6146_6149','SapiensContactsShort','SapiensContactsLong','SapiensSegmentsLong'};  %we may need to add more leads here.
-         if not(any(ismember(possible_leadtypes,leadtype)));
-             error(['Leadtype (',leadtype,') does not exist']);
-         end
-         
-         
-         %write it in the log.
-          %-- get the Session.
-          S = obj.session; 
-          %--update its log
-          S.log('Changed leadtype from %s to %s for %s',obj.leadtype,leadtype, obj.MATLABid);
-          
-          %change the value in the object
-          obj.leadtype = leadtype;
-          
-          %update the XML
-          SDK_updateXML(S,obj,'.leadType.Enum.Attributes.value',leadtype);
-          
+            if obj.noset;obj.leadtype = leadtype; return;end
+            
+            if not(ischar(leadtype));error('leadtype has to be a string');end
+            
+            possible_leadtypes = {'Medtronic3389','Medtronic3387','None','BostonScientific','StJudeMedical6142_6145','StJudeMedical6146_6149','SapiensContactsShort','SapiensContactsLong','SapiensSegmentsLong'};  %we may need to add more leads here.
+            if not(any(ismember(possible_leadtypes,leadtype)));
+                error(['Leadtype (',leadtype,') does not exist']);
+            end
+            
+            
+            %write it in the log.
+            %-- get the Session.
+            S = obj.session;
+            %--update its log
+            S.log('Changed leadtype from %s to %s for %s',obj.leadtype,leadtype, obj.MATLABid);
+            
+            %change the value in the object
+            obj.leadtype = leadtype;
+            
+            %update the XML
+            SDK_updateXML(S,obj,'.leadType.Enum.Attributes.value',leadtype);
+            
             
         end
         
         function obj = set.label(obj,label)
-         if obj.noset;obj.label = label; return;end
-         
-         if not(ischar(label));error('label has to be a string');end
-         
-
-         %write it in the log.
-          %-- get the Session.
-          S = obj.session; 
-          %--update its log
-          S.log('Changed label from %s to %s for %s',obj.label,label, obj.MATLABid);
-          
-          %change the value in the object
-          obj.label = label;
-          
-          %update the XML
-          SDK_updateXML(S,obj,'.label.Attributes.value',label);
-          
+            if obj.noset;obj.label = label; return;end
             
-        end        
+            if not(ischar(label));error('label has to be a string');end
+            
+            
+            %write it in the log.
+            %-- get the Session.
+            S = obj.session;
+            %--update its log
+            S.log('Changed label from %s to %s for %s',obj.label,label, obj.MATLABid);
+            
+            %change the value in the object
+            obj.label = label;
+            
+            %update the XML
+            SDK_updateXML(S,obj,'.label.Attributes.value',label);
+            
+            
+        end
     end
     
 end

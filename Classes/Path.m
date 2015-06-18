@@ -8,7 +8,7 @@ classdef Path < SessionComponent & Registerable
         entry
         opacity
         marginRadius
-        beyondTargetDistance        
+        beyondTargetDistance
     end
     
     methods

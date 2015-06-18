@@ -109,6 +109,10 @@ classdef ImportedStructure < SessionComponent & Registerable
             
             A.opacity.Attributes.type = 'Double';
             A.accepted.Attributes.type = 'Bool';
+            
+            A.ambientLightingLevel.Attributes.type = 'Double';
+            A.diffuseLightingLevel.Attributes.type = 'Double';
+            A.specularLightingLevel.Attributes.type = 'Double';
 
 
 

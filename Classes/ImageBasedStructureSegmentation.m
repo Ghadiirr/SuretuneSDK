@@ -31,7 +31,7 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
             obj.boundingBox = boundingBox;
             obj.includeSeeds = includeSeeds;
             obj.excludeSeeds = excludeSeeds;
-%             obj.registerable = registerable;
+            %             obj.registerable = registerable;
         end
     end
     

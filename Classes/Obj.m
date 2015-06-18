@@ -35,8 +35,8 @@ classdef Obj <handle
             obj.Registerable{end+1} = R;
             R.linkToObj(obj);
         end
-            
-            
+        
+        
         
     end
     

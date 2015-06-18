@@ -11,7 +11,7 @@ classdef ACPCIH < SessionComponent & Registerable
     end
     
     properties (Hidden = true)
-%         noset
+        %         noset
     end
     
     methods

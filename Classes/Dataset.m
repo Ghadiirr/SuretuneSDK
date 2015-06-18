@@ -28,18 +28,18 @@ classdef Dataset < SessionComponent & Registerable
                 if numel(index)>1;index = index(1);end
                 obj.volume = obj.session.Volumes.list{index};
             end
-                
-                
             
-
+            
+            
+            
         end
         
         
         
         function obj = set.label(obj,label)
-                        %-- get the Session.
-          S = obj.session; 
-          
+            %-- get the Session.
+            S = obj.session;
+            
             %change object
             obj.label = label;
             
@@ -48,41 +48,41 @@ classdef Dataset < SessionComponent & Registerable
         end
         
         function obj = set.volumeId(obj,VolumeId)
-                        %-- get the Session.
-          S = obj.session; 
-          
+            %-- get the Session.
+            S = obj.session;
+            
             %change object
             obj.volumeId = VolumeId;
             
             %update the XML;
             SDK_updateXML(S,obj,'.volumeId.Attributes.value',VolumeId);
-        end        
+        end
         
-       function obj = set.id(obj,id)
-                        %-- get the Session.
-          S = obj.session; 
-          
+        function obj = set.id(obj,id)
+            %-- get the Session.
+            S = obj.session;
+            
             %change object
             obj.id = id;
             
             %update the XML;
             SDK_updateXML(S,obj,'.Attributes.id',id);
             
-
-       end     
+            
+        end
         
-              function obj = set.stf(obj,stf)
-                        %-- get the Session.
-          S = obj.session; 
-          
+        function obj = set.stf(obj,stf)
+            %-- get the Session.
+            S = obj.session;
+            
             %change object
             obj.stf = stf;
             
-    
             
-
-        end  
-       
+            
+            
+        end
+        
         
         
         
