@@ -1,4 +1,4 @@
-function [  ] = SDK_updateXML(obj,Component,field_address,value)
+function [  ] = SDK_updatexml(obj,Component,field_address,value)
 %SDK_UPDATEXML Summary of this function goes here
 %   Detailed explanation goes here
 Component_address = Component.path;

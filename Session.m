@@ -29,7 +29,7 @@ classdef Session < handle_hidden
         directory %Directory of the loaded XML file
         log %Changes are logged
         %         ActiveSession = 1;
-        %         ActiveDataset = 1;
+                activeDataset = 1;
         registerables %List of all Registerables
         master %Registerable tree starts with this dataset
         noLog = 0; %Flag if logging is done
@@ -87,7 +87,7 @@ classdef Session < handle_hidden
             % Add empty cells:
             obj.volumeStorage.list = {};
             obj.volumeStorage.names = {};
-            obj.therapyPlanStorage.List = {};
+            obj.therapyPlanStorage.list = {};
             obj.therapyPlanStorage.names = {};
             obj.meshStorage.list = {};
             obj.meshStorage.names = {};
@@ -100,7 +100,7 @@ classdef Session < handle_hidden
         
         
         
-        function loadXML(obj,pathName,fileName)
+        function loadxml(obj,pathName,fileName)
             % Input should be pathname and filename, otherwise a dialog
             % appears.
             
@@ -151,7 +151,7 @@ classdef Session < handle_hidden
         
         
         
-        function loadZip(obj,file)
+        function loadzip(obj,file)
             
             %get PathName
             if nargin==1;
@@ -168,16 +168,16 @@ classdef Session < handle_hidden
             eval(['!C:/MATLAB-Addons/SDK/7za.exe x -bd -y ',file,' -o',file(1:end-4)]);
             
             %Index Volumes
-            obj.volumeStorage = obj.loadVolumes([file(1:end-4),'\Volumes']);
+            obj.volumeStorage = obj.loadvolumes([file(1:end-4),'\Volumes']);
             
             %Load Meshes
             obj.meshStorage = obj.loadmeshes([file(1:end-4),'\Meshes']);
             
             %Load XML
-            obj.loadXML([file(1:end-4),'\'],'SureTune2Sessions.xml')
+            obj.loadxml([file(1:end-4),'\'],'SureTune2Sessions.xml')
             
             %Load Stimplans
-            obj.therapyPlanStorage = obj.loadTherapyPlans(file(1:end-4));
+            obj.therapyPlanStorage = obj.loadtherapyplans(file(1:end-4));
             
             
             
@@ -197,13 +197,15 @@ classdef Session < handle_hidden
                 cd(obj.getsessionname());
             else
                 disp('No TherapyPlans for this session')
+                cd(thisdir)
                 return;
             end
             
-            if exist('Leads','dir')
+            if exist([pwd,'/Leads'],'dir')
                 cd('Leads')
             else
                 disp('No TherapyPlans for this session');
+                cd(thisdir)
                 return;
             end
                 
@@ -474,29 +476,29 @@ classdef Session < handle_hidden
             
             %% Datasets
             
-            function listdatasets(obj)
-            % Function may be obselete.
-                fprintf('\n\nDatasets for %s:\n',obj.getPatientName)
-                
-                for i = 1:numel(obj.sessionData.SureTune2Sessions.Session.datasets.Array.Dataset)
-                    if obj.ativeDataset(obj.activeSession) == i
-                        arrow = '-> ';
-                    else
-                        arrow = '   ';
-                    end
-                    
-                    label = obj.sessionData.SureTune2Sessions.Session.datasets.Array.Dataset{i}.label.Attributes.value;
-                    
-                    fprintf('%s%1.0f - %s\n',arrow,i, label);
-                end
-            end
-            
+%             function listdatasets(obj)
+%             % Function may be obselete.
+%                 fprintf('\n\nDatasets for %s:\n',obj.getpatientname)
+%                 
+%                 for i = 1:numel(obj.sessionData.SureTune2Sessions.Session.datasets.Array.Dataset)
+%                     if obj.ativeDataset(obj.activeSession) == i
+%                         arrow = '-> ';
+%                     else
+%                         arrow = '   ';
+%                     end
+%                     
+%                     label = obj.sessionData.SureTune2Sessions.Session.datasets.Array.Dataset{i}.label.Attributes.value;
+%                     
+%                     fprintf('%s%1.0f - %s\n',arrow,i, label);
+%                 end
+%             end
+%             
             
             
             %% Set/Get
             
             %Name
-            function setPatientName(obj,val)
+            function setpatientname(obj,val)
                 if nargin == 1
                     val = input('Patient name: ','s');
                 end
@@ -507,12 +509,12 @@ classdef Session < handle_hidden
                 
             end
             
-            function val = getPatientName(obj)
+            function val = getpatientname(obj)
                 val = obj.sessionData.SureTune2Sessions.Session.patient.Patient.name.Attributes.value;
             end
             
             %SessionName
-            function setSessionName(obj,val)
+            function setsessionname(obj,val)
                 if nargin == 1
                     val = input('Session name: ','s');
                 end
@@ -523,13 +525,13 @@ classdef Session < handle_hidden
                 
             end
             
-            function val = getSessionName(obj)
+            function val = getsessionname(obj)
                 val = obj.sessionData.SureTune2Sessions.Session.id.Attributes.value;
             end
             
             
             %PatientID
-            function setPatientID(obj,val)
+            function setpatientid(obj,val)
                 if nargin == 1
                     val = input('Patient ID: ','s');
                 end
@@ -540,30 +542,30 @@ classdef Session < handle_hidden
                 
             end
             
-            function val = getPatientID(obj)
+            function val = getpatientid(obj)
                 val = obj.sessionData.SureTune2Sessions.Session.patient.Patient.patientID.Attributes.value;
             end
             
             
             %DateOfBirth
-            function setDateOfBirth(obj,val)
+            function setdateofbirth(obj,val)
                 old = obj.sessionData.SureTune2Sessions.Session.patient.Patient.patientID.Attributes.value;
                 obj.sessionData.SureTune2Sessions.Session.patient.Patient.dateOfBirth.Attributes.value = val;
                 obj.addtolog('Changed date of birth from %s to %s',old,val);
             end
             
-            function val = getDateOfBirth(obj)
+            function val = getdateofbirth(obj)
                 val = obj.sessionData.SureTune2Sessions.Session.patient.Patient.dateOfBirth.Attributes.value;
             end
             
             %Gender
-            function setGender(obj,val)
+            function setgender(obj,val)
                 old = obj.sessionData.SureTune2Sessions.Session.patient.Patient.gender.Enum.Attributes.value;
                 obj.sessionData.SureTune2Sessions.Session.patient.Patient.gender.Enum.Attributes.value = val;
                 obj.addtolog('Changed gender from %s to %s',old,val);
             end
             
-            function val = getGender(obj)
+            function val = getgender(obj)
                 val = obj.sessionData.SureTune2Sessions.Session.patient.Patient.gender.Enum.Attributes.value;
             end
             
@@ -571,10 +573,10 @@ classdef Session < handle_hidden
             
             %Dataset
             
-            function setActiveDataset(obj,val)
+            function setactivedataset(obj,val)
                 %Function may be obsolete.
                 if nargin==1
-                    obj.getDatasets;
+                    obj.listdatasets;
                     val = input('Select dataset number: ');
                     if isempty(val)
                         return
@@ -594,7 +596,7 @@ classdef Session < handle_hidden
                 obj.addtolog('Changed activeDataset from %1.0f to %1.0f',old,val);
             end
             
-            function val = getActiveDataset(obj)
+            function val = getactivedataset(obj)
                 val = obj.ActiveDataset;
             end
             
@@ -605,7 +607,7 @@ classdef Session < handle_hidden
                 val = obj.registerables.names;
                 
                 
-                types = cellfun(@class,obj.registerables.List,'UniformOutput',0);
+                types = cellfun(@class,obj.registerables.list,'UniformOutput',0);
                 
                 
                 if nargout == 0
@@ -629,12 +631,12 @@ classdef Session < handle_hidden
                 
             end
             
-            function varargout = getTRoot(obj,name)
+            function varargout = gettroot(obj,name)
                 if not(checkinputarguments(obj,nargin,1,'Registerable'));return;end
                 
                 
                 if not(ischar(name))
-                    name = name.MATLABid;
+                    name = name.matlabId;
                 end
                 
                 
@@ -650,14 +652,14 @@ classdef Session < handle_hidden
                     Tcell = {};
                     
                     T = eye(4);
-                    T = T*obj.registerables.List{index}.T;
+                    T = T*obj.registerables.list{index}.T;
                     
                     %in case nargout = 2, export all steps.
                     Tcell{1} =  T;
                     namecell{1} = name;
                     
                     
-                    O = obj.registerables.List{index}.parent;
+                    O = obj.registerables.list{index}.parent;
                     
                     
                     while any(find(ismember(superclasses(O),'Registerable')))
@@ -665,7 +667,7 @@ classdef Session < handle_hidden
                         
                         %in case nargout = 2, export all steps.
                         Tcell{end+1} = O.T; %#ok<AGROW>
-                        namecell{end+1} = O.MATLABid; %#ok<AGROW>
+                        namecell{end+1} = O.matlabId; %#ok<AGROW>
                         
                         O = O.parent;
                     end
@@ -687,7 +689,7 @@ classdef Session < handle_hidden
             end
             
             
-            function varargout = getTfromto(obj,from,to)
+            function varargout = gettfromto(obj,from,to)
                 
                 if not(checkinputarguments(obj,nargin,2,'Registerable'));return;end
                 
@@ -701,7 +703,7 @@ classdef Session < handle_hidden
                         error(['Registerable ''',from,''' does not exist'])
                     end
                 else
-                    from = from.MATLABid;
+                    from = from.matlabId;
                 end
                 
                 %check name 2
@@ -711,7 +713,7 @@ classdef Session < handle_hidden
                         error(['Registerable ''',to,''' does not exist'])
                     end
                 else
-                    to = to.MATLABid;
+                    to = to.matlabId;
                 end
                 
                 
@@ -720,16 +722,16 @@ classdef Session < handle_hidden
                 
                 if nargout==2
                     
-                    [Tfrom,NameFrom] = obj.getTRoot(from);
-                    [Tto,NameTo] = obj.getTRoot(to);
+                    [Tfrom,NameFrom] = obj.computetroot(from);
+                    [Tto,NameTo] = obj.computetroot(to);
                     
                     Tto = cellfun(@inv,Tto,'uni',0);
                     
                     varargout{1} = [Tfrom,flip(Tto)];
                     varargout{2} = [NameFrom,flip(NameTo)];
                 else
-                    Tfrom = obj.getTRoot(from);
-                    Tto = obj.getTRoot(to);
+                    Tfrom = obj.computetroot(from);
+                    Tto = obj.computetroot(to);
                     varargout{1} = Tfrom/Tto;  %similar--> Tfrom*inv(Tto)
                 end
                 
@@ -785,21 +787,55 @@ classdef Session < handle_hidden
                     error(['Registerable ''',name,''' does not exist'])
                 end
                 
-                val = vertcat(obj.registerables.List{ii});
+                val = vertcat(obj.registerables.list{ii});
                 
             end
             
             
             %leads
             
-            function val = getLeads(obj)
-                nleads = numel(obj.sessionData.SureTune2Sessions.Session.leads.Array.Lead);
-                for n = 1:nleads
+            function listleads(obj)
+                txt = '\n';
+                registerableTypes = cellfun(@class,obj.registerables.list,'UniformOutput',0);
+                for iRegisterable = 1:numel(registerableTypes)
                     
-                    %think of something clever.
+                    if strcmp(registerableTypes{iRegisterable},'Lead')
+                        thisLead = obj.registerables.list{iRegisterable};
+                        
+                        txt = [txt,'\t',num2str(iRegisterable),') "',thisLead.matlabId,'"\n',...
+                            '\t   Type: ',thisLead.leadType,'\n',...
+                            '\t   Stimplans: ',num2str(numel(thisLead.stimPlan)),'\n\n'];
+                            
+                    end
+                
                     
+                    
+                    
+%                                     types = cellfun(@class,obj.registerables.list,'UniformOutput',0);
+%                 
+%                 
+%                 if nargout == 0
+%                     
+%                     txt = '\n';
+%                     for i = 1:numel(val)
+%                         txt = [txt,'\t',num2str(i),') ',val{i},'   (',types{i},')\n']; %#ok<AGROW>
+%                     end
+%                     disp(['All registerables: ',sprintf(txt)])
+%                     
+%                     
+%                     
+%                 elseif nargout ==1
+%                     varargout{1} = val;
+%                 elseif nargout ==2
+%                     varargout{1} = val;
+%                     varargout{2} = types;
+%                     
+%                     
+%                 end
+%                     
                     
                 end
+                fprintf(txt)
             end
             
             
@@ -808,7 +844,7 @@ classdef Session < handle_hidden
             
             %Add New elements
             
-            function R = addNewMesh(varargin)
+            function R = addnewmesh(varargin)
                 if nargin==1
                     disp('input arguments should be: [object], label,opacity,parent,T')
                     R = [];
@@ -839,7 +875,7 @@ classdef Session < handle_hidden
                 if isempty(parentindex)
                     warning('Parent is not known. Mesh is added without correct reference')
                 else
-                    parent = obj.registerables.List{parentindex};
+                    parent = obj.registerables.list{parentindex};
                 end
                 
                 
@@ -868,7 +904,7 @@ classdef Session < handle_hidden
                 R = ImportedStructure(component_args, registerable_args,label,opacity);
                 
                 obj.registerables.names{end+1} = label;
-                obj.registerables.List{end+1} = R;
+                obj.registerables.list{end+1} = R;
                 
                 
                 
@@ -879,7 +915,7 @@ classdef Session < handle_hidden
             
             
             
-            function R = addNewDataset(varargin)
+            function R = addnewdataset(varargin)
                 if nargin==1
                     disp('input arguments should be: [object], label,volumeId,Id,Stf,parent,T')
                     R = [];
@@ -913,7 +949,7 @@ classdef Session < handle_hidden
                 if isempty(parentindex)
                     warning('Parent is not known. Mesh is added without correct reference')
                 else
-                    parent = obj.registerables.List{parentindex};
+                    parent = obj.registerables.list{parentindex};
                 end
                 
                 
@@ -952,7 +988,7 @@ classdef Session < handle_hidden
                 
                 %Add to registerable list
                 obj.registerables.names{end+1} = label;
-                obj.registerables.List{end+1} = R;
+                obj.registerables.list{end+1} = R;
                 
                 
                 
@@ -963,31 +999,31 @@ classdef Session < handle_hidden
                 
             end
             
-            function ObjInstance = makeObj(Session,V,F,name)
+            function ObjInstance = makeobj(Session,V,F,name)
                 if nargin==1
                     disp('Input Arguments are needed: V,F,name')
                     return
                 end
                 ObjInstance = Obj(V,F,name);
-                ObjInstance.LinkToSession(Session);
+                ObjInstance.linkToSession(Session);
                 
                 Session.Meshes.names{end+1}=name;
-                Session.Meshes.List{end+1} = ObjInstance;
+                Session.Meshes.list{end+1} = ObjInstance;
                 
             end
             
-            function listVolumes(obj)
+            function listvolumes(obj)
                 
                 for i = 1:numel(obj.volumeStorage.names)
                     fprintf(' %s) %s\n\tSize: %s\n\t%s\n\t%s\n',num2str(i),...
                         obj.volumeStorage.names{i},...
-                        mat2str(obj.volumeStorage.list{i}.VolumeInfo.Dimensions),...
-                        obj.volumeStorage.list{i}.VolumeInfo.Modality,...
-                        obj.volumeStorage.list{i}.VolumeInfo.ScanDirection)
+                        mat2str(obj.volumeStorage.list{i}.volumeInfo.dimensions),...
+                        obj.volumeStorage.list{i}.volumeInfo.modality,...
+                        obj.volumeStorage.list{i}.volumeInfo.scanDirection)
                 end
             end
             
-            function val=getVolume(obj,index)
+            function val=getvolume(obj,index)
                 
                 %There are three scenarios:
                 % 1. the user gives a name for a registerable
@@ -995,7 +1031,7 @@ classdef Session < handle_hidden
                 % 3. the user does not enter anything at all.
                 
                 if nargin==1  %if the user gives not an index. show the options
-                    obj.listVolumes
+                    obj.listvolumes
                     string = input('Choose volume index number: ','s');
                     index = str2double(string);
                     

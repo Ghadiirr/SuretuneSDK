@@ -1,4 +1,4 @@
-function [R ] = SDK_findRegistrables( obj )
+function [R ] = SDK_findregistrables( obj )
 %SDK_FINDREGISTRABLES Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -35,7 +35,7 @@ fprintf('\nFinding Registrables: 000')
 while level >=0
     
     if level>1
-        Regs = SDK_ManageRegistrables(obj,Regs,P,level);
+        Regs = SDK_manageregistrables(obj,Regs,P,level);
         
         if strcmp(P{level},'Array');
             Plevel = {P{1:level}};
@@ -66,7 +66,7 @@ while level >=0
         evalstr = ['obj.',strjoin(Plevel,'.')];
         
         %if current position is no long SessionData >> abort
-        if strcmp(P{level},'Volumes');break;end
+        if strcmp(P{level},'therapyPlanStorage');break;end
     else
         evalstr = 'obj';
     end
@@ -228,7 +228,7 @@ end
 index = find(ismember({Regs{5,:}},'ROOT'));
 
 R.names{1} = Regs{3,index}; %Add the first element to the namelist;
-R.list{1} = SDK_CreateRegisterable(obj,Regs{:,index}); %Pass properties to build first registerable;
+R.list{1} = SDK_createregisterable(obj,Regs{:,index}); %Pass properties to build first registerable;
 
 
 %While-loop until nothing changes to add dependencies
@@ -270,7 +270,7 @@ while nochanges < size(Regs,2)
             
             
             %make registerable object
-            registerable = SDK_CreateRegisterable(obj,Regs{:,index});
+            registerable = SDK_createregisterable(obj,Regs{:,index});
             
             if ~isempty(registerable)
                 R.list{elnr} = registerable;

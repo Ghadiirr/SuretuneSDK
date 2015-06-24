@@ -3,37 +3,37 @@ classdef Obj <handle
     %   Detailed explanation goes here
     
     properties
-        FileName
-        V
-        F
+        fileName
+        v
+        f
     end
     
     properties (Hidden=true)
-        Session
-        Registerable
+        session
+        registerable
         
     end
     
     methods
         function obj = Obj(V,F,FileName)
-            obj.FileName = FileName;
-            obj.V = V;
-            obj.F = F;
+            obj.fileName = FileName;
+            obj.v = V;
+            obj.f = F;
         end
         
-        function obj = LinkToSession(obj,Session)
-            obj.Session = Session;
-            Session.Meshes.list{end+1} = obj;
-            Session.Meshes.names{end+1} = obj.FileName;
+        function obj = linktosession(obj,Session)
+            obj.session = Session;
+            Session.meshStorage.list{end+1} = obj;
+            Session.meshStorage.names{end+1} = obj.fileName;
         end
         
-        function saveToFolder(obj,folder)
+        function savetofolder(obj,folder)
             vertface2obj(obj.V,obj.F,[folder,'/',obj.FileName])
         end
         
-        function LinkToRegisterable(obj,R)
-            obj.Registerable{end+1} = R;
-            R.linkToObj(obj);
+        function linktoregisterable(obj,R)
+            obj.registerable{end+1} = R;
+            R.linktoobj(obj);
         end
         
         

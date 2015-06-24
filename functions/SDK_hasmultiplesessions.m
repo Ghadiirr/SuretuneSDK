@@ -1,4 +1,4 @@
-function [ xml, abort ] = SDK_MultipleSessionCheck( xml,pathName,fileName )
+function [ xml, abort ] = SDK_hasmultiplesessions( xml,pathName,fileName )
 
 %This function checks if multiple sessions are saved in the same xml file.
 %If this is the case, only the first one will be used. 

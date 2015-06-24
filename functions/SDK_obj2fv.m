@@ -1,4 +1,4 @@
-function [V,F] = read_vertices_and_faces_from_obj_file(filename)
+function [V,F] = obj2fv(filename)
   % Downloaded function from: http://www.alecjacobson.com/weblog/?p=917
   % Reads a .obj mesh file and outputs the vertex and face list
   % assumes a 3D triangle mesh and ignores everything but:

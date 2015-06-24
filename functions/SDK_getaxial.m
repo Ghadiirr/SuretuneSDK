@@ -1,4 +1,4 @@
-function [ V, Dim ] = SDK_GetAxial( V, T,Dim )
+function [ V, Dim ] = SDK_getaxial( V, T,Dim )
 %SDK_GETAXIAL Summary of this function goes here
 %   Detailed explanation goes here
 

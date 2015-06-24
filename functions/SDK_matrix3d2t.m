@@ -1,4 +1,4 @@
-function [ T ] = SDK_Matrix3D2T( Matrix3D )
+function [ T ] = SDK_matrix3d2t( Matrix3D )
 %SDK_MATRIX3D2T Summary of this function goes here
 %   Detailed explanation goes here
 

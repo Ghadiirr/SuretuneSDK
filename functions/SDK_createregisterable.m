@@ -1,4 +1,4 @@
-function [ R ] = SDK_CreateRegisterable( varargin )
+function [ R ] = SDK_createregisterable( varargin )
 %SDK_CREATEREGISTERABLE Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -44,8 +44,8 @@ switch RegType
         
         label = XML.label.Attributes.value;
         leadType = XML.leadType.Enum.Attributes.value;
-        distal = SDK_Point3D2vector(XML.distal.Point3D);
-        proximal = SDK_Point3D2vector(XML.proximal.Point3D);
+        distal = SDK_point3d2vector(XML.distal.Point3D);
+        proximal = SDK_point3d2vector(XML.proximal.Point3D);
         stimPlans = XML.stimPlans.Array; %has to be improved
         
         R = Lead(component_args,registerable_args,distal,proximal,stimPlans,leadType,label);
@@ -54,9 +54,9 @@ switch RegType
     case 'ACPCIH'
         XML = eval(path);
         
-        ac = SDK_Point3D2vector(XML.ac.Point3D);
-        pc = SDK_Point3D2vector(XML.pc.Point3D);
-        ih = SDK_Point3D2vector(XML.ih.Point3D);
+        ac = SDK_point3d2vector(XML.ac.Point3D);
+        pc = SDK_point3d2vector(XML.pc.Point3D);
+        ih = SDK_point3d2vector(XML.ih.Point3D);
         
         R = ACPCIH(component_args, registerable_args,ac,pc,ih);
         
@@ -69,18 +69,18 @@ switch RegType
         threshold = XML.threshold.Attributes.value;
         thresholdType = XML.thresholdType.Enum.Attributes.value;
         blurEnabled = XML.blurEnabled.Attributes.value;
-        boundingBox.leftDown =SDK_Point3D2vector(XML.boundingBox.BoundingBox.leftDown.Point3D);
-        boundingBox.rightUp =SDK_Point3D2vector(XML.boundingBox.BoundingBox.rightUp.Point3D);
+        boundingBox.leftDown =SDK_point3d2vector(XML.boundingBox.BoundingBox.leftDown.Point3D);
+        boundingBox.rightUp =SDK_point3d2vector(XML.boundingBox.BoundingBox.rightUp.Point3D);
         
         %optional fields;
         if isfield(XML.includeSeeds.Array,'Point3D')
-            includeSeeds = SDK_Point3D2vector(XML.includeSeeds.Array.Point3D);
+            includeSeeds = SDK_point3d2vector(XML.includeSeeds.Array.Point3D);
         else
             includeSeeds = [];
         end
         
         if isfield(XML.excludeSeeds.Array,'Point3D')
-            excludeSeeds = SDK_Point3D2vector(XML.excludeSeeds.Array.Point3D);
+            excludeSeeds = SDK_point3d2vector(XML.excludeSeeds.Array.Point3D);
         else
             excludeSeeds = [];
         end
@@ -92,8 +92,8 @@ switch RegType
         XML = eval(path);
         
         label = XML.label.Attributes.value;
-        target = SDK_Point3D2vector(XML.target.Point3D) ;
-        entry = SDK_Point3D2vector(XML.entry.Point3D) ;
+        target = SDK_point3d2vector(XML.target.Point3D) ;
+        entry = SDK_point3d2vector(XML.entry.Point3D) ;
         opacity = XML.opacity.Attributes.value;
         marginRadius = XML.marginRadius.Attributes.value;
         beyondTargetDistance = XML.beyondTargetDistance.Attributes.value;

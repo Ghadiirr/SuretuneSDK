@@ -1,4 +1,4 @@
-function varargout = SDK_Session2XML( s, varargin )
+function varargout = SDK_session2xml( s, varargin )
 %Convert a MATLAB structure into a xml file 
 % [ ] = struct2xml( s, file )
 % xml = struct2xml( s )

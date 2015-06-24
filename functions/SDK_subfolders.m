@@ -1,4 +1,4 @@
-function [ nameFolds ] = SDK_getSubFolders( folder )
+function [ nameFolds ] = SDK_subfolders (folder )
 %SDK_GETSUBFOLDER Summary of this function goes here
 %   Detailed explanation goes here
             

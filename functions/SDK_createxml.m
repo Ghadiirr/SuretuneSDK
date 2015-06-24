@@ -1,4 +1,4 @@
-function  [template] = SDK_CreateXML(volumeOrientation, dimensions, fileName, rescaleSlope)
+function  [template] = SDK_createxml(volumeOrientation, dimensions, fileName, rescaleSlope)
 %Since the correct folder was added to the path in a previous step, the
 %inputarguments can be loaded right away:
 

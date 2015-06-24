@@ -1,4 +1,4 @@
-function [ children ] = SDK_findChildren( obj,name )
+function [ children ] = SDK_findchildren( obj,name )
 %SDK_FINDCHILDREN Summary of this function goes here
 %   Detailed explanation goes here
     

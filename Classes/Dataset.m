@@ -23,10 +23,10 @@ classdef Dataset < SessionComponent & Registerable
             
             %Check if a volume is indexed with the same volumeId
             
-            index = find(ismember(obj.session.Volumes.names,volumeId));
+            index = find(ismember(obj.session.volumeStorage.names,volumeId));
             if ~isempty(index)
                 if numel(index)>1;index = index(1);end
-                obj.volume = obj.session.Volumes.list{index};
+                obj.volume = obj.session.volumeStorage.list{index};
             end
             
             
@@ -44,7 +44,7 @@ classdef Dataset < SessionComponent & Registerable
             obj.label = label;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.label.Attributes.value',label);
+            SDK_updatexml(S,obj,'.Label.Attributes.value',label);
         end
         
         function obj = set.volumeId(obj,VolumeId)
@@ -55,7 +55,7 @@ classdef Dataset < SessionComponent & Registerable
             obj.volumeId = VolumeId;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.volumeId.Attributes.value',VolumeId);
+            SDK_updatexml(S,obj,'.VolumeId.Attributes.value',VolumeId);
         end
         
         function obj = set.id(obj,id)
@@ -66,7 +66,7 @@ classdef Dataset < SessionComponent & Registerable
             obj.id = id;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.Attributes.id',id);
+            SDK_updatexml(S,obj,'.Attributes.id',id);
             
             
         end
@@ -77,6 +77,7 @@ classdef Dataset < SessionComponent & Registerable
             
             %change object
             obj.stf = stf;
+           
             
             
             

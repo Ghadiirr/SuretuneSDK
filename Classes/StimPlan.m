@@ -3,8 +3,8 @@ classdef StimPlan
     %   Detailed explanation goes here
     
     properties
-        VTA
-        Lead
+        vta
+        lead
         label
         voltageBasedStimulation
         stimulationValue
@@ -18,8 +18,8 @@ classdef StimPlan
     
     methods
         function obj = StimPlan(VTA,Lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation)
-            obj.VTA = VTA;
-            obj.Lead = Lead;
+            obj.vta = VTA;
+            obj.lead = Lead;
             obj.label = label;
             obj.voltageBasedStimulation = voltageBasedStimulation;
             obj.stimulationValue = stimulationValue;

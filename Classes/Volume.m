@@ -3,57 +3,57 @@ classdef Volume <handle
     %   Detailed explanation goes here
     
     properties
-        VoxelArray
-        VolumeInfo
-        Thumbnail
+        voxelArray
+        volumeInfo
+        thumbnail
     end
     
     properties (Hidden = true)
-        Unsaved = 1;
-        Session
+        unsaved = 1;
+        session
     end
     methods
         
         function Obj = Volume()
             
-            I.Id = 'NoId';
-            I.Dimensions = [0 0 0];
-            I.Spacing = [0 0 0];
-            I.Origin = [0 0 0];
-            I.RescaleSlope = 0;
-            I.RescaleIntercept = 0;
-            I.ScanDirection = '';
+            I.id = 'Noid';
+            I.dimensions = [0 0 0];
+            I.spacing = [0 0 0];
+            I.origin = [0 0 0];
+            I.rescaleSlope = 0;
+            I.rescaleIntercept = 0;
+            I.scanDirection = '';
             I.imageType = '';
             I.seriesNumber=0;
-            I.Modality = '';
-            I.Name = '';
-            I.patientID = '';
-            I.Gender = 'Unknown';
+            I.modality = '';
+            I.name = '';
+            I.patientId = '';
+            I.gender = 'Unknown';
             
             
-            Obj.VolumeInfo = I;
-            Obj.VoxelArray = [];
-            Obj.Thumbnail = [];
+            Obj.volumeInfo = I;
+            Obj.voxelArray = [];
+            Obj.thumbnail = [];
         end
         
-        function newVolume(obj,VolumeInfo,VoxelArray,Session)
-            obj.VolumeInfo = VolumeInfo;
-            obj.VoxelArray = VoxelArray;
-            obj.Session = Session;
+        function newvolume(obj,volumeInfo,voxelArray,session)
+            obj.volumeInfo = volumeInfo;
+            obj.voxelArray = voxelArray;
+            obj.session = session;
         end
         
         
-        function loadVolume(obj,pathName)
+        function loadvolume(obj,pathname)
             thisdir = pwd;
             %set unsaved to 0, because the volume is not created within
             %MATLAB
-            obj.Unsaved = 0;
+            obj.unsaved = 0;
             
             if nargin == 1
                 
                 %ask user for directory
-                [pathName] = uigetdir();
-                if not(pathName)
+                [pathname] = uigetdir();
+                if not(pathname)
                     disp('Aborted by user')
                     return
                 end
@@ -63,61 +63,61 @@ classdef Volume <handle
             
             
             %load xml
-            xml = SDK_xml2struct([pathName,'\VolumeInfo.xml']);
+            xml = SDK_xml2struct([pathname,'\volumeInfo.xml']);
             
             % Check for any comments (they may obstruct XML parsing
-            if SDK_removeComments(pathName,'\VolumeInfo.xml');
+            if SDK_removecomments(pathname,'\volumeInfo.xml');
                 %repeat reading with new file
-                fileName = '\VolumeInfo_nocomments.xml';
-                xml = SDK_xml2struct([pathName,fileName]);
+                filename = '\volumeInfo_nocomments.xml';
+                xml = SDK_xml2struct([pathname,filename]);
                 disp('removed comments')
             end
             
             
             %extract data from xml:
-            I.Id = xml.Volume.volumeInfo.VolumeInfo.volumeIdentifier.Attributes.value;
-            I.Dimensions = [str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nx.Attributes.value),...
+            I.id = xml.Volume.volumeInfo.VolumeInfo.volumeIdentifier.Attributes.value;
+            I.dimensions = [str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nx.Attributes.value),...
                 str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.ny.Attributes.value),...
                 str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nz.Attributes.value)];
-            I.Spacing = [str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sx.Attributes.value),...
+            I.spacing = [str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sx.Attributes.value),...
                 str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sy.Attributes.value),...
                 str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sz.Attributes.value)];
-            I.Origin = SDK_Point3D2vector(xml.Volume.volumeInfo.VolumeInfo.origin.Point3D);
-            I.RescaleSlope = xml.Volume.volumeInfo.VolumeInfo.rescaleSlope.Attributes.value;
-            I.RescaleIntercept =xml.Volume.volumeInfo.VolumeInfo.rescaleIntercept.Attributes.value;
-            I.ScanDirection = xml.Volume.volumeInfo.VolumeInfo.scanDirection.Enum.Attributes.value;
+            I.origin = SDK_point3d2vector(xml.Volume.volumeInfo.VolumeInfo.origin.Point3D);
+            I.rescaleSlope = xml.Volume.volumeInfo.VolumeInfo.rescaleSlope.Attributes.value;
+            I.rescaleIntercept =xml.Volume.volumeInfo.VolumeInfo.rescaleIntercept.Attributes.value;
+            I.scanDirection = xml.Volume.volumeInfo.VolumeInfo.scanDirection.Enum.Attributes.value;
             I.imageType = xml.Volume.volumeInfo.VolumeInfo.imageType.Enum.Attributes.value;
             try
                 I.seriesNumber= xml.Volume.seriesInfo.SeriesInfo.seriesNumber.Attributes.value;
-                I.Modality = xml.Volume.seriesInfo.SeriesInfo.modality.Attributes.value;
-                I.Name = xml.Volume.patientInfo.PatientInfo.name.Attributes.value;
-                I.patientID = xml.Volume.patientInfo.PatientInfo.patientID.Attributes.value;
-                I.Gender = xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value;
+                I.modality = xml.Volume.seriesInfo.SeriesInfo.modality.Attributes.value;
+                I.name = xml.Volume.patientInfo.PatientInfo.name.Attributes.value;
+                I.patientId = xml.Volume.patientInfo.PatientInfo.patientID.Attributes.value;
+                I.gender = xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value;
             catch
                 I.seriesNumber = [];
-                I.Modality = [];
-                I.Name = [];
-                I.patientID = [];
-                I.Gender = [];
+                I.modality = [];
+                I.name = [];
+                I.patientId = [];
+                I.gender = [];
             end
             
-            obj.VolumeInfo = I;
+            obj.volumeInfo = I;
             
             
             
             
-            %Read voxelarray
-            fid = fopen([pathName,'/VoxelArray.bin']);
+            %Read voxelArray
+            fid = fopen([pathname,'/voxelArray.bin']);
             file = fread(fid, 'uint16');
             fclose(fid);
             
-            %reshape according to volumeinfo
-            obj.VoxelArray = reshape(file,[I.Dimensions(1),I.Dimensions(2),I.Dimensions(3)]);
+            %reshape according to volumeInfo
+            obj.voxelArray = reshape(file,[I.dimensions(1),I.dimensions(2),I.dimensions(3)]);
             
             %check if thumbnail exists:
-            if exist([pathName,'/Thumbnail.png'],'file' ) ~= 2
+            if exist([pathname,'/thumbnail.png'],'file' ) ~= 2
                 import = load('thumbnail.mat');
-                obj.Thumbnail=import.thumbnail;
+                obj.thumbnail=import.thumbnail;
                 
             end
             
@@ -127,21 +127,21 @@ classdef Volume <handle
             
         end
         
-        function saveToFolder(obj,folder)
-            if ~obj.Unsaved;return;end;
+        function save2folder(obj,folder)
+            if ~obj.unsaved;return;end;
             
             %save the voxel array
             [~,~] = mkdir(folder);
-            fid = fopen([folder,'/VoxelArray.bin'],'w+');
-            fwrite(fid, obj.VoxelArray, 'uint16');
+            fid = fopen([folder,'/voxelArray.bin'],'w+');
+            fwrite(fid, obj.voxelArray, 'uint16');
             fclose(fid);
             
             %generate XML
-            XML = ExportXML(obj);
-            SDK_Session2XML(XML,[folder,'/VolumeInfo.xml'])
+            XML = exportxml(obj);
+            SDK_session2xml(XML,[folder,'/volumeInfo.xml'])
             
             %save thumbnail
-            imwrite(obj.Thumbnail,[folder,'/Thumbnail.png'],'png')
+            imwrite(obj.thumbnail,[folder,'/thumbnail.png'],'png')
             
             
             
@@ -151,108 +151,108 @@ classdef Volume <handle
         end
         
         
-        function XML = ExportXML(obj)
+        function XML = exportxml(obj)
             
-            I = obj.VolumeInfo;
-            
-            
-            V.volumeIdentifier.Attributes.type = 'String';
-            V.volumeIdentifier.Attributes.value = I.Id;
-            
-            %Dimensions
-            V.dimension.Dimensions3d.nx.Attributes.type='Int';
-            V.dimension.Dimensions3d.nx.Attributes.value=I.Dimensions(1);
-            
-            V.dimension.Dimensions3d.ny.Attributes.type='Int';
-            V.dimension.Dimensions3d.ny.Attributes.value=I.Dimensions(2);
-            
-            V.dimension.Dimensions3d.nz.Attributes.type='Int';
-            V.dimension.Dimensions3d.nz.Attributes.value=I.Dimensions(3);
-            
-            %Spacing
-            V.spacing.Spacing3d.sx.Attributes.type='Double';
-            V.spacing.Spacing3d.sx.Attributes.value=I.Spacing(1);
-            
-            V.spacing.Spacing3d.sy.Attributes.type='Double';
-            V.spacing.Spacing3d.sy.Attributes.value=I.Spacing(2);
-            
-            V.spacing.Spacing3d.sz.Attributes.type='Double';
-            V.spacing.Spacing3d.sz.Attributes.value=I.Spacing(3);
-            
-            %Origin
-            V.origin.Point3D.Attributes.x=I.Origin(1);
-            V.origin.Point3D.Attributes.y=I.Origin(2);
-            V.origin.Point3D.Attributes.z=I.Origin(3);
-            
-            %RescaleSlope/Intercept
-            V.rescaleSlope.Attributes.type='Double';
-            V.rescaleSlope.Attributes.value = I.RescaleSlope;
+            I = obj.volumeInfo;
             
             
-            V.rescaleIntercept.Attributes.type='Double';
-            V.rescaleIntercept.Attributes.value = I.RescaleIntercept;
+            V.Volumeidentifier.Attributes.type = 'String';
+            V.Volumeidentifier.Attributes.value = I.id;
             
-            %ScanDirection
-            V.scanDirection.Enum.Attributes.type='ScanDirection';
-            V.scanDirection.Enum.Attributes.value = 'Axial';
+            %dimensions
+            V.Dimension.Dimensions3d.nx.Attributes.type='Int';
+            V.Dimension.Dimensions3d.nx.Attributes.value=I.dimensions(1);
+            
+            V.Dimension.Dimensions3d.ny.Attributes.type='Int';
+            V.Dimension.Dimensions3d.ny.Attributes.value=I.dimensions(2);
+            
+            V.Dimension.Dimensions3d.nz.Attributes.type='Int';
+            V.Dimension.Dimensions3d.nz.Attributes.value=I.dimensions(3);
+            
+            %spacing
+            V.Spacing.Spacing3d.sx.Attributes.type='Double';
+            V.Spacing.Spacing3d.sx.Attributes.value=I.spacing(1);
+            
+            V.Spacing.Spacing3d.sy.Attributes.type='Double';
+            V.Spacing.Spacing3d.sy.Attributes.value=I.spacing(2);
+            
+            V.Spacing.Spacing3d.sz.Attributes.type='Double';
+            V.Spacing.Spacing3d.sz.Attributes.value=I.spacing(3);
+            
+            %origin
+            V.Origin.Point3D.Attributes.x=I.origin(1);
+            V.Origin.Point3D.Attributes.y=I.origin(2);
+            V.Origin.Point3D.Attributes.z=I.origin(3);
+            
+            %rescaleSlope/Intercept
+            V.RescaleSlope.Attributes.type='Double';
+            V.RescaleSlope.Attributes.value = I.rescaleSlope;
+            
+            
+            V.RescaleIntercept.Attributes.type='Double';
+            V.RescaleIntercept.Attributes.value = I.rescaleIntercept;
+            
+            %scanDirection
+            V.ScanDirection.Enum.Attributes.type='scanDirection';
+            V.ScanDirection.Enum.Attributes.value = 'Axial';
             
             %PatientOrientation
-            V.patientOrientationX.Vector3D.Attributes.x = '1';
-            V.patientOrientationX.Vector3D.Attributes.y = '0';
-            V.patientOrientationX.Vector3D.Attributes.z = '0';
+            V.PatientOrientationX.Vector3D.Attributes.x = '1';
+            V.PatientOrientationX.Vector3D.Attributes.y = '0';
+            V.PatientOrientationX.Vector3D.Attributes.z = '0';
             
-            V.patientOrientationY.Vector3D.Attributes.x = '0';
-            V.patientOrientationY.Vector3D.Attributes.y = '1';
-            V.patientOrientationY.Vector3D.Attributes.z = '0';
+            V.PatientOrientationY.Vector3D.Attributes.x = '0';
+            V.PatientOrientationY.Vector3D.Attributes.y = '1';
+            V.PatientOrientationY.Vector3D.Attributes.z = '0';
             
             %ImageType
-            V.imageType.Enum.Attributes.type = 'ImageType';
-            V.imageType.Enum.Attributes.value = 'MR';
+            V.ImageType.Enum.Attributes.type = 'ImageType';
+            V.ImageType.Enum.Attributes.value = 'MR';
             
             %instanceNumbers
-            V.instanceNumbers.IntArray.Text = 1;
+            V.InstanceNumbers.IntArray.Text = 1;
             
             %acquisitionDatetime
-            V.acquisitionDateTime.Attributes.type = 'DateTime';
-            V.acquisitionDateTime.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
+            V.AcquisitionDateTime.Attributes.type = 'DateTime';
+            V.AcquisitionDateTime.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
             
             
-            V.generationRecipe.Attributes.type = 'String';
-            V.generationRecipe.Attributes.value = 'MATLAB SDK';
+            V.GenerationRecipe.Attributes.type = 'String';
+            V.GenerationRecipe.Attributes.value = 'MATLAB SDK';
             
             %%%SeriesInfo
-            S.seriesDate.Null = [];
+            S.SeriesDate.Null = [];
             
-            S.seriesNumber.Attributes.type = 'Int';
-            S.seriesNumber.Attributes.value = '0';
+            S.SeriesNumber.Attributes.type = 'Int';
+            S.SeriesNumber.Attributes.value = '0';
             
-            S.seriesDescription.Null =[];
+            S.SeriesDescription.Null =[];
             
-            S.modality.Attributes.type = 'String';
-            S.modality.Attributes.value = 'MR';
+            S.Modality.Attributes.type = 'String';
+            S.Modality.Attributes.value = 'MR';
             
-            S.studyDate.Attributes.type = 'DateTime';
-            S.studyDate.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
+            S.StudyDate.Attributes.type = 'DateTime';
+            S.StudyDate.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
             
-            S.studyDescription.Attributes.type = 'String';
-            S.studyDescription.Attributes.value = 'This volume was added by MATLAB';
-            S.studyInstanceUid.Attributes.type = 'String';
-            S.studyInstanceUid.Attributes.value = 'MATLAB import';    %Nummer generator
-            S.seriesInstanceUid.Attributes.type = 'String';
-            S.seriesInstanceUid.Attributes.value = strrep(datestr(datetime),' ','_');
-            S.frameOfReferenceUid.Attributes.type = 'String';
-            S.frameOfReferenceUid.Attributes.value = 'Unknown';
+            S.StudyDescription.Attributes.type = 'String';
+            S.StudyDescription.Attributes.value = 'This volume was added by MATLAB';
+            S.StudyInstanceUid.Attributes.type = 'String';
+            S.StudyInstanceUid.Attributes.value = 'MATLAB import';    %Nummer generator
+            S.SeriesInstanceUid.Attributes.type = 'String';
+            S.SeriesInstanceUid.Attributes.value = strrep(datestr(datetime),' ','_');
+            S.FrameOfReferenceUid.Attributes.type = 'String';
+            S.FrameOfReferenceUid.Attributes.value = 'Unknown';
             
             %%%patientinfo
-            p.name.Attributes.type = 'String';
-            p.name.Attributes.value = '';
-            p.patientID.Attributes.type = 'String';
-            p.patientID.Attributes.value = '';
+            p.Name.Attributes.type = 'String';
+            p.Name.Attributes.value = '';
+            p.PatientID.Attributes.type = 'String';
+            p.PatientID.Attributes.value = '';
             
-            p.dateOfBirth.Null  = [];
+            p.DateOfBirth.Null  = [];
             
-            p.gender.Enum.Attributes.type = 'GenderType';
-            p.gender.Enum.Attributes.value = 'Unknown';
+            p.Gender.Enum.Attributes.type = 'genderType';
+            p.Gender.Enum.Attributes.value = 'Unknown';
             
             
             XML.Volume.volumeInfo.VolumeInfo = V;
@@ -262,55 +262,55 @@ classdef Volume <handle
             
         end
         
-        function [x,y,z] = getMeshgrid(obj)
-            Dimensions = obj.VolumeInfo.Dimensions;
-            Spacing = obj.VolumeInfo.Spacing;
-            Origin = obj.VolumeInfo.Origin;
+        function [x,y,z] = getmeshgrid(obj)
+            dimensions = obj.volumeInfo.dimensions;
+            spacing = obj.volumeInfo.spacing;
+            origin = obj.volumeInfo.origin;
             
-            [x,y,z] = meshgrid(Origin(1):Spacing(1):Origin(1)+(Dimensions(1)-1)*Spacing(1),...
-                Origin(2):Spacing(2):Origin(2)+(Dimensions(2)-1)*Spacing(2),...
-                Origin(3):Spacing(3):Origin(3)+(Dimensions(3)-1)*Spacing(3));
+            [x,y,z] = meshgrid(origin(1):spacing(1):origin(1)+(dimensions(1)-1)*spacing(1),...
+                origin(2):spacing(2):origin(2)+(dimensions(2)-1)*spacing(2),...
+                origin(3):spacing(3):origin(3)+(dimensions(3)-1)*spacing(3));
             
         end
         
-        function [x,y,z] = getLinspace(obj)
-            Dimensions = obj.VolumeInfo.Dimensions;
-            Spacing = obj.VolumeInfo.Spacing;
-            Origin = obj.VolumeInfo.Origin;
+        function [x,y,z] = getlinspace(obj)
+            dimensions = obj.volumeInfo.dimensions;
+            spacing = obj.volumeInfo.spacing;
+            origin = obj.volumeInfo.origin;
             
-            x = [Origin(1):Spacing(1):Origin(1)+(Dimensions(1)-1)*Spacing(1)];
-            y =    [Origin(2):Spacing(2):Origin(2)+(Dimensions(2)-1)*Spacing(2)];
-            z =  [Origin(3):Spacing(3):Origin(3)+(Dimensions(3)-1)*Spacing(3)];
+            x = [origin(1):spacing(1):origin(1)+(dimensions(1)-1)*spacing(1)];
+            y =    [origin(2):spacing(2):origin(2)+(dimensions(2)-1)*spacing(2)];
+            z =  [origin(3):spacing(3):origin(3)+(dimensions(3)-1)*spacing(3)];
         end
         
         
         
-        function LinkToSession(obj,Session)
-            obj.Session = Session;
+        function linktosession(obj,session)
+            obj.session = session;
         end
         
         
-        function BB = getBoundingBox(obj)
-            O = obj.VolumeInfo.Origin;
-            S = obj.VolumeInfo.Spacing;
-            D = obj.VolumeInfo.Dimensions;
+        function BB = getboundingbox(obj)
+            O = obj.volumeInfo.origin;
+            S = obj.volumeInfo.spacing;
+            D = obj.volumeInfo.dimensions;
             
             maxBB = O+S.*D;
             
             BB = [O;maxBB]';
         end
         
-        function exportNifti(obj)
-            img = obj.VoxelArray;
-            voxel_size = obj.VolumeInfo.Spacing;
-            origin = obj.VolumeInfo.Origin;
+        function exportnifti(obj)
+            img = obj.voxelArray;
+            voxel_size = obj.volumeInfo.spacing;
+            origin = obj.volumeInfo.origin;
             
-            nii = make_nii(img, voxel_size, origin, 4, obj.VolumeInfo.patientID);
+            nii = makenifti(img, voxel_size, origin, 4, obj.volumeInfo.patientId);
             %                     thisdir = pwd;
             
-            exportfolder = obj.Session.ExportFolder;
+            exportfolder = obj.session.exportFolder;
             cd(exportfolder)
-            name = ['nii_',obj.VolumeInfo.Id];
+            name = ['nii_',obj.volumeInfo.id];
             [~,~]=mkdir(name)
             cd(name)
             save_nii(nii,name)

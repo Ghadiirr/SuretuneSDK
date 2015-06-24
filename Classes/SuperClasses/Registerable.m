@@ -6,11 +6,11 @@ classdef (Abstract) Registerable < handle
         accepted
         parent
         T
-        MATLABid  %not sure if this one will be needed.
+        matlabId  %not sure if this one will be needed.
     end
     
     properties (Hidden = true)
-        noset
+        noSet
     end
     
     methods
@@ -28,14 +28,14 @@ classdef (Abstract) Registerable < handle
                     inputRegisterable = argin;
                     parent = inputRegisterable.parent;
                     T = inputRegisterable.T;
-                    MATLABid = inputRegisterable.MATLABName;
+                    matlabId = inputRegisterable.MATLABName;
                     accepted = inputRegisterable.accepted;
                 elseif isa(argin,'cell')
                     inputCell = argin;
                     parent = inputCell{1};
                     T = inputCell{2};
                     accepted = inputCell{3};
-                    MATLABid = inputCell{4};
+                    matlabId = inputCell{4};
                 end
             end
             
@@ -43,12 +43,12 @@ classdef (Abstract) Registerable < handle
             %             obj.path = path;
             %             obj.id = id;
             %             obj.label = label;
-            obj.noset = 1;
+            obj.noSet = 1;
             obj.accepted = accepted;
             obj.parent = parent;
             obj.T = T;
-            obj.MATLABid = MATLABid;
-            obj.noset = 0;
+            obj.matlabId = matlabId;
+            obj.noSet = 0;
             %             obj.session = instance;
         end
         
@@ -63,7 +63,7 @@ classdef (Abstract) Registerable < handle
         function obj = set.accepted(obj,accepted)
             
             S = obj.session;
-            if S.NoLog;obj.accepted=accepted;return;end
+            if S.noLog;obj.accepted=accepted;return;end
             
             switch class(accepted)
                 case 'logical'
@@ -97,8 +97,8 @@ classdef (Abstract) Registerable < handle
             %-- get the Session.
             S = obj.session;
             %--update its log
-            if ~obj.noset;
-                S.log('Changed accepted state from %s to %s for %s',oldval,newval, obj.MATLABid);
+            if ~obj.noSet;
+                S.log('Changed accepted state from %s to %s for %s',oldval,newval, obj.matlabId);
             end
             
             %change the value in the object
@@ -115,7 +115,7 @@ classdef (Abstract) Registerable < handle
             %  does it match with a registerable?
             
             S = obj.session;
-            if S.NoLog;obj.parent=newparent;return;end
+            if S.noLog;obj.parent=newparent;return;end
             
             
             if ischar(newparent);
@@ -132,7 +132,7 @@ classdef (Abstract) Registerable < handle
                     supercl = superclasses(newparent);
                     if any(ismember(supercl,'SessionComponent'));  %if it is a session component
                         parentobj = newparent;
-                        newparent = newparent.MATLABid;
+                        newparent = newparent.matlabId;
                         
                     end
                 catch error('Parent should be char or a Registerable')
@@ -145,8 +145,8 @@ classdef (Abstract) Registerable < handle
             %-- get the Session.
             S = obj.session;
             %--update its log
-            if ~obj.noset;
-                S.log('Changed parent from %s to %s for %s',obj.parent.MATLABid,newparent, obj.MATLABid);
+            if ~obj.noSet;
+                S.log('Changed parent from %s to %s for %s',obj.parent.matlabId,newparent, obj.matlabId);
             end
             %change the value in the object
             obj.parent = parentobj;
@@ -158,7 +158,7 @@ classdef (Abstract) Registerable < handle
         function obj = set.T(obj,T)
             
             S = obj.session;
-            if S.NoLog;obj.T=T;return;end
+            if S.noLog;obj.T=T;return;end
             
             if ismatrix(T) && numel(T)==16
                 Tarray = reshape(T,[1,16]);
@@ -183,8 +183,8 @@ classdef (Abstract) Registerable < handle
                 SDK_updateXML(S,obj,['.transform.Matrix3D.Attributes.',XML_names{i}],Tarray(i));
             end
             
-            if obj.noset;obj.T = T;return;end
-            S.log('Changed registration matrix for %s',obj.MATLABid);
+            if obj.noSet;obj.T = T;return;end
+            S.log('Changed registration matrix for %s',obj.matlabId);
             
             
         end

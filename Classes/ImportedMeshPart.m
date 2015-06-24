@@ -22,7 +22,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             
             %try to find its parent, and add itself as a part.
             p = obj.parent;
-            p.addParts(obj);
+            p.addparts(obj);
             
             obj.meshId = meshId;
             obj.color = color;
@@ -36,9 +36,9 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             
             
             %Try to find the obj file and add itself as a registerable:
-            ind=find(ismember(obj.session.Meshes.names,meshId));
+            ind=find(ismember(obj.session.meshStorage.names,meshId));
             if ~isempty(ind)
-                obj.session.Meshes.list{ind}.LinkToRegisterable(obj);
+                obj.session.meshStorage.list{ind}.linktoregisterable(obj);
             end
             
             
@@ -53,7 +53,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %-- get the Session.
             S = obj.session;
             
-            %             if S.NoLog;obj.meshId = meshId; return;end
+            %             if S.noLog;obj.meshId = meshId; return;end
             
             
             
@@ -61,7 +61,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.meshId = meshId;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.meshId.Attributes.value',meshId);
+            SDK_updatexml(S,obj,'.MeshId.Attributes.value',meshId);
             
         end
         
@@ -72,7 +72,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %-- get the Session.
             S = obj.session;
             
-            %             if S.NoLog;obj.color = color; return;end
+            %             if S.noLog;obj.color = color; return;end
             
             
             
@@ -80,7 +80,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.color = color;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.color.Color.Attributes.value',color);
+            SDK_updatexml(S,obj,'.Color.Color.Attributes.value',color);
             
         end
         
@@ -90,7 +90,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %-- get the Session.
             S = obj.session;
             
-            if S.NoLog;obj.opacity = opacity; return;end
+            if S.noLog;obj.opacity = opacity; return;end
             
             
             
@@ -98,7 +98,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.opacity = opacity;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.opacity.Attributes.value',opacity);
+            SDK_updatexml(S,obj,'.Opacity.Attributes.value',opacity);
             
         end
         
@@ -107,7 +107,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %-- get the Session.
             S = obj.session;
             
-            %             if S.NoLog;obj.color = color; return;end
+            %             if S.noLog;obj.color = color; return;end
             
             
             
@@ -115,7 +115,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.ambientLightingLevel = ambient;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.ambientLightingLevel.Attributes.value',ambient);
+            SDK_updatexml(S,obj,'.AmbientLightingLevel.Attributes.value',ambient);
             
         end
         
@@ -124,7 +124,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %-- get the Session.
             S = obj.session;
             
-            %             if S.NoLog;obj.color = color; return;end
+            %             if S.noLog;obj.color = color; return;end
             
             
             
@@ -132,7 +132,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.diffuseLightingLevel = diffuse;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.diffuseLightingLevel.Attributes.value',diffuse);
+            SDK_updatexml(S,obj,'.DiffuseLightingLevel.Attributes.value',diffuse);
             
         end
         
@@ -141,7 +141,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %-- get the Session.
             S = obj.session;
             
-            %             if S.NoLog;obj.color = color; return;end
+            %             if S.noLog;obj.color = color; return;end
             
             
             
@@ -149,11 +149,11 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.specularLightingLevel = specular;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.specularLightingLevel.Attributes.value',specular);
+            SDK_updatexml(S,obj,'.SpecularLightingLevel.Attributes.value',specular);
             
         end
         
-        function obj = linkToObj(obj,objInstance)
+        function obj = linktoobj(obj,objInstance)
             obj.obj = objInstance;
         end
     end

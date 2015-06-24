@@ -1,4 +1,4 @@
-function [ output_args ] = SDK_makeThumbnail( input_args )
+function [ output_args ] = SDK_makethumbnail( input_args )
 %SDK_MAKETHUMBNAIL Summary of this function goes here
 %   Detailed explanation goes here
 

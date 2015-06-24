@@ -1,4 +1,4 @@
-function [ Regs ] = SDK_ManageRegistrables(obj, Regs, P, level,R )
+function [ Regs ] = SDK_manageregistrables(obj, Regs, P, level,R )
 %SDK_MANAGEREGISTRABLES Summary of this function goes here
 %   Detailed explanation goes here
 

@@ -22,7 +22,7 @@ classdef ImportedStructure < SessionComponent & Registerable
         
         
         
-        function obj = addParts(obj,parts)
+        function obj = addparts(obj,parts)
             if iscell(parts)
                 for i = numel(parts)
                     
@@ -39,36 +39,36 @@ classdef ImportedStructure < SessionComponent & Registerable
         
         
         function obj = set.label(obj,label)
-            if obj.noset;obj.label = label; return;end
+            if obj.noSet;obj.label = label; return;end
             
             %-- get the Session.
-          S = obj.session; 
+            S = obj.session; 
           
             %change object
             obj.label = label;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.label.Attributes.value',label);
+            SDK_updatexml(S,obj,'.label.Attributes.value',label);
             
         end
         
                 
         function obj = set.opacity(obj,opacity)
-            if obj.noset;obj.opacity = opacity; return;end
+            if obj.noSet;obj.opacity = opacity; return;end
             
             %-- get the Session.
-          S = obj.session; 
+            S = obj.session; 
             
             %change object
             obj.opacity = opacity;
             
             %update the XML;
-            SDK_updateXML(S,obj,'.opacity.Attributes.value',opacity);
+            SDK_updatexml(S,obj,'.opacity.Attributes.value',opacity);
             
         end
         
         
-        function obj = addNewPart(varargin)
+        function obj = addnewpart(varargin)
             
             if nargin == 1
                 disp('input arguments should be: [object],label,color,opacity,T,MeshId')
@@ -97,22 +97,22 @@ classdef ImportedStructure < SessionComponent & Registerable
           
           %Make dummy elements in XML
           
-          A.parent.ref.Text = '';
-            A.parent.ref.Attributes.id = obj.MATLABid;
-            A.transform.Matrix3D.Text = '';
+          A.Parent.ref.Text = '';
+            A.Parent.ref.Attributes.id = obj.MATLABid;
+            A.Transform.Matrix3D.Text = '';
                         A.meshId.Text = '';
-            A.meshId.Attributes.type = 'String';
+            A.MeshId.Attributes.type = 'String';
 %             A.meshId.Attributes.value = 'Dummytxt'; %filename.obj
 %                         A.color.Color.Attributes.value = '#999999';
-            A.color.Color.Text = '';
-            A.opacity.Text = '';
+            A.Color.Color.Text = '';
+            A.Opacity.Text = '';
             
-            A.opacity.Attributes.type = 'Double';
-            A.accepted.Attributes.type = 'Bool';
+            A.Opacity.Attributes.type = 'Double';
+            A.Accepted.Attributes.type = 'Bool';
             
-            A.ambientLightingLevel.Attributes.type = 'Double';
-            A.diffuseLightingLevel.Attributes.type = 'Double';
-            A.specularLightingLevel.Attributes.type = 'Double';
+            A.AmbientLightingLevel.Attributes.type = 'Double';
+            A.DiffuseLightingLevel.Attributes.type = 'Double';
+            A.SpecularLightingLevel.Attributes.type = 'Double';
 
 
 

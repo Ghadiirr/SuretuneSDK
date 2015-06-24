@@ -1,4 +1,4 @@
-function [ changes ] = SDK_removeComments( folder,file )
+function [ changes ] = SDK_removecomments( folder,file )
 %SDK_REMOVECOMMENTS Summary of this function goes here
 %   Detailed explanation goes here
         

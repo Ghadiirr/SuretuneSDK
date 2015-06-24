@@ -1,4 +1,4 @@
-function [ v ] = SDK_Point3D2vector( Point3D )
+function [ v ] = SDK_point3d2vector( Point3D )
 %SDK_MATRIX3D2T Summary of this function goes here
 %   Detailed explanation goes here
 
