@@ -44,7 +44,7 @@ classdef Dataset < SessionComponent & Registerable
             obj.label = label;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.Label.Attributes.value',label);
+            SDK_updatexml(S,obj,'.label.Attributes.value',label);
         end
         
         function obj = set.volumeId(obj,VolumeId)
@@ -55,7 +55,7 @@ classdef Dataset < SessionComponent & Registerable
             obj.volumeId = VolumeId;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.VolumeId.Attributes.value',VolumeId);
+            SDK_updatexml(S,obj,'.volumeId.Attributes.value',VolumeId);
         end
         
         function obj = set.id(obj,id)

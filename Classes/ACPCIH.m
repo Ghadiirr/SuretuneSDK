@@ -44,7 +44,7 @@ classdef ACPCIH < SessionComponent & Registerable
             obj.accepted = newval;
             
             %update the XML
-            SDK_updatexml(S,obj,'.Accepted.Attributes.value',newval);
+            SDK_updatexml(S,obj,'.accepted.Attributes.value',newval);
             
             
         end

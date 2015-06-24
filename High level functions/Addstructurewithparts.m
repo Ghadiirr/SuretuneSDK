@@ -2,16 +2,16 @@
 S = Session;
 
 %Load XML
-S.LoadXML;
+S.loadxml;
 
 %Show regs:
-S.getRegs;
+S.listregisterables;
 
 %Add new mesh
-NewMesh = S.addNewMesh('MyLabel',1,'Lead_Left',eye(4));
+NewMesh = S.addnewmesh('MyLabel',1,'Lead_Left',eye(4));
 
 %Add parts:
-Part = NewMesh.addNewPart('Part11b','#FFFF0000',1,eye(4),'11.obj');
+Part = NewMesh.addnewpart('Part11b','#FFFF0000',1,eye(4),'11.obj');
 
 %Export Session;
 S.exportSession;

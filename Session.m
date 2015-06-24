@@ -355,12 +355,12 @@ classdef Session < handle_hidden
                 
                 
                 % Save Sessions:
-                SDK_Session2xml(obj.sessionData,'SureTune2Sessions.xml')
-                SDK_Session2xml(obj.originalSessionData,'OriginalSession.xml')
+                SDK_session2xml(obj.sessionData,'SureTune2Sessions.xml')
+                SDK_session2xml(obj.originalSessionData,'OriginalSession.xml')
                 
                 % Save Meshes:
                 for iMesh = 1:numel(obj.meshStorage.list);
-                    obj.meshStorage.list{iMesh}.savetodir('Meshes')
+                    obj.meshStorage.list{iMesh}.savetofolder('Meshes')
                     
                     % Also save the mesh to meshstorage:
                     vertface2obj( obj.meshStorage.list{iMesh}.v, obj.meshStorage.list{iMesh}.f,[obj.sureTune,'MeshStorage/',obj.meshStorage.list{iMesh}.fileName])
@@ -369,7 +369,7 @@ classdef Session < handle_hidden
                 % Save new Volumes
                 for iVolume = 1:numel(obj.volumeStorage.list);
                     
-                    obj.volumeStorage.list{iVolume}.savetodir(['Volumes/',obj.volumeStorage.names{iVolume}]);
+                    obj.volumeStorage.list{iVolume}.savetofolder(['Volumes/',obj.volumeStorage.names{iVolume}]);
                 end
                 
                 % Export log
@@ -631,7 +631,7 @@ classdef Session < handle_hidden
                 
             end
             
-            function varargout = gettroot(obj,name)
+            function varargout = gettransformroot(obj,name)
                 if not(checkinputarguments(obj,nargin,1,'Registerable'));return;end
                 
                 
@@ -652,7 +652,7 @@ classdef Session < handle_hidden
                     Tcell = {};
                     
                     T = eye(4);
-                    T = T*obj.registerables.list{index}.T;
+                    T = T*obj.registerables.list{index}.transform;
                     
                     %in case nargout = 2, export all steps.
                     Tcell{1} =  T;
@@ -663,10 +663,10 @@ classdef Session < handle_hidden
                     
                     
                     while any(find(ismember(superclasses(O),'Registerable')))
-                        T = T*O.T;
+                        T = T*O.transform;
                         
                         %in case nargout = 2, export all steps.
-                        Tcell{end+1} = O.T; %#ok<AGROW>
+                        Tcell{end+1} = O.transform; %#ok<AGROW>
                         namecell{end+1} = O.matlabId; %#ok<AGROW>
                         
                         O = O.parent;
@@ -689,7 +689,7 @@ classdef Session < handle_hidden
             end
             
             
-            function varargout = gettfromto(obj,from,to)
+            function varargout = gettransformfromto(obj,from,to)
                 
                 if not(checkinputarguments(obj,nargin,2,'Registerable'));return;end
                 
@@ -722,16 +722,16 @@ classdef Session < handle_hidden
                 
                 if nargout==2
                     
-                    [Tfrom,NameFrom] = obj.computetroot(from);
-                    [Tto,NameTo] = obj.computetroot(to);
+                    [Tfrom,NameFrom] = obj.gettransformroot(from);
+                    [Tto,NameTo] = obj.gettransformroot(to);
                     
                     Tto = cellfun(@inv,Tto,'uni',0);
                     
                     varargout{1} = [Tfrom,flip(Tto)];
                     varargout{2} = [NameFrom,flip(NameTo)];
                 else
-                    Tfrom = obj.computetroot(from);
-                    Tto = obj.computetroot(to);
+                    Tfrom = obj.gettransformroot(from);
+                    Tto = obj.gettransformroot(to);
                     varargout{1} = Tfrom/Tto;  %similar--> Tfrom*inv(Tto)
                 end
                 

@@ -62,7 +62,7 @@ end
 %T
 try
     M3D = eval([link,'.transform.Matrix3D']);
-    T = SDK_Matrix3D2T(M3D);
+    T = SDK_matrix3d2transform(M3D);
 catch
     T = 'None';
 end

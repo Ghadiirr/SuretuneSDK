@@ -98,7 +98,7 @@ classdef ImportedStructure < SessionComponent & Registerable
           %Make dummy elements in XML
           
           A.Parent.ref.Text = '';
-            A.Parent.ref.Attributes.id = obj.MATLABid;
+            A.Parent.ref.Attributes.id = obj.matlabId;
             A.Transform.Matrix3D.Text = '';
                         A.meshId.Text = '';
             A.MeshId.Attributes.type = 'String';

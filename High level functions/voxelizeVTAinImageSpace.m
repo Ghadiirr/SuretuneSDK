@@ -1,34 +1,34 @@
 S = Session;
-S.getSessionFromSureTune('*01*')
+S.importfromsuretune('*01*')
 % S.getSessionFromDicom('session1.dcm')
 
 
 %Get the volume of activation in T2 Space
-dataset = S.getReg;  %I know that the T2 image is the second registerable in the session.
+dataset = S.getregisterable;  %I know that the T2 image is the second registerable in the session.
 
 %Get the stimulation plans
-stimplanlist = S.TherapyPlans;
+stimplanlist = S.therapyPlanStorage;
 
 
 
 
-for stimplanindex = 1:numel(stimplanlist)
-    thisStimPlan = stimplanlist{stimplanindex};
+for iStimPlan = 1:numel(stimplanlist)
+    thisStimPlan = stimplanlist{iStimPlan};
     
     %thisStimplan belongs to lead:
-    thisLead = thisStimPlan.Lead;
+    thisLead = thisStimPlan.lead;
     
     %get transformation matrix from leadspace to T2 space
-    [T]  = S.getTfromto(thisLead,dataset);
+    [T]  = S.gettransformfromto(thisLead,dataset);
     
     %get the VTA for middle-sized neurons
     indexOfMediumAxons = 2;
-    VTA = thisStimPlan.VTA.list{indexOfMediumAxons};
+    vta = thisStimPlan.vta.list{indexOfMediumAxons};
     
     
     %Convert VTA-volume to F annd V
-    [x,y,z] = VTA.getMeshgrid;
-    voxelArray = VTA.VoxelArray;
+    [x,y,z] = vta.getmeshgrid;
+    voxelArray = vta.voxelArray;
     fv = isosurface(x,y,z,voxelArray,0.5);
     
     %transform the coordinates of the vertices
@@ -38,25 +38,25 @@ for stimplanindex = 1:numel(stimplanlist)
     
     
     %Use mesh voxelation to generate a binary volume in T2 space
-    [gridX,gridY,gridZ] = dataset.volume.getLinspace;
+    [gridX,gridY,gridZ] = dataset.volume.getlinspace;
     [gridOUTPUT] = VOXELISE(gridX,gridY,gridZ,fv,'xyz');
     
     %Make a new volume with this data
-    t2VolumeInfo = dataset.volume.VolumeInfo; %take the volumeInfo from the t2dataset
-    t2VolumeInfo.Id = 'VTAinCT'; %change the Id
+    t2VolumeInfo = dataset.volume.volumeInfo; %take the volumeInfo from the t2dataset
+    t2VolumeInfo.id = 'VTAinCT'; %change the Id
     v = Volume;  
-    v.newVolume(t2VolumeInfo,gridOUTPUT,S)  %
+    v.newvolume(t2VolumeInfo,gridOUTPUT,S)  %
     
     %add thumbmnail
     import = load('thumbnail');
-    v.Thumbnail = import.thumbnail;
+    v.thumbnail = import.thumbnail;
 
     
     %add the Volume to the Session
-    T = S.getTfromto(dataset.MATLABid,'Dataset0');
-    S.addNewDataset('VTAinCT','VTAinCT','VTAinCT',[],'Dataset0',T,v)
+    T = S.gettransformfromto(dataset.matlabId,'Dataset0');
+    S.addnewdataset('VTAinCT','VTAinCT','VTAinCT',[],'Dataset0',T,v)
     
-     S.import2SureTune
+     S.import2suretune
     
     
     

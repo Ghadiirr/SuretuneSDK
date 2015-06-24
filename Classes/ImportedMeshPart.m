@@ -61,7 +61,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.meshId = meshId;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.MeshId.Attributes.value',meshId);
+            SDK_updatexml(S,obj,'.meshId.Attributes.value',meshId);
             
         end
         
@@ -80,7 +80,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.color = color;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.Color.Color.Attributes.value',color);
+            SDK_updatexml(S,obj,'.color.Color.Attributes.value',color);
             
         end
         
@@ -98,7 +98,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.opacity = opacity;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.Opacity.Attributes.value',opacity);
+            SDK_updatexml(S,obj,'.opacity.Attributes.value',opacity);
             
         end
         
@@ -115,7 +115,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.ambientLightingLevel = ambient;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.AmbientLightingLevel.Attributes.value',ambient);
+            SDK_updatexml(S,obj,'.ambientLightingLevel.Attributes.value',ambient);
             
         end
         
@@ -132,7 +132,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.diffuseLightingLevel = diffuse;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.DiffuseLightingLevel.Attributes.value',diffuse);
+            SDK_updatexml(S,obj,'.diffuseLightingLevel.Attributes.value',diffuse);
             
         end
         
@@ -149,7 +149,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             obj.specularLightingLevel = specular;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.SpecularLightingLevel.Attributes.value',specular);
+            SDK_updatexml(S,obj,'.specularLightingLevel.Attributes.value',specular);
             
         end
         

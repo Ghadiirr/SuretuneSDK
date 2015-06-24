@@ -5,7 +5,7 @@ classdef (Abstract) Registerable < handle
     properties
         accepted
         parent
-        T
+        transform
         matlabId  %not sure if this one will be needed.
     end
     
@@ -27,13 +27,13 @@ classdef (Abstract) Registerable < handle
                     %superclass
                     inputRegisterable = argin;
                     parent = inputRegisterable.parent;
-                    T = inputRegisterable.T;
+                    transform = inputRegisterable.transform;
                     matlabId = inputRegisterable.MATLABName;
                     accepted = inputRegisterable.accepted;
                 elseif isa(argin,'cell')
                     inputCell = argin;
                     parent = inputCell{1};
-                    T = inputCell{2};
+                    transform = inputCell{2};
                     accepted = inputCell{3};
                     matlabId = inputCell{4};
                 end
@@ -46,7 +46,7 @@ classdef (Abstract) Registerable < handle
             obj.noSet = 1;
             obj.accepted = accepted;
             obj.parent = parent;
-            obj.T = T;
+            obj.transform = transform;
             obj.matlabId = matlabId;
             obj.noSet = 0;
             %             obj.session = instance;
@@ -105,34 +105,34 @@ classdef (Abstract) Registerable < handle
             obj.accepted = newval;
             
             %update the XML
-            SDK_updateXML(S,obj,'.accepted.Attributes.value',newval);
+            SDK_updatexml(S,obj,'.accepted.Attributes.value',newval);
         end
         
-        function obj = set.parent(obj,newparent)
+        function obj = set.parent(obj,newParent)
             
             %check if parent is a SessionComponent (Lead/Dataset/..) or a string.
             % if string:
             %  does it match with a registerable?
             
             S = obj.session;
-            if S.noLog;obj.parent=newparent;return;end
+            if S.noLog;obj.parent=newParent;return;end
             
             
-            if ischar(newparent);
+            if ischar(newParent);
                 %get the list of all current registerables
-                allparents = eval('obj.session.getRegs');
-                if not(any(ismember(allparents,newparent)));  %if it is a session component
+                allparents = eval('obj.session.listregisterables');
+                if not(any(ismember(allparents,newParent)));  %if it is a session component
                     warning('Parent is not known. Changes are still applied')
-                    parentobj = newparent; %use string instead
+                    parentobj = newParent; %use string instead
                 else
-                    parentobj = eval(['obj.session.getReg(''',newparent,''')']);
+                    parentobj = eval(['obj.session.getregisterable(''',newParent,''')']);
                 end
             else
                 try
-                    supercl = superclasses(newparent);
+                    supercl = superclasses(newParent);
                     if any(ismember(supercl,'SessionComponent'));  %if it is a session component
-                        parentobj = newparent;
-                        newparent = newparent.matlabId;
+                        parentobj = newParent;
+                        newParent = newParent.matlabId;
                         
                     end
                 catch error('Parent should be char or a Registerable')
@@ -145,23 +145,34 @@ classdef (Abstract) Registerable < handle
             %-- get the Session.
             S = obj.session;
             %--update its log
+            
+            % Get the name of the current parent:
+            if ischar(obj.parent)  %it could be a string
+                oldParentName = obj.parent;
+            else
+                try oldParentName = obj.parent.matlabId;
+                catch oldParnetName = 'Undefined';
+                end
+                
+            end
+            
             if ~obj.noSet;
-                S.log('Changed parent from %s to %s for %s',obj.parent.matlabId,newparent, obj.matlabId);
+                S.addtolog('Changed parent from %s to %s for %s',oldParentName,newParent, obj.matlabId);
             end
             %change the value in the object
             obj.parent = parentobj;
             
             %update the XML
-            SDK_updateXML(S,obj,'.parent.ref.Attributes.id',newparent);
+            SDK_updatexml(S,obj,'.parent.ref.Attributes.id',newParent);
         end
         
-        function obj = set.T(obj,T)
+        function obj = set.transform(obj,transform)
             
             S = obj.session;
-            if S.noLog;obj.T=T;return;end
+            if S.noLog;obj.transform=transform;return;end
             
-            if ismatrix(T) && numel(T)==16
-                Tarray = reshape(T,[1,16]);
+            if ismatrix(transform) && numel(transform)==16
+                Tarray = reshape(transform,[1,16]);
             else
                 error('T has to be a 4x4 matrix')
             end
@@ -174,16 +185,16 @@ classdef (Abstract) Registerable < handle
             
             
             %change the value in the object
-            obj.T = T;
+            obj.transform = transform;
             
             
             XML_names = {'m11','m12','m13','m14','m21','m22','m23','m24','m31','m32','m33','m34','ox','oy','oz','m44'};
             
             for i = 1:16
-                SDK_updateXML(S,obj,['.transform.Matrix3D.Attributes.',XML_names{i}],Tarray(i));
+                SDK_updatexml(S,obj,['.transform.Matrix3D.Attributes.',XML_names{i}],Tarray(i));
             end
             
-            if obj.noSet;obj.T = T;return;end
+            if obj.noSet;obj.transform = transform;return;end
             S.log('Changed registration matrix for %s',obj.matlabId);
             
             
