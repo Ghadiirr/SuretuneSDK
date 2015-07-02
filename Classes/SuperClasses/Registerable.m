@@ -10,7 +10,7 @@ classdef (Abstract) Registerable < handle
     end
     
     properties (Hidden = true)
-        noSet
+%         trackChanges
     end
     
     methods
@@ -43,12 +43,17 @@ classdef (Abstract) Registerable < handle
             %             obj.path = path;
             %             obj.id = id;
             %             obj.label = label;
-            obj.noSet = 1;
+            
+            % Initialize all registerables with trackChanges turned off. If
+            % the registerable constructed trackChanges can be turned on.
+            % This prevents echoing the original data.
+            S.updateXml = 0;  
+            obj.matlabId = matlabId;
             obj.accepted = accepted;
             obj.parent = parent;
             obj.transform = transform;
-            obj.matlabId = matlabId;
-            obj.noSet = 0;
+            
+
             %             obj.session = instance;
         end
         
@@ -63,7 +68,7 @@ classdef (Abstract) Registerable < handle
         function obj = set.accepted(obj,accepted)
             
             S = obj.session;
-            if S.noLog;obj.accepted=accepted;return;end
+              if ~S.updateXml;obj.accepted=accepted;return;end
             
             switch class(accepted)
                 case 'logical'
@@ -93,19 +98,20 @@ classdef (Abstract) Registerable < handle
             oldval = obj.accepted;
             
             
+            %change the value in the object
+            obj.accepted = newval;
+            
             %write it in the log.
             %-- get the Session.
             S = obj.session;
             %--update its log
-            if ~obj.noSet;
-                S.log('Changed accepted state from %s to %s for %s',oldval,newval, obj.matlabId);
+            if S.updateXml;
+                SDK_updatexml(S,obj,'.accepted.Attributes.value',newval,'accepted state');
             end
             
-            %change the value in the object
-            obj.accepted = newval;
+
             
-            %update the XML
-            SDK_updatexml(S,obj,'.accepted.Attributes.value',newval);
+            
         end
         
         function obj = set.parent(obj,newParent)
@@ -115,14 +121,16 @@ classdef (Abstract) Registerable < handle
             %  does it match with a registerable?
             
             S = obj.session;
-            if S.noLog;obj.parent=newParent;return;end
+%             if ~S.updateXml;obj.parent=newParent;return;end
             
             
             if ischar(newParent);
                 %get the list of all current registerables
                 allparents = eval('obj.session.listregisterables');
                 if not(any(ismember(allparents,newParent)));  %if it is a session component
-                    warning('Parent is not known. Changes are still applied')
+                    if S.updateXml;
+                        warning('Parent is not known. Changes are still applied');
+                    end
                     parentobj = newParent; %use string instead
                 else
                     parentobj = eval(['obj.session.getregisterable(''',newParent,''')']);
@@ -139,37 +147,26 @@ classdef (Abstract) Registerable < handle
                 end
             end
             
-            
+            %change the value in the object
+            obj.parent = parentobj;
             
             %write it in the log.
             %-- get the Session.
             S = obj.session;
             %--update its log
-            
-            % Get the name of the current parent:
-            if ischar(obj.parent)  %it could be a string
-                oldParentName = obj.parent;
-            else
-                try oldParentName = obj.parent.matlabId;
-                catch oldParnetName = 'Undefined';
-                end
-                
+
+            if S.updateXml;
+                SDK_updatexml(S,obj,'.parent.ref.Attributes.id',newParent,'Parent');
             end
+
+           
             
-            if ~obj.noSet;
-                S.addtolog('Changed parent from %s to %s for %s',oldParentName,newParent, obj.matlabId);
-            end
-            %change the value in the object
-            obj.parent = parentobj;
-            
-            %update the XML
-            SDK_updatexml(S,obj,'.parent.ref.Attributes.id',newParent);
         end
         
         function obj = set.transform(obj,transform)
             
             S = obj.session;
-            if S.noLog;obj.transform=transform;return;end
+              if ~S.updateXml;obj.transform=transform;return;end
             
             if ismatrix(transform) && numel(transform)==16
                 Tarray = reshape(transform,[1,16]);
@@ -178,24 +175,21 @@ classdef (Abstract) Registerable < handle
             end
             
             
+            %change the value in the object
+            obj.transform = transform;
+            
             %write it in the log.
             %-- get the Session.
             S = obj.session;
             %--update its log
             
-            
-            %change the value in the object
-            obj.transform = transform;
-            
-            
             XML_names = {'m11','m12','m13','m14','m21','m22','m23','m24','m31','m32','m33','m34','ox','oy','oz','m44'};
             
-            for i = 1:16
-                SDK_updatexml(S,obj,['.transform.Matrix3D.Attributes.',XML_names{i}],Tarray(i));
+            if S.updateXml
+                for i = 1:16
+                    SDK_updatexml(S,obj,['.transform.Matrix3D.Attributes.',XML_names{i}],Tarray(i),XML_names{i});
+                end
             end
-            
-            if obj.noSet;obj.transform = transform;return;end
-            S.log('Changed registration matrix for %s',obj.matlabId);
             
             
         end

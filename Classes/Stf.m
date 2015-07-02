@@ -15,7 +15,7 @@ classdef Stf < handle
             
             
             M3D = transform.Matrix3D;
-            T = SDK_matrix3d2t(M3D);
+            T = SDK_matrix3d2transform(M3D);
             obj.transform = T;
             obj.type = type;
             obj.localizerPoints = localizerPoints;  %could be improved;

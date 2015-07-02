@@ -20,6 +20,8 @@ classdef Lead < SessionComponent & Registerable
             obj.distal = distal;
             obj.stimPlan = {};
             obj.label = label;
+            
+            
         end
         
         
@@ -29,7 +31,8 @@ classdef Lead < SessionComponent & Registerable
     
     methods
         function obj = set.leadType(obj,leadType)
-            if obj.noSet;obj.leadType = leadType; return;end
+            S = obj.session;
+            if ~S.updateXml;obj.leadType = leadType; return;end
             
             if not(ischar(leadType));error('Lead type has to be a string');end
             
@@ -39,38 +42,31 @@ classdef Lead < SessionComponent & Registerable
             end
             
             
-            %write it in the log.
-            %-- get the Session.
-            S = obj.session;
-            %--update its log
-            S.addtolog('Changed leadType from %s to %s for %s',obj.leadType,leadType, obj.matlabId);
-            
             %change the value in the object
             obj.leadType = leadType;
             
+            
+            %write it in the log.
+
+            
             %update the XML
-            SDK_updatexml(S,obj,'.leadType.Enum.Attributes.value',leadType);
+            SDK_updatexml(S,obj,'.leadType.Enum.Attributes.value',leadType,'leadType');
             
             
         end
         
         function obj = set.label(obj,label)
-            if obj.noSet;obj.label = label; return;end
+            S = obj.session;
+            if ~S.updateXml;obj.label = label; return;end
             
             if not(ischar(label));error('label has to be a string');end
             
-            
-            %write it in the log.
-            %-- get the Session.
-            S = obj.session;
-            %--update its log
-            S.addtolog('Changed label from %s to %s for %s',obj.label,label, obj.matlabId);
-            
+
             %change the value in the object
             obj.label = label;
             
             %update the XML
-            SDK_updatexml(S,obj,'.label.Attributes.value',label);
+            SDK_updatexml(S,obj,'.label.Attributes.value',label,'lead label');
             
             
         end

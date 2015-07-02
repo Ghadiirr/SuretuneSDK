@@ -19,47 +19,71 @@ classdef ACPCIH < SessionComponent & Registerable
             obj@SessionComponent(component_args{:});
             obj@Registerable(registerable_args);
             
-            obj.noSet = 1;
+
             obj.ac = ac;
             obj.pc = pc;
             obj.ih = ih;
-            obj.noSet = 0;
+            
+            
             
         end
         
         function obj = set.ac(obj,ac)
-            if obj.noSet;obj.ac = ac; return;end
+            if ~obj.session.updateXml;obj.ac = ac; return;end
             
 
             if ~(ismatrix(ac));error('Input has to be a 3D vector');end
             if ~(numel(ac)==3);error('Input has to be a 3D vector');end
             
-            %write it in the log.
-            %-- get the Session.
-            S = obj.session;
-            %--update its log
-            S.log('Changed AC');
+ error('ACPCIH object has not been made yet')
             
-            %change the value in the object
-            obj.accepted = newval;
-            
-            %update the XML
-            SDK_updatexml(S,obj,'.accepted.Attributes.value',newval);
+%             %-- get the Session.
+%             S = obj.session;
+%             
+%             %change the value in the object
+%             obj.ac = ac;
+%             
+%             %update the XML
+%             SDK_updatexml(S,obj,'.accepted.Attributes.value',newval,'AC');
             
             
         end
         
         
         function obj = set.pc(obj,pc)
-            if obj.noSet;obj.pc = pc; return;end
+            obj.pc = pc; 
             
-            error('ACPCIH object has not been made yet')
+            warning('ACPCIH object has not been made yet')
         end
         
         function obj = set.ih(obj,ih)
-            if obj.noSet;obj.ih = ih; return;end
+            obj.ih = ih;
             
-            error('ACPCIH object has not been made yet')
+            warning('ACPCIH object has not been made yet')
+        end
+        
+        function acpcihSpace = makeCoordinateSystem(obj)
+            
+            z = SDK_unitvector(obj.ih);
+            y = SDK_unitvector(obj.pc-obj.ac);
+            x = SDK_unitvector(cross(y,z));
+            
+            origin = (obj.pc+obj.ac)./2;
+            
+            transform = [x(1),y(1),z(1),origin(1);...
+                x(2),y(2),z(2),origin(2);...
+                x(3),y(3),z(3),origin(3);...
+                0,0,0,1]'
+            
+            S = obj.session;
+            S.addnewmesh('acpcCoordinateSystem',0,'Dataset0',transform)
+            
+            
+            
+            
+            
+            
+            
         end
     end
     

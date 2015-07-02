@@ -15,8 +15,8 @@ classdef Dataset < SessionComponent & Registerable
             obj@SessionComponent(component_args{:});
             obj@Registerable(registerable_args)
             
-            obj.label = label;
             obj.volumeId = volumeId;
+            obj.label = label;
             obj.id = id;
             obj.stf = stf;
             
@@ -37,46 +37,44 @@ classdef Dataset < SessionComponent & Registerable
         
         
         function obj = set.label(obj,label)
-            %-- get the Session.
-            S = obj.session;
-            
             %change object
             obj.label = label;
             
-            %update the XML;
-            SDK_updatexml(S,obj,'.label.Attributes.value',label);
+            
+
+                SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
+                
+            
         end
         
         function obj = set.volumeId(obj,VolumeId)
-            %-- get the Session.
-            S = obj.session;
-            
+
             %change object
             obj.volumeId = VolumeId;
             
-            %update the XML;
-            SDK_updatexml(S,obj,'.volumeId.Attributes.value',VolumeId);
+
+                SDK_updatexml(obj.session,obj,'.volumeId.Attributes.value',VolumeId,'volumeId');
+            
         end
         
         function obj = set.id(obj,id)
-            %-- get the Session.
-            S = obj.session;
+
             
             %change object
             obj.id = id;
             
-            %update the XML;
-            SDK_updatexml(S,obj,'.Attributes.id',id);
+
+                SDK_updatexml(obj.session,obj,'.Attributes.id',id,'id for reference');
             
             
         end
         
         function obj = set.stf(obj,stf)
-            %-- get the Session.
-            S = obj.session;
+
             
             %change object
             obj.stf = stf;
+            warning('Dataset set stf has to be made')
            
             
             

@@ -18,6 +18,8 @@ classdef ImportedStructure < SessionComponent & Registerable
             
             obj.label = label;
             obj.opacity = opacity;
+            
+            
         end
         
         
@@ -39,31 +41,25 @@ classdef ImportedStructure < SessionComponent & Registerable
         
         
         function obj = set.label(obj,label)
-            if obj.noSet;obj.label = label; return;end
-            
-            %-- get the Session.
-            S = obj.session; 
+                      
           
             %change object
             obj.label = label;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.label.Attributes.value',label);
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
             
         end
         
                 
         function obj = set.opacity(obj,opacity)
-            if obj.noSet;obj.opacity = opacity; return;end
-            
-            %-- get the Session.
-            S = obj.session; 
-            
+
             %change object
             obj.opacity = opacity;
             
+            
             %update the XML;
-            SDK_updatexml(S,obj,'.opacity.Attributes.value',opacity);
+            SDK_updatexml(obj.session,obj,'.opacity.Attributes.value',opacity,'Opacity');
             
         end
         

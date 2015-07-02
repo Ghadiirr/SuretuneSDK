@@ -50,18 +50,11 @@ classdef ImportedMeshPart < SessionComponent & Registerable
         
         function obj = set.meshId(obj,meshId)
             
-            %-- get the Session.
-            S = obj.session;
-            
-            %             if S.noLog;obj.meshId = meshId; return;end
-            
-            
-            
-            %change object
+
             obj.meshId = meshId;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.meshId.Attributes.value',meshId);
+            SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',meshId,'MeshId');
             
         end
         
@@ -69,87 +62,55 @@ classdef ImportedMeshPart < SessionComponent & Registerable
         
         function obj = set.color(obj,color)
             
-            %-- get the Session.
-            S = obj.session;
-            
-            %             if S.noLog;obj.color = color; return;end
-            
-            
+
             
             %change object
             obj.color = color;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.color.Color.Attributes.value',color);
+            SDK_updatexml(obj.session,obj,'.color.Color.Attributes.value',color,'Color');
             
         end
         
         
         function obj = set.opacity(obj,opacity)
-            
-            %-- get the Session.
-            S = obj.session;
-            
-            if S.noLog;obj.opacity = opacity; return;end
-            
-            
-            
+
             %change object
             obj.opacity = opacity;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.opacity.Attributes.value',opacity);
+            SDK_updatexml(obj.session,obj,'.opacity.Attributes.value',opacity,'Opacity');
             
         end
         
         function obj = set.ambientLightingLevel(obj,ambient)
             
-            %-- get the Session.
-            S = obj.session;
-            
-            %             if S.noLog;obj.color = color; return;end
-            
-            
-            
+
             %change object
             obj.ambientLightingLevel = ambient;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.ambientLightingLevel.Attributes.value',ambient);
+            SDK_updatexml(obj.session,obj,'.ambientLightingLevel.Attributes.value',ambient,'ambientLightingLevel');
             
         end
         
         function obj = set.diffuseLightingLevel(obj,diffuse)
             
-            %-- get the Session.
-            S = obj.session;
-            
-            %             if S.noLog;obj.color = color; return;end
-            
-            
-            
             %change object
             obj.diffuseLightingLevel = diffuse;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.diffuseLightingLevel.Attributes.value',diffuse);
+            SDK_updatexml(obj.session,obj,'.diffuseLightingLevel.Attributes.value',diffuse,'diffuseLightingLevel');
             
         end
         
         function obj = set.specularLightingLevel(obj,specular)
-            
-            %-- get the Session.
-            S = obj.session;
-            
-            %             if S.noLog;obj.color = color; return;end
-            
-            
-            
+
             %change object
             obj.specularLightingLevel = specular;
             
             %update the XML;
-            SDK_updatexml(S,obj,'.specularLightingLevel.Attributes.value',specular);
+            SDK_updatexml(obj.session,obj,'.specularLightingLevel.Attributes.value',specular,'specularLightingLevel');
             
         end
         

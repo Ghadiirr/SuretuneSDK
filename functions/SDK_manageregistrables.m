@@ -91,6 +91,9 @@ try
             id = ['Lead_',eval([link,'.label.Attributes.value'])];
             eval([link,'.Attributes.id = ''',id,''';']);  %Lead does not have Id
         end
+        
+    elseif strcmp(RegisterableType,'ACPCIH')
+        id = 'acpcCoordinateSystem';
     else
         
         id = eval([link,'.Attributes.id']);

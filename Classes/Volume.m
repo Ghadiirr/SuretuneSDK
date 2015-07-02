@@ -193,7 +193,7 @@ classdef Volume <handle
             V.rescaleIntercept.Attributes.value = I.rescaleIntercept;
             
             %scanDirection
-            V.scanDirection.Enum.Attributes.type='scanDirection';
+            V.scanDirection.Enum.Attributes.type='ScanDirection';
             V.scanDirection.Enum.Attributes.value = 'Axial';
             
             %PatientOrientation

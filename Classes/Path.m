@@ -22,6 +22,7 @@ classdef Path < SessionComponent & Registerable
             obj.opacity = opacity;
             obj.marginRadius = marginRadius;
             obj.beyondTargetDistance = beyondTargetDistance;
+            
         end
     end
     

@@ -32,8 +32,9 @@ classdef Session < handle_hidden
                 activeDataset = 1;
         registerables %List of all Registerables
         master %Registerable tree starts with this dataset
-        noLog = 0; %Flag if logging is done
-        sureTune = 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
+        echoLog = 1; %Flag: 1/0: do/don't echo logging to command window. 
+        updateXml = 0;
+        sureTune = 'C:\Suresuit\Blue3\'; %'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = 'C:\MATLAB-Addons\Export\'; % Folder were sessions are exported.
         
     end
@@ -50,10 +51,12 @@ classdef Session < handle_hidden
         
         function addtolog(obj,varargin)
             % varargin should be a cell array with strings
-            if obj.noLog;return;end;
+
             obj.log{end+1,1} = datestr(datetime);
-            fprintf(['\n',sprintf(varargin{:}),'\n']);
             obj.log{end,2} = sprintf(varargin{:});
+            
+            if ~obj.echoLog;return;end;
+            fprintf([sprintf(varargin{:}),'\n']);
         end
         
         
@@ -81,7 +84,7 @@ classdef Session < handle_hidden
             % Instance
             
             if nargin > 0
-                warning('No input arguments are required. Run loadXML to populate session objects.')
+                warning('No input arguments are required. Run ''myFirstSession.m'' for examples.')
             end
             
             % Add empty cells:
@@ -91,6 +94,8 @@ classdef Session < handle_hidden
             obj.therapyPlanStorage.names = {};
             obj.meshStorage.list = {};
             obj.meshStorage.names = {};
+            obj.registerables.names = {};
+            obj.registerables.list = {};
             
             % Make export dir of not already exist:
             if ~exist(obj.exportFolder,'dir')
@@ -142,10 +147,12 @@ classdef Session < handle_hidden
             obj.activeDataset = 1;
             
             %find registerables
-            obj.noLog = 1;
+%             obj.noLog = 1;
             obj.registerables = SDK_findregistrables(obj);
-            obj.noLog = 0;
+%             obj.noLog = 0;
             %             O.Master = O.SessionData.
+            
+            obj.updateXml = 1;
         end
         
         
@@ -749,15 +756,15 @@ classdef Session < handle_hidden
                 
                 if nargin==1
                     %let the user know the options
-                    names = obj.listregisterables;
-                    txt = '\n';
-                    for i = 1:numel(names)
-                        txt = [txt,'\t',num2str(i),') ',names{i},'\n']; %#ok<AGROW>
-                    end
+%                     names = obj.listregisterables;
+%                     txt = '\n';
+%                     for i = 1:numel(names)
+%                         txt = [txt,'\t',num2str(i),') ',names{i},'\n']; %#ok<AGROW>
+%                     end
+                    obj.listregisterables;
+   
                     
-                    disp(['Choose registerable index number: ',sprintf(txt)])
-                    
-                    name = input('index number: ');
+                    name = input('Choose registerable index number: ');
                 end
                 
                 
