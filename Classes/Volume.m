@@ -287,6 +287,8 @@ classdef Volume <handle
         
         function linktosession(obj,session)
             obj.session = session;
+            obj.session.volumeStorage.list{end+1} = obj;
+            obj.session.volumeStorage.names{end+1} = obj.volumeInfo.id;
         end
         
         

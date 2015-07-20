@@ -28,7 +28,7 @@ classdef Obj <handle
         end
         
         function savetofolder(obj,folder)
-            vertface2obj(obj.v,obj.f,[folder,'/',obj.fileName])
+            vertface2obj(obj.v,obj.f,[folder,'/',obj.fileName]);
         end
         
         function linktoregisterable(obj,R)

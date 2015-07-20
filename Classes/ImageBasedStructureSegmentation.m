@@ -35,6 +35,73 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
             
             
         end
+        
+        function obj = set.label(obj,label)
+            obj.label = label;
+            
+            %update the XML;
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'Label');
+        end
+        
+        function obj = set.opacity(obj,opacity)
+            obj.opacity = opacity;
+            
+            %update the XML;
+            SDK_updatexml(obj.session,obj,'.opacity.Attributes.value',opacity,'opacity');
+        end
+        
+        function obj = set.color(obj,color)
+            obj.color = color;
+            
+            %update the XML;
+            SDK_updatexml(obj.session,obj,'.color.Attributes.value',color,'color');
+        end
+        
+        function obj = set.threshold(obj,threshold)
+            obj.threshold = threshold;
+            
+            %update the XML;
+            SDK_updatexml(obj.session,obj,'.threshold.Attributes.value',threshold,'threshold');
+        end
+        
+        function obj = set.thresholdType(obj,thresholdType)
+            obj.thresholdType = thresholdType;
+            
+            %update the XML;
+            SDK_updatexml(obj.session,obj,'.thresholdType.Enum.Attributes.value',thresholdType,'thresholdType');
+        end
+        
+        function obj = set.blurEnabled(obj,blurEnabled)
+            obj.blurEnabled = blurEnabled;
+            
+            %update the XML;
+            SDK_updatexml(obj.session,obj,'.blurEnabled.Attributes.value',blurEnabled,'blurEnabled');
+        end
+        
+        function obj = set.boundingBox(obj,boundingBox)
+            obj.boundingBox = boundingBox;
+            warning('Bounding Box not yet supported')
+%             %update the XML;
+%             SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',boundingBox,'boundingBox');
+        end
+        
+        function obj = set.includeSeeds(obj,includeSeeds)
+            obj.includeSeeds = includeSeeds;
+            warning('IncludeSeeds not yet supported')
+            %update the XML;
+%             SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',includeSeeds,'includeSeeds');
+        end
+        
+        function obj = set.excludeSeeds(obj,excludeSeeds)
+            obj.excludeSeeds = excludeSeeds;
+            warning('ExcludeSeeds not yet supported')
+            %update the XML;
+%             SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',excludeSeeds,'excludeSeeds');
+        end
+        
+        
+        
+        
     end
     
 end

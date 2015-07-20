@@ -38,7 +38,7 @@ classdef ImportedMeshPart < SessionComponent & Registerable
             %Try to find the obj file and add itself as a registerable:
             ind=find(ismember(obj.session.meshStorage.names,meshId));
             if ~isempty(ind)
-                obj.session.meshStorage.list{ind}.linktoregisterable(obj);
+                obj.session.meshStorage.list{ind(1)}.linktoregisterable(obj);
             end
             
             

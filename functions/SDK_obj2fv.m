@@ -43,7 +43,7 @@ function [V,F] = obj2fv(filename)
       F(face_index,:) = face_long_long;
       face_index = face_index+1;
     else
-      fprintf('Ignored: %s',line);
+%       fprintf('Ignored: %s',line);  %silenced by Jonas Roothans
     end
 
     line = fgets(fid);

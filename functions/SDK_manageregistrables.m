@@ -84,16 +84,19 @@ RegisterableType = withoutCellIndex;
 %id
 try
     if strcmp(RegisterableType,'Lead')
-        if isfield(eval(link),'Attributes')
-            id =  eval([link,'.Attributes.id']);  %Lead alredy has Id
-            
-        else
+%         if isfield(eval(link),'Attributes')
+%             id =  eval([link,'.Attributes.id']);  %Lead alredy has Id
+%             
+%         else
             id = ['Lead_',eval([link,'.label.Attributes.value'])];
             eval([link,'.Attributes.id = ''',id,''';']);  %Lead does not have Id
-        end
+%         end
         
     elseif strcmp(RegisterableType,'ACPCIH')
         id = 'acpcCoordinateSystem';
+        
+%    elseif strcmp(RegisterableType,'Dataset')
+%         id = strrep(eval([link,'.label.Attributes.value']),' ','_');
     else
         
         id = eval([link,'.Attributes.id']);

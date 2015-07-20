@@ -8,13 +8,14 @@ if ~obj.updateXml;return;end
 Component_address = Component.path;
 address = [Component_address,field_address];
 
-if exist(address)
+try
     oldValue = eval(address);
     if SDK_isregisterable(oldValue)
         oldValue = oldValue.matlabId;
     end
-else
+catch
     oldValue = ' [nothing] ';
+end
 
 evalthis = [address,' = ''',num2str(newValue),''';'];
 eval(evalthis);

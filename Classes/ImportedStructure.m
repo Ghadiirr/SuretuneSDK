@@ -93,22 +93,22 @@ classdef ImportedStructure < SessionComponent & Registerable
           
           %Make dummy elements in XML
           
-          A.Parent.ref.Text = '';
-            A.Parent.ref.Attributes.id = obj.matlabId;
-            A.Transform.Matrix3D.Text = '';
+          A.parent.ref.Text = '';
+            A.parent.ref.Attributes.id = obj.matlabId;
+            A.transform.Matrix3D.Text = '';
                         A.meshId.Text = '';
-            A.MeshId.Attributes.type = 'String';
+            A.meshId.Attributes.type = 'String';
 %             A.meshId.Attributes.value = 'Dummytxt'; %filename.obj
 %                         A.color.Color.Attributes.value = '#999999';
-            A.Color.Color.Text = '';
-            A.Opacity.Text = '';
+            A.color.Color.Text = '';
+            A.opacity.Text = '';
             
-            A.Opacity.Attributes.type = 'Double';
-            A.Accepted.Attributes.type = 'Bool';
+            A.opacity.Attributes.type = 'Double';
+            A.accepted.Attributes.type = 'Bool';
             
-            A.AmbientLightingLevel.Attributes.type = 'Double';
-            A.DiffuseLightingLevel.Attributes.type = 'Double';
-            A.SpecularLightingLevel.Attributes.type = 'Double';
+            A.ambientLightingLevel.Attributes.type = 'Double';
+            A.diffuseLightingLevel.Attributes.type = 'Double';
+            A.specularLightingLevel.Attributes.type = 'Double';
 
 
 

@@ -67,6 +67,8 @@ while level >=0
         
         %if current position is no long SessionData >> abort
         if strcmp(P{level},'therapyPlanStorage');break;end
+        if strcmp(P{level},'volumeStorage');break;end
+        if strcmp(P{level},'meshStorage');break;end
     else
         evalstr = 'obj';
     end

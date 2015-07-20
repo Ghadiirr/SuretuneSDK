@@ -24,6 +24,10 @@ classdef Session < handle_hidden
     
     
     
+    % * Hidden = private?
+    % * fullfile ipv [   \   ]
+    %  * 7zip niet hardcoded
+    
     properties (Hidden = true)  %These properties are hidden to not bother the user.
         originalSessionData %The original XML file
         directory %Directory of the loaded XML file
@@ -34,7 +38,7 @@ classdef Session < handle_hidden
         master %Registerable tree starts with this dataset
         echoLog = 1; %Flag: 1/0: do/don't echo logging to command window. 
         updateXml = 0;
-        sureTune = 'C:\Suresuit\Blue3\'; %'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
+        sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = 'C:\MATLAB-Addons\Export\'; % Folder were sessions are exported.
         
     end
@@ -90,8 +94,7 @@ classdef Session < handle_hidden
             % Add empty cells:
             obj.volumeStorage.list = {};
             obj.volumeStorage.names = {};
-            obj.therapyPlanStorage.list = {};
-            obj.therapyPlanStorage.names = {};
+            obj.therapyPlanStorage = {};
             obj.meshStorage.list = {};
             obj.meshStorage.names = {};
             obj.registerables.names = {};
@@ -152,7 +155,7 @@ classdef Session < handle_hidden
 %             obj.noLog = 0;
             %             O.Master = O.SessionData.
             
-            obj.updateXml = 1;
+            
         end
         
         
@@ -175,27 +178,26 @@ classdef Session < handle_hidden
             eval(['!C:/MATLAB-Addons/SDK/7za.exe x -bd -y ',file,' -o',file(1:end-4)]);
             
             %Index Volumes
-            obj.volumeStorage = obj.loadvolumes([file(1:end-4),'\Volumes']);
+            obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));
             
             %Load Meshes
-            obj.meshStorage = obj.loadmeshes([file(1:end-4),'\Meshes']);
+            obj.loadmeshes(fullfile(file(1:end-4),'Meshes'));
             
             %Load XML
             obj.loadxml([file(1:end-4),'\'],'SureTune2Sessions.xml')
             
             %Load Stimplans
-            obj.therapyPlanStorage = obj.loadtherapyplans(file(1:end-4));
+            obj.loadtherapyplans(file(1:end-4));
             
-            
+            obj.updateXml = 1;
             
         end
         
         
         
-        function planArrayOutput = loadtherapyplans(obj,sessiondir)
+        function loadtherapyplans(obj,sessiondir)
             thisdir = pwd;
-            planArrayOutput = {};
-            
+                        
             % Browse to therapy folders:
             cd(sessiondir)
             cd('Sessions')
@@ -258,7 +260,7 @@ classdef Session < handle_hidden
                         
    
                         % Get the Stimplan data from therapyXML:
-                        VTA = obj.loadvolumes([thisLead,'\',thisPlan]);
+                        VTA = obj.loadvta([thisLead,'\',thisPlan]);
                         label = thisPlan;
                         voltageBasedStimulation = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.voltageBasedStimulation.Attributes.value;
                         stimulationValue = str2double(therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.stimulationValue.Attributes.value);
@@ -272,24 +274,40 @@ classdef Session < handle_hidden
                         stimPlanObject = StimPlan(VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
                         
                         %Add the therapy object to Lead.StimPlan{end+1}
-                        leadObject.stimPlan{end+1} = stimPlanObject;
-                        planArrayOutput{end+1} = stimPlanObject; %#ok<AGROW>
+                        stimPlanObject.linktolead(leadObject)
+                       
                     end
                 end
                 
                 % Revert to original directory: 
                 cd(thisdir)
-            end
+        end
+            
+        function vta = loadvta(obj,folder)
+            thisDir = pwd;
+                cd(folder)
+                volumeFolders = SDK_subfolders();
+                
+                for iVolumeFolder = 1:numel(volumeFolders)
+                    %Add an Volume instance to the list.
+                    volumeObject = Volume();
+                    volumeObject.loadvolume(volumeFolders{iVolumeFolder})
+                    vta.(volumeFolders{iVolumeFolder}) = volumeObject;
+                    
+                    
+                end
+                % Revert to original directory
+                cd(thisDir)
+            
+        end
             
             
             
-            function meshArrayOutput = loadmeshes(thisSession,folder)
+            function loadmeshes(thisSession,folder)
                 thisdir = pwd;
                 cd(folder)
                 
-                % Initialize output:
-                meshArrayOutput.list = {};
-                meshArrayOutput.names = {};
+                
                 
                 % Get a list with all obj filenames:
                 objFiles = dir('*.obj');
@@ -308,11 +326,9 @@ classdef Session < handle_hidden
                     
                     
                     %Add an Obj instance to the list.
-                    meshArrayOutput.list{iObjName} = Obj(V,F,fileName);
-                    meshArrayOutput.list{iObjName}.linktosession(thisSession)
+                    objInstance = Obj(V,F,fileName);
+                    objInstance.linktosession(thisSession);
                     
-                    %Add the name to the list.
-                    meshArrayOutput.names{iObjName} = fileName;
                     
                     if ~iscell(objNames)
                         break
@@ -325,14 +341,11 @@ classdef Session < handle_hidden
                 
             end
             
-            function volumeArrayOutput = loadvolumes(thisSession,folder)
+            function loadvolumes(thisSession,folder)
                 thisDir = pwd;
                 cd(folder)
                 
-                %get a list with all obj files
-                volumeArrayOutput.list = {};
-                volumeArrayOutput.names = {};
-                
+
                 volumeFolders = SDK_subfolders();
                 
                 for iVolumeFolder = 1:numel(volumeFolders)
@@ -341,8 +354,6 @@ classdef Session < handle_hidden
                     volumeObject.loadvolume(volumeFolders{iVolumeFolder});
                     volumeObject.linktosession(thisSession);
                     
-                    volumeArrayOutput.list{iVolumeFolder} = volumeObject;
-                    volumeArrayOutput.names{iVolumeFolder} = volumeFolders{iVolumeFolder};
                 end
                 % Revert to original directory
                 cd(thisDir)
@@ -405,7 +416,7 @@ classdef Session < handle_hidden
                     disp('wildcard: ''*01*'' to filter on filenames that contain 01')
                     return
                 end
-                thisdir = pwd;
+%                 thisdir = pwd;
                 
                 fileName = 'MATLABinput.zip';
                 
@@ -417,8 +428,8 @@ classdef Session < handle_hidden
                 
                 obj.loadzip([obj.sureTune,fileName])
                 
-                %Revert to original directory
-                cd(thisdir)
+%                 %Revert to original directory
+%                 cd(thisdir)
             end
             
             
@@ -615,13 +626,19 @@ classdef Session < handle_hidden
                 
                 
                 types = cellfun(@class,obj.registerables.list,'UniformOutput',0);
+
                 
                 
                 if nargout == 0
                     
                     txt = '\n';
                     for i = 1:numel(val)
-                        txt = [txt,'\t',num2str(i),') ',val{i},'   (',types{i},')\n']; %#ok<AGROW>
+                        switch types{i}
+                            case 'Dataset'
+                                txt = [txt,'\t',num2str(i),') ',val{i},'     (',types{i},': ',obj.registerables.list{i}.label,')\n']; %#ok<AGROW>
+                            otherwise 
+                                txt = [txt,'\t',num2str(i),') ',val{i},'   (',types{i},')\n']; %#ok<AGROW>
+                        end
                     end
                     disp(['All registerables: ',sprintf(txt)])
                     
@@ -874,17 +891,18 @@ classdef Session < handle_hidden
                 end
                 path = [genericPath,'{',num2str(index),'}'];
                 
-                
-                %replace parent char with its object
-                namelist = obj.registerables.names;
-                parentindex = find(ismember(namelist,parent));
-                
-                if isempty(parentindex)
-                    warning('Parent is not known. Mesh is added without correct reference')
-                else
-                    parent = obj.registerables.list{parentindex};
+                if ischar(parent)
+                    %replace parent char with its object
+                    namelist = obj.registerables.names;
+                    parentindex = find(ismember(namelist,parent));
+
+                    if isempty(parentindex)
+                        warning('Parent is not known. Mesh is added without correct reference')
+                    else
+                        parent = obj.registerables.list{parentindex};
+                    end
                 end
-                
+
                 
                 component_args = {path,obj};
                 registerable_args = {parent,T,0,label}; %set accepted to false
@@ -1012,10 +1030,8 @@ classdef Session < handle_hidden
                     return
                 end
                 ObjInstance = Obj(V,F,name);
-                ObjInstance.linkToSession(Session);
-                
-                Session.Meshes.names{end+1}=name;
-                Session.Meshes.list{end+1} = ObjInstance;
+                ObjInstance.linktosession(Session);
+               
                 
             end
             

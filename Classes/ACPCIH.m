@@ -35,7 +35,7 @@ classdef ACPCIH < SessionComponent & Registerable
             if ~(ismatrix(ac));error('Input has to be a 3D vector');end
             if ~(numel(ac)==3);error('Input has to be a 3D vector');end
             
- error('ACPCIH object has not been made yet')
+ warning('ACPCIH object has not been made yet')
             
 %             %-- get the Session.
 %             S = obj.session;
