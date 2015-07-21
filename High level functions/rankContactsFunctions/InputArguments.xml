@@ -1,0 +1,31 @@
+<Settings>
+	<GridDimension>
+		<x>61</x>
+		<y>61</y>
+		<z>85</z>
+	</GridDimension>
+	<GridSpacing>
+		<x>0.000250</x>
+		<y>0.000250</y>
+		<z>0.000250</z>
+	</GridSpacing>
+	<GridOrigin>
+		<x>-0.00750</x>
+		<y>-0.00750</y>
+		<z>-0.00750</z>
+	</GridOrigin>
+	<LeadTipPosition>
+		<x>0.00000</x>
+		<y>0.00000</y>
+		<z>-0.00225</z>
+	</LeadTipPosition>
+	<NrOfRings>4</NrOfRings>
+	<InterRingDistances>0.002, 0.002, 0.002</InterRingDistances>		
+	<NrOfElectrodes>4</NrOfElectrodes>
+	<MinRadius>0.000635</MinRadius>
+	<MaxRadius>0.007</MaxRadius>
+	<Manufacturer>Medtronic</Manufacturer>	
+	<LeadModel>DBS lead model 3389</LeadModel>
+	<GridGenerationToolVersion>0.2</GridGenerationToolVersion>
+	<GenerationDateTime>20120926 11:31</GenerationDateTime>
+</Settings>

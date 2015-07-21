@@ -1,0 +1,31 @@
+<Settings>
+	<TableOrganization>
+		<Dim1>Amplitude [V]</Dim1>
+		<Dim2>Pulse width [us]</Dim2>
+		<Dim3>Axon diameter [um]</Dim3>
+		<Dim4>Number of active rings</Dim4>
+		<Dim5>Number of steering configurations</Dim5>
+	</TableOrganization>
+	<TableDimension>
+		<Dim1>20</Dim1>
+		<Dim2>8</Dim2>
+		<Dim3>3</Dim3>
+		<Dim4>10</Dim4>
+		<Dim5>2</Dim5>
+	</TableDimension>
+	<TableSpacing>
+		<Dim1>0.5</Dim1>
+		<Dim2>30.0</Dim2>
+		<Dim3>0.5</Dim3>
+		<Dim4>1.0</Dim4>
+		<Dim5>1.0</Dim5>
+	</TableSpacing>
+	<TableOrigin>
+		<Dim1>0.5</Dim1>
+		<Dim2>30.0</Dim2>
+		<Dim3>2.0</Dim3>
+		<Dim4>1.0</Dim4>
+		<Dim5>0.0</Dim5>
+	</TableOrigin>
+	<GenerationDateTime>20150511 18:35</GenerationDateTime>
+</Settings>

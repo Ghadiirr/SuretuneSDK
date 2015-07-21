@@ -1,0 +1,27 @@
+<Settings>
+	<TableOrganization>
+		<Dim1>Amplitude [V]</Dim1>
+		<Dim2>Pulse width [us]</Dim2>
+		<Dim3>Axon diameter [um]</Dim3>
+		<Dim4>Configuration number</Dim4>
+	</TableOrganization>
+	<TableDimension>
+		<Dim1>20</Dim1>
+		<Dim2>8</Dim2>
+		<Dim3>3</Dim3>
+		<Dim4>4</Dim4>
+	</TableDimension>
+	<TableSpacing>
+		<Dim1>0.5</Dim1>
+		<Dim2>30.0</Dim2>
+		<Dim3>0.5</Dim3>
+		<Dim4>1.0</Dim4>
+	</TableSpacing>
+	<TableOrigin>
+		<Dim1>0.5</Dim1>
+		<Dim2>30.0</Dim2>
+		<Dim3>2.0</Dim3>
+		<Dim4>1.0</Dim4>
+	</TableOrigin>
+	<GenerationDateTime>20150409 09:47</GenerationDateTime>
+</Settings>
