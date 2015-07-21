@@ -37,6 +37,7 @@ while level >=0
     if level>1
         Regs = SDK_manageregistrables(obj,Regs,P,level);
         
+        % If the current level is 'Array', the child will be a cell.
         if strcmp(P{level},'Array');
             Plevel = {P{1:level}};
             evalstr = ['obj.',strjoin(Plevel,'.')];

@@ -1,6 +1,9 @@
 function ObjInstance = makemesh(Session,V,F,name)
-%MAKEMESH here comes a help
-if nargin==1
+% MAKEMESH makes an OBJ instance with vertices and faces
+%   ObjInstance = makemesh(Session,V,F,name)
+%
+% See also ADDNEWMESH
+if nargin<3
     disp('Input Arguments are needed: V,F,name')
     return
 end

@@ -1,4 +1,4 @@
-classdef Obj <handle
+classdef Obj < handle
     %OBJFILE Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -16,10 +16,37 @@ classdef Obj <handle
     
     methods
         function obj = Obj(V,F,FileName)
-            obj.fileName = FileName;
-            obj.v = V;
-            obj.f = F;
+            if nargin~=3
+                obj.fileName = [];
+                obj.v = [];
+                obj.f = [];
+            else
+                
+                obj.fileName = FileName;
+                obj.v = V;
+                obj.f = F;
+            end
         end
+        
+        function obj = set.v(obj,v)
+            if size(v,2)~=3
+                error('vertex list needs to have 3 columns')
+            end
+            obj.v = v;
+        end
+        
+        function obj = set.f(obj,f)
+            
+            obj.f = f;
+        end
+        
+        function TR = triangulate(obj)
+            TR = triangulation(obj.v,obj.f);
+        end
+        
+        
+        
+        
         
         function obj = linktosession(obj,Session)
             obj.session = Session;
@@ -32,6 +59,7 @@ classdef Obj <handle
         end
         
         function linktoregisterable(obj,R)
+            warning('Unfinished function')
             obj.registerable{end+1} = R;
             R.linktoobj(obj);
         end

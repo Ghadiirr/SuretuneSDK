@@ -1,4 +1,10 @@
 function R = addnewmesh(varargin)
+% ADDNEWMESH, a @Session function, adds an OBJ instance to a session
+%   Registerable = addnewmesh(obj,label,opacity,parent,T) returns a
+%   registerable
+%   addnewmesh() returns a description of the input and output arguments.
+%   
+%   see also MAKEMESH
 if nargin==1
     disp('input arguments should be: [object], label,opacity,parent,T')
     R = [];

@@ -23,12 +23,8 @@ classdef Session < handle_hidden
     %
     
     
-    
-    % * Hidden = private? --> private still shows up in methods list
-    % *
-    % * fullfile ipv [   \   ]
-    %  * 7zip niet hardcoded
-    
+
+%% properties    
     properties (Hidden = true)  %These properties are hidden to not bother the user.
         originalSessionData %The original XML file
         directory %Directory of the loaded XML file
@@ -52,7 +48,7 @@ classdef Session < handle_hidden
         patient
     end
     
-    %     methods(Hidden = true)  %These methods are hidden because they are called from within.
+%% methods hidden
     methods (Hidden = true)
         
         function addtolog(obj,varargin)
@@ -82,8 +78,9 @@ classdef Session < handle_hidden
         
     end
     
+    %% methods visible
+    
     methods
-        
         
         function obj = Session(varargin)
             % Constructor. No input is required. Creates an empty Session
@@ -110,6 +107,7 @@ classdef Session < handle_hidden
         
         
         
+  %% loading functions
         function loadxml(obj,pathName,fileName)
             % Input should be pathname and filename, otherwise a dialog
             % appears.
@@ -346,13 +344,11 @@ classdef Session < handle_hidden
         
         
         
-        %% Logging
+        %% deleted functions
         
         
         
-        
-        
-        %% Sessions
+     
         
         
         
@@ -368,7 +364,7 @@ classdef Session < handle_hidden
         %             obj.getSessions
         %         end
         
-        %% Datasets
+
         
         %             function listdatasets(obj)
         %             % Function may be obselete.
@@ -388,8 +384,7 @@ classdef Session < handle_hidden
         %             end
         %
         
-        
-        %% Set/Get
+
         
         %Name
         %             function setpatientname(obj,val)
@@ -419,9 +414,9 @@ classdef Session < handle_hidden
         %
         %             end
         
-        %             function val = getsessionname(obj)
-        %                 val = obj.sessionData.SureTune2Sessions.Session.id.Attributes.value;
-        %             end
+                    function val = getsessionname(obj)
+                        val = obj.sessionData.SureTune2Sessions.Session.id.Attributes.value;
+                    end
         
         
         %             %PatientID
@@ -494,49 +489,7 @@ classdef Session < handle_hidden
         %                 val = obj.ActiveDataset;
         %             end
         %
-        
-        
-        %Registerables
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        %leads
-        
-        
-        
-        
-        
-        
-        %Add New elements
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         
         
     end
