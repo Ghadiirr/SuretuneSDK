@@ -5,7 +5,7 @@ if isempty(obj.directory)
     warning('No Session was loaded')
     return
 end
-disp
+
 thisdir = pwd;
 cd(obj.directory)
 
