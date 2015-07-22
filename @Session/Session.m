@@ -37,6 +37,7 @@ classdef Session < handle_hidden
         updateXml = 0;
         sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = 'C:\MATLAB-Addons\Export\'; % Folder were sessions are exported.
+        homeFolder;
         
     end
     
@@ -103,6 +104,10 @@ classdef Session < handle_hidden
             if ~exist(obj.exportFolder,'dir')
                 mkdir(obj.exportFolder);
             end
+            
+            %add home folder
+            fullpath = mfilename('fullpath');
+            obj.homeFolder = fullpath(1:findstr(fullpath,'@Session')-2);
         end
         
         

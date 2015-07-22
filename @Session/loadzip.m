@@ -12,7 +12,7 @@ end
 
 
 %Unzip
-eval(['!C:/MATLAB-Addons/SDK/7za.exe x -bd -y ',file,' -o',file(1:end-4)]);
+eval(['!',fullfile(obj.homeFolder,'7za.exe'),' x -bd -y ',file,' -o',file(1:end-4)]);
 
 %Index Volumes
 obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));

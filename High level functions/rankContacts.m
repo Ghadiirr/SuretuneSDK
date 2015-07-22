@@ -10,7 +10,7 @@ atlasColorIndex = SDK_colorpicker('Anatomy: ');
 funcAtlasColorIndex = SDK_colorpicker('Atlas: ');
 
 
-for iWildcard = 4:4%numel(wildcards)
+for iWildcard = 7:7%numel(wildcards)
     
     % Load Session to matlab
     S = Session;
@@ -30,7 +30,7 @@ for iWildcard = 4:4%numel(wildcards)
     faces = convhull(fvCube.vertices);
     vertices = fvCube.vertices; %center around origin.
 
-    S.makeobj(vertices,faces,'bar.obj');
+    S.makemesh(vertices,faces,'bar.obj');
 %     colormap('hsv')
     cmap = SDK_redgreencolormap;
     

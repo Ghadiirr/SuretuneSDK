@@ -34,7 +34,7 @@ writetable(table,[obj.directory,'/Log.txt'],'Delimiter','\t')
 
 % Zip session:
 disp('Zipping Session...')
-eval('!C:/MATLAB-Addons/SDK/7za.exe a -tzip -r -bd -- session.zip '); %-xr@Log.txt -xr@OriginalSession.xml
+eval(['!',fullfile(obj.homeFolder,'7za.exe'),' a -tzip -r -bd -- session.zip ']); %-xr@Log.txt -xr@OriginalSession.xml
 
 
 %Import
