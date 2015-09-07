@@ -35,7 +35,7 @@ classdef Session < handle_hidden
         master %Registerable tree starts with this dataset
         echoLog = 1; %Flag: 1/0: do/don't echo logging to command window.
         updateXml = 0;
-        sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
+        sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = 'C:\MATLAB-Addons\Export\'; % Folder were sessions are exported.
         homeFolder;
         
@@ -253,8 +253,8 @@ classdef Session < handle_hidden
                     % Make a StimPlan Instance:
                     stimPlanObject = StimPlan(VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
                     
-                    %Add the therapy object to Lead.StimPlan{end+1}
-                    stimPlanObject.linktolead(leadObject)
+%                     %Add the therapy object to Lead.StimPlan{end+1}
+%                     stimPlanObject.linktolead(leadObject)
                     
                 end
             end
@@ -285,7 +285,9 @@ classdef Session < handle_hidden
         
         function loadmeshes(thisSession,folder)
             thisdir = pwd;
-            cd(folder)
+            try cd(folder);
+            catch disp([folder,' does not exist']);return
+            end
             
             
             

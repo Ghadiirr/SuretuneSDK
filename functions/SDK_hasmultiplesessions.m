@@ -12,7 +12,8 @@ if iscell(xml.SureTune2Sessions.Session)
     
     ids = ['\n'];
     for i = 1:numel(xml.SureTune2Sessions.Session)
-        ids = [ids,'\t* ',xml.SureTune2Sessions.Session{i}.id.Attributes.value,'\n'];
+        ids = [ids,'\t* ',xml.SureTune2Sessions.Session{i}.id.Attributes.value, '(',xml.SureTune2Sessions.Session{i}.lastSaved.Attributes.value,')\n'];
+        
     end
     text = ['The Sessionfile contains multiple sessions:',sprintf(ids),sprintf('\n Only the first session will be imported into matlab. Would you like to export all sessions to seperate files?')];
     

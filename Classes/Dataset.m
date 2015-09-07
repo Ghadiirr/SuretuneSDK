@@ -28,37 +28,50 @@ classdef Dataset < SessionComponent & Registerable
                 if numel(index)>1;index = index(1);end
                 obj.volume = obj.session.volumeStorage.list{index};
             end
-            
-            
-            
-            
+
         end
         
         
         
         function obj = set.label(obj,label)
-            %change object
+            S = obj.session;
+            if ~S.updateXml;obj.label = label;return;end
+            
+            if isempty(label)
+                label = 'NoLabel';
+            end
+            
+            if ~ischar(label)
+                error('Label has to be a string')
+            end
             obj.label = label;
             
             
 
-                SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
+             SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
                 
             
         end
         
-        function obj = set.volumeId(obj,VolumeId)
+        function obj = set.volumeId(obj,volumeId)
+            S = obj.session;
+            if ~S.updateXml;obj.volumeId = volumeId;return;end
+            
+            if ~ischar(volumeId)
+                warning('volumeId should be a string')
+            end
 
             %change object
-            obj.volumeId = VolumeId;
+            obj.volumeId = volumeId;
             
 
-                SDK_updatexml(obj.session,obj,'.volumeId.Attributes.value',VolumeId,'volumeId');
+                SDK_updatexml(obj.session,obj,'.volumeId.Attributes.value',volumeId,'volumeId');
             
         end
         
         function obj = set.id(obj,id)
-
+            S = obj.session;
+            if ~S.updateXml;obj.id = id;return;end
             
             %change object
             obj.id = id;
@@ -70,12 +83,18 @@ classdef Dataset < SessionComponent & Registerable
         end
         
         function obj = set.stf(obj,stf)
+            S = obj.session;
+            if ~S.updateXml;obj.stf = stf;return;end
+            
+            if strcmp(class(stf),'Stf')
+                warning('stf has to be an Stf object. >> stfObject = Stf(accepted,transform,type,localizerPoints)')
+            end
 
             
             %change object
             obj.stf = stf;
-            warning('Dataset set stf has to be made')
-           
+            
+           warning('Updating STF in xml has not been implemented yet')
             
             
             

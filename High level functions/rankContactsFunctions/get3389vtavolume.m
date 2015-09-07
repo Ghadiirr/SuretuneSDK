@@ -2,7 +2,7 @@ function [x, y, z, ScaledFieldDataV, IsolevelV]=get3389vtavolume(Amplitude, cont
 %% Load input arguments file
 
 % read inputArguments
-InputArguments = XML2struct('InputArguments.xml');
+InputArguments = XML2struct('InputArgumentsConventional.xml');
 handles.NumberOfContacts = str2double(InputArguments.Settings.NrOfElectrodes.Text);
 
 handles.GridSpacingX = str2double(InputArguments.Settings.GridSpacing.z.Text);

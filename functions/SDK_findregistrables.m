@@ -45,7 +45,7 @@ while level >=0
             if isstruct(current)
                 child = fieldnames(current);
 
-                if ~iscell(current.(child{1})) && ~strcmp(child,'Text') %if the the child is not a cell and not 'Text'
+                if ~iscell(current.(child{1})) && ~strcmp(child{1},'Text') %if the the child is not a cell and not 'Text'
                     eval([evalstr,'.',child{1},' = {current.(child{1})};']);
                 end
             end
@@ -226,6 +226,9 @@ end
 %% all registerables have been found. Now make objects
 
 %initiate with MASTER
+
+
+
 
 %Find index of master
 index = find(ismember({Regs{5,:}},'ROOT'));

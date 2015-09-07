@@ -1,6 +1,6 @@
 classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
-    %LEAD Summary of this class goes here
-    %   Detailed explanation goes here
+    %ImageBasedStructureSegmentation is a class belonging to @Session
+    %   this class is instantiated by Session.
     
     properties
         label
@@ -80,23 +80,40 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
         
         function obj = set.boundingBox(obj,boundingBox)
             obj.boundingBox = boundingBox;
-            warning('Bounding Box not yet supported')
+%             warning('Bounding Box not yet supported')
 %             %update the XML;
-%             SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',boundingBox,'boundingBox');
+            if ~isstruct(boundingBox)
+                warning('BoundingBox contains leftDown and/or rightUp')
+            end
+            if isfield(boundingBox,'leftDown')
+                block = SDK_vector2point3d( boundingBox.leftDown );
+                SDK_updatexml(obj.session,obj,'.boundingBox.BoundingBox.leftDown',block,'boundingBox leftDown');
+            end
+            if isfield(boundingBox,'rightUp')
+                block = SDK_vector2point3d( boundingBox.rightUp );
+                SDK_updatexml(obj.session,obj,'.boundingBox.BoundingBox.rightUp',block,'boundingBox rightUp');
+              
+            end
+
+            
         end
         
         function obj = set.includeSeeds(obj,includeSeeds)
             obj.includeSeeds = includeSeeds;
-            warning('IncludeSeeds not yet supported')
-            %update the XML;
-%             SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',includeSeeds,'includeSeeds');
+            
+            block = SDK_vector2point3d( includeSeeds );
+            %update the XML
+            SDK_updatexml(obj.session,obj,'.includeSeeds',block,'includeSeeds');
+
+           
         end
         
         function obj = set.excludeSeeds(obj,excludeSeeds)
             obj.excludeSeeds = excludeSeeds;
-            warning('ExcludeSeeds not yet supported')
-            %update the XML;
-%             SDK_updatexml(obj.session,obj,'.meshId.Attributes.value',excludeSeeds,'excludeSeeds');
+            
+            block = SDK_vector2point3d( excludeSeeds );
+            %update the XML
+            SDK_updatexml(obj.session,obj,'.excludeSeeds',block,'excludeSeeds');
         end
         
         

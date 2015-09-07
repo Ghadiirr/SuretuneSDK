@@ -45,9 +45,13 @@ uiwait(gcf)
    function setColor(source,eventdata,selectedcolor)
     uiresume(gcf)
     varargout{1} = selectedcolor-1;
+    
+
 
     close(gcf)
    end
 
-  
+      if nargout==2
+        varargout{2} = SDK_hex2rgb(colors(varargout{1}+1))/255;
+    end
 end

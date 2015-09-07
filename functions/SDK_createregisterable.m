@@ -106,7 +106,7 @@ switch RegType
         
         opacity = XML.opacity.Attributes.value;
         color = XML.color.Attributes.value;
-        contourStacks = XML.contourStacks.HashTable.ContourStack;
+        contourStacks = XML.contourStacks.HashTable;
         label = XML.label.Attributes.value;
         
         R = ManualStructureSegmentation(component_args, registerable_args,label,opacity,color,contourStacks);

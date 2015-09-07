@@ -1,6 +1,16 @@
 function R = addnewdataset(varargin)
+% ADDNEWDATASET is an @Session function. It adds a dataset to the
+% SessionObject.
+%   Dataset = SessionObject.addnewdataset(label,volumeId,Id,Stf,parent,T,volumeObject)
+%   * label: readable name/description of the volume like 'Pre T1'
+%   * volumeId: Unique name that refers to a volume folder
+%   * id: this is used for referencing.
+%   * Stf: referal to an STF object
+%   * parent: a registerable object (or its matlabId).
+%   * T: a 4x4 transformation matrix 
+%   * VolumeObject: an object containing voxeldata (init with vo = Volume)
 if nargin==1
-    disp('input arguments should be: [object], label,volumeId,Id,Stf,parent,T')
+    disp('input arguments should be: [object], label,volumeId,Id,Stf,parent,T,VolumeObject')
     R = [];
     return
 end
@@ -24,15 +34,16 @@ catch
 end
 path = [genericPath,'{',num2str(index),'}'];
 
+if ischar(parent)
+    %replace parent char with its object
+    namelist = obj.registerables.names;
+    parentindex = find(ismember(namelist,parent));
 
-%replace parent char with its object
-namelist = obj.registerables.names;
-parentindex = find(ismember(namelist,parent));
-
-if isempty(parentindex)
-    warning('Parent is not known. Mesh is added without correct reference')
-else
-    parent = obj.registerables.list{parentindex};
+    if isempty(parentindex)
+        warning('Parent is not known. Mesh is added without correct reference')
+    else
+        parent = obj.registerables.list{parentindex};
+    end
 end
 
 

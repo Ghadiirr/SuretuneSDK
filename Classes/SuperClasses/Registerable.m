@@ -47,7 +47,7 @@ classdef (Abstract) Registerable < handle
             % Initialize all registerables with trackChanges turned off. If
             % the registerable constructed trackChanges can be turned on.
             % This prevents echoing the original data.
-            S.updateXml = 0;  
+%             S.updateXml = 0;  
             obj.matlabId = matlabId;
             obj.accepted = accepted;
             obj.parent = parent;

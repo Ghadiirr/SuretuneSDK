@@ -1,4 +1,8 @@
 function import2suretune(obj)
+% IMPORT2SURETUNE is an @Session function. It sends a SessionInstance to
+% Suretune. This is a developers function and will probably be removed in
+% a future version.
+
 disp('Saving Files...')
 
 if isempty(obj.directory)

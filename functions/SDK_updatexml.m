@@ -17,8 +17,20 @@ catch
     oldValue = ' [nothing] ';
 end
 
-evalthis = [address,' = ''',num2str(newValue),''';'];
-eval(evalthis);
+
+
+
+if isstruct(newValue)
+    evalthis = [address,' = newValue;'];
+    eval(evalthis);
+    newValue = '[1x1 Structure]';
+    if isstruct(oldValue)
+        oldValue = '[1x1 Structure]';
+    end;
+else
+    evalthis = [address,' = ''',num2str(newValue),''';'];
+    eval(evalthis);
+end
 
 
 

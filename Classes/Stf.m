@@ -1,6 +1,6 @@
 classdef Stf < handle
-    %STF Summary of this class goes here
-    %   Detailed explanation goes here
+    %STF is a class belonging to @Session.
+    %   
     
     properties
         accepted

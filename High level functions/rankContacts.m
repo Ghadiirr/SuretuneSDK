@@ -10,8 +10,8 @@ atlasColorIndex = SDK_colorpicker('Anatomy: ');
 funcAtlasColorIndex = SDK_colorpicker('Atlas: ');
 
 
-for iWildcard = 7:7%numel(wildcards)
-    
+for iWildcard = 1:21%numel(wildcards)
+%     if iWildcard==7;continue;end
     % Load Session to matlab
     S = Session;
     S.importfromsuretune(['*',wildcards{iWildcard},'*']);
@@ -40,6 +40,9 @@ for iWildcard = 7:7%numel(wildcards)
     atlasRight = S.getregisterable('ID_AtlasRight');
     funcAtlasLeft = S.getregisterable('ID_Left.FuncAtlas_BestResponders');
     funcAtlasRight = S.getregisterable('ID_Right.FuncAtlas_BestResponders');
+%     funcAtlasLeft = S.getregisterable('ID_Left.FuncAtlas_PSM');
+%     funcAtlasRight = S.getregisterable('ID_Right.FuncAtlas_PSM');
+
     
     atlasLeft.color=atlasColorIndex;%'#E6E6D8';
     atlasLeft.opacity = 0.5;
@@ -176,7 +179,7 @@ for iWildcard = 7:7%numel(wildcards)
         bestScoreT(3,3) = 1.5;
         bestScoreT(1:3,4) = [0.5-1.5;0;iContact*2-0.75];
         contactPredictionStructure.addnewpart(['contact',num2str(iContact),'_bestContact'],'#ffffff',0.5,rotationMatrix*bestScoreT,'bar.obj')
-        
+        excelCell{excelCounter,7} = iContact;
         
         
         
@@ -187,4 +190,4 @@ for iWildcard = 7:7%numel(wildcards)
 end
 % Send session back to suretune
 
-% xlswrite('contactRanking.xls',excelCell)
+xlswrite('contactRanking2.xls',excelCell)

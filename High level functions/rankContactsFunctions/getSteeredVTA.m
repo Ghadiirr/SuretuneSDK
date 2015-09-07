@@ -1,8 +1,8 @@
 function [f,v]=getSteeredVTA(Amplitude, Degrees)
 %% Load input arguments file
-
+cd(fileparts(mfilename('fullpath')))
 % read inputArguments
-InputArguments = XML2struct('InputArguments.xml');
+InputArguments = XML2struct('InputArgumentsX5.xml');
 handles.NumberOfContacts = str2double(InputArguments.Settings.NrOfElectrodes.Text);
 
 handles.GridSpacingX = str2double(InputArguments.Settings.GridSpacing.z.Text);
@@ -23,7 +23,7 @@ handles.LeadModel = InputArguments.Settings.LeadModel.Text;
 %% load field from bin files
 
 % Generate filenames
-FileName = 'ExportedGridData.bin';
+FileName = 'ExportedGridDataX5.bin';
 
 % Open the files for a specific ring
 fileID = fopen(FileName);
@@ -64,7 +64,14 @@ IsolevelV = QueryThresholdTableVfieldSureStim1(...
 % 
 % %Rotate
 Rtest = rotationmat3D(deg2rad(direction),[0 0 1]);
-v=v*Rtest;
+
+%Flip anterior/posterior
+Rflip = eye(3);Rflip(2,2) = -1;
+try
+v=v*Rtest*Rflip;
+catch
+    disp('huh?')
+end
 
 
 %get to mm domain:

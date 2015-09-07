@@ -1,17 +1,19 @@
+NeuronSize = 'Medium';
+
 S = Session;
-S.importfromsuretune('*01*')
+S.importfromsuretune('*FAME01*')
 % S.getSessionFromDicom('session1.dcm')
 
 
 %Get the volume of activation in T2 Space
-dataset = S.getregisterable;  %I know that the T2 image is the second registerable in the session.
+dataset = S.getregisterable;  %choose "2" in the dialog for T2 image
 
 %Get the stimulation plans
 stimplanlist = S.therapyPlanStorage;
 
 
 
-
+% for each stimplan make a volume
 for iStimPlan = 1:numel(stimplanlist)
     thisStimPlan = stimplanlist{iStimPlan};
     
@@ -19,22 +21,21 @@ for iStimPlan = 1:numel(stimplanlist)
     thisLead = thisStimPlan.lead;
     
     %get transformation matrix from leadspace to T2 space
-    [T]  = S.gettransformfromto(thisLead,dataset);
+    T  = S.gettransformfromto(thisLead,dataset);
     
     %get the VTA for middle-sized neurons
-    indexOfMediumAxons = 2;
-    vta = thisStimPlan.vta.list{indexOfMediumAxons};
+    vta = thisStimPlan.vta.(NeuronSize);
     
     
-    %Convert VTA-volume to F annd V
+    %Convert VTA-volume to FV
     [x,y,z] = vta.getmeshgrid;
     voxelArray = vta.voxelArray;
     fv = isosurface(x,y,z,voxelArray,0.5);
     
     %transform the coordinates of the vertices
-    verts = [fv.vertices,ones(size(fv.vertices,1),1)];
-    vertsT2Space = verts*T; %row multiplication, so transposed T
-    fv.vertices = vertsT2Space(:,1:3);
+%     verts = [fv.vertices,ones(size(fv.vertices,1),1)];
+%     vertsT2Space = verts*T; %row multiplication, so transposed T
+    fv.vertices = SDK_transform3d(fv.vertices,T);%vertsT2Space(:,1:3);
     
     
     %Use mesh voxelation to generate a binary volume in T2 space
@@ -43,7 +44,7 @@ for iStimPlan = 1:numel(stimplanlist)
     
     %Make a new volume with this data
     t2VolumeInfo = dataset.volume.volumeInfo; %take the volumeInfo from the t2dataset
-    t2VolumeInfo.id = 'VTAinCT'; %change the Id
+    t2VolumeInfo.id = 'VNAinCT'; %change the Id
     v = Volume;  
     v.newvolume(t2VolumeInfo,gridOUTPUT,S)  %
     

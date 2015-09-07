@@ -1,4 +1,4 @@
-classdef Volume <handle
+classdef Volume <handle_hidden
     %VOLUME Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -37,9 +37,18 @@ classdef Volume <handle
         end
         
         function newvolume(obj,volumeInfo,voxelArray,session)
-            obj.volumeInfo = volumeInfo;
+            if nargin<4
+                disp('newvolume([obj],volumeInfo,voxelArray,session)')
+                disp('If volumeInfo is not [], blanc volumeInfo structure is replaced')
+                return
+            end
+            if ~isempty(volumeInfo)
+                obj.volumeInfo = volumeInfo;
+            end
             obj.voxelArray = voxelArray;
-            obj.session = session;
+            if ~isempty(session)
+                obj.linktosession(session)
+            end
         end
         
         
@@ -310,7 +319,12 @@ classdef Volume <handle
             nii = makenifti(img, voxel_size, origin, 4, obj.volumeInfo.patientId);
             %                     thisdir = pwd;
             
-            exportfolder = obj.session.exportFolder;
+            if  isempty(obj.session)
+                warning('Volume Object is not linked to a session. In order to save, please select a directory')
+                exportfolder = uigetdir();
+            else
+                exportfolder = obj.session.exportFolder;
+            end
             cd(exportfolder)
             name = ['nii_',obj.volumeInfo.id];
             [~,~]=mkdir(name)
