@@ -276,7 +276,11 @@ while nochanges < size(Regs,2)
             
             
             %make registerable object
-            registerable = SDK_createregisterable(obj,Regs{:,index});
+            try
+                registerable = SDK_createregisterable(obj,Regs{:,index});
+            catch
+                registerable = [];
+            end
             
             if ~isempty(registerable)
                 R.list{elnr} = registerable;

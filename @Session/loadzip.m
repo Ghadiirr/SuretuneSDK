@@ -15,9 +15,13 @@ if nargin==1;
     file = fullfile(pathName,fileName);
 end
 
+if ~exist(fullfile(obj.homeFolder,'thirdParty','7za.exe'))
+    error('7zip could not be found!')
+end
+
 
 %Unzip
-eval(['!',fullfile(obj.homeFolder,'7za.exe'),' x -bd -y ',file,' -o',file(1:end-4)]);
+eval(['!"',fullfile(obj.homeFolder,'thirdParty','7za.exe"'),' x -bd -y ',file,' -o',file(1:end-4)]);
 
 obj.updateXml = 0;
 %Index Volumes

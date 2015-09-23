@@ -210,6 +210,9 @@ classdef Session < handle_hidden
                 %find thislead in the sessiondata
                 [names,types] = obj.listregisterables;
                 leadNames = names(ismember(types,'Lead'));
+                if numel(leadNames)==0
+                    return
+                end
                 
                 %Find Lead Object
                 leadObject = obj.getregisterable(leadNames{~cellfun(@isempty,strfind(leadNames,thisLead))});

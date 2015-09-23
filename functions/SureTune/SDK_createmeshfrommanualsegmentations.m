@@ -27,8 +27,8 @@ concavefaces = concavetest(points,convhull(points));
 % mesh.patch
 
 % 
-face_output = swapedges(points,concavefaces,0.5);
-mesh = Obj(points,face_output,'temp');
+% face_output = swapedges(points,concavefaces,0.5);
+mesh = Obj(points,concavefaces,'temp');
 
 
 figure;

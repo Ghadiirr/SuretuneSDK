@@ -151,12 +151,7 @@ classdef Volume <handle_hidden
             
             %save thumbnail
             imwrite(obj.thumbnail,[folder,'/thumbnail.png'],'png')
-            
-            
-            
-            
-            
-            
+           
         end
         
         
@@ -316,7 +311,11 @@ classdef Volume <handle_hidden
             voxel_size = obj.volumeInfo.spacing;
             origin = obj.volumeInfo.origin;
             
-            nii = makenifti(img, voxel_size, origin, 4, obj.volumeInfo.patientId);
+            if (~exist('make_nii.m'))
+                error('Nifti toolbox could not be found.')
+            end
+            
+            nii = make_nii(img, voxel_size, origin, 4, obj.volumeInfo.patientId);
             %                     thisdir = pwd;
             
             if  isempty(obj.session)
@@ -326,9 +325,14 @@ classdef Volume <handle_hidden
                 exportfolder = obj.session.exportFolder;
             end
             cd(exportfolder)
-            name = ['nii_',obj.volumeInfo.id];
-            [~,~]=mkdir(name)
-            cd(name)
+            if strcmp(obj.volumeInfo.modality,'MR')
+                
+                name = 'anat.nii';
+            elseif strcmp(obj.volumeInfo.modality,'CT')
+                name = 'postop_ct.nii';
+            end
+            [~,~]=mkdir(obj.volumeInfo.patientId);
+            cd(obj.volumeInfo.patientId)
             save_nii(nii,name)
             
             
