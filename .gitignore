@@ -1,4 +1,10 @@
 import
 output
 *.asv
+*.pdf
+*.bin
+*.exe
+*.zip
+*.rar
+
 
