@@ -66,7 +66,7 @@ classdef Lead < SessionComponent & Registerable
             obj.label = label;
             
             %update the XML
-            SDK_updatexml(S,obj,'.label.Attributes.value',label,'lead label');
+%             SDK_updatexml(S,obj,'.label.Attributes.value',label,'lead label');
             
             
         end

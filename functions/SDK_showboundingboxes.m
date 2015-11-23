@@ -24,7 +24,14 @@ for iReg = 1:numel(allRegNames)
             thisReg = obj.getregisterable(allRegNames{iReg});
             
             thisTransform = obj.gettransformroot(thisReg);
-            thisBoundingBox = thisReg.volume.getboundingbox';
+            try
+            thisBoundingBox = thisReg.volume.getboundingbox;
+            catch
+                disp(['Dataset with label ',thisReg.label,' has no bounding box'])
+                continue
+            end
+            thisBoundingBox = [thisBoundingBox.leftDown,thisBoundingBox.rightUp]';
+            
             
                         % construct vertices
             vertices = zeros(8,3);

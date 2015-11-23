@@ -116,6 +116,24 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
             SDK_updatexml(obj.session,obj,'.excludeSeeds',block,'excludeSeeds');
         end
         
+        function newObj = computeobj(obj)
+            bb = obj.boundingBox;
+            V = obj.parent.volume;
+            cropped = V.getcroppedvolume(bb);
+            [X,Y,Z] = cropped.getndgrid;
+            Z = Z/10;
+            
+            threshold  = (str2double(obj.threshold) - str2double(cropped.volumeInfo.rescaleIntercept))*str2double(cropped.volumeInfo.rescaleSlope);
+            
+
+            FV = isosurface(X,Y,Z,smooth3(flip(cropped.voxelArray)),threshold);
+            v = FV.vertices;
+            v(:,3) = v(:,3)*10;
+            newObj = Obj(v,FV.faces,'');
+
+            
+        end
+        
         
         
         

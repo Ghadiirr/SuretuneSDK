@@ -29,12 +29,13 @@ classdef Patient < SessionComponent
             S = obj.session;
             if ~S.updateXml;obj.name = name; return;end
             
-            %change the value in the object
-            obj.name = name;
-            
-            %update the XML
-            SDK_updatexml(S,obj,'.name.Attributes.value',name,'patient name');
-            
+            if SDK_readabledialog(obj.session)
+                %change the value in the object
+                obj.name = name;
+                
+                %update the XML
+                SDK_updatexml(S,obj,'.name.Attributes.value',name,'patient name');
+            end
             
         end
         
@@ -43,11 +44,14 @@ classdef Patient < SessionComponent
             S = obj.session;
             if ~S.updateXml;obj.patientID = patientID; return;end
             
-            %change the value in the object
-            obj.patientID = patientID;
-            
-            %update the XML
-            SDK_updatexml(S,obj,'.patientID.Attributes.value',patientID,'patient ID');
+            if SDK_readabledialog(obj.session)
+                %change the value in the object
+                obj.patientID = patientID;
+                
+                
+                %update the XML
+                SDK_updatexml(S,obj,'.patientID.Attributes.value',patientID,'patient ID');
+            end
         end
         
         

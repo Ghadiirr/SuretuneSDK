@@ -41,7 +41,7 @@ classdef Obj < handle
             
             obj.f = f;
         end
-              
+        
         
         
         
@@ -53,7 +53,8 @@ classdef Obj < handle
         end
         
         function savetofolder(obj,folder)
-            vertface2obj(obj.v,obj.f,[folder,'/',obj.fileName]);
+            [~,~] = mkdir(folder);
+            vertface2obj(obj.v,obj.f,fullfile(folder,obj.fileName));
         end
         
         function linktoregisterable(obj,R)
@@ -64,9 +65,9 @@ classdef Obj < handle
         
         function handle = patch(obj,varargin)
             if numel(varargin)==0
-
-                    varargin{1} = 'FaceColor'; varargin{2} = 'r';
-
+                
+                varargin{1} = 'FaceColor'; varargin{2} = 'r';
+                
             end
             handle = patch('Vertices', obj.v, 'Faces', obj.f,varargin{:} );
             axis vis3d equal
@@ -79,19 +80,19 @@ classdef Obj < handle
             lighting phong
             rotate3d
             
-            hold on
-            triangles = obj.gettriangulation;
-            P = incenter(triangles);
-            fn = faceNormal(triangles);
-            vn = vertexNormal(triangles);
-            P2 = triangles.Points;
-            quiver3(P(:,1),P(:,2),P(:,3), ...
-            fn(:,1),fn(:,2),fn(:,3),0.5, 'color','k');
-        
-                    quiver3(P2(:,1),P2(:,2),P2(:,3), ...
-            vn(:,1),vn(:,2),vn(:,3),0.5, 'color','r');
+            %             hold on
+            %             triangles = obj.gettriangulation;
+            %             P = incenter(triangles);
+            %             fn = faceNormal(triangles);
+            %             vn = vertexNormal(triangles);
+            %             P2 = triangles.Points;
+            %             quiver3(P(:,1),P(:,2),P(:,3), ...
+            %             fn(:,1),fn(:,2),fn(:,3),0.5, 'color','k');
+            %
+            %                     quiver3(P2(:,1),P2(:,2),P2(:,3), ...
+            %             vn(:,1),vn(:,2),vn(:,3),0.5, 'color','r');
             
-           
+            
         end
         
         function centerOfGravity = computecenterofgravity(obj,precision)
@@ -99,7 +100,7 @@ classdef Obj < handle
                 error('VOXELISE.m cannot be found. Make sure to add the Mesh_Voxelisation toolbox to your path')
             end
             
-            % Define a boundingBox 
+            % Define a boundingBox
             leftDown = min(obj.v);
             rightUp = max(obj.v);
             
@@ -122,19 +123,19 @@ classdef Obj < handle
             centerOfGravityVoxel = [mean(x),mean(y),mean(z)];
             centerOfGravity = round(centerOfGravityVoxel+leftDown/precision)*precision;
             disp('done.')
-              
+            
         end
         
         function TR = gettriangulation(obj)
             
             TR = triangulation(obj.f,obj.v);
-
+            
             
         end
         
         function subdividesurface(obj,maxmaxedge,maxnumvertices,buldge)
             [v,f] = SDK_subdividesurface(obj,maxmaxedge,maxnumvertices,8,buldge);
-%             [v,f] = SDK_smoothedges(obj,p1,p2,8,0.7);
+            %             [v,f] = SDK_smoothedges(obj,p1,p2,8,0.7);
             obj.v= v;
             obj.f = f;
             patch(obj)
@@ -142,7 +143,7 @@ classdef Obj < handle
         
         function simultaneoussubdividesurface(obj,maxmaxedge,maxnumvertices,buldge)
             [v,f] = SDK_simultaneoussubdividesurface(obj,maxmaxedge,maxnumvertices,8,buldge);
-%             [v,f] = SDK_smoothedges(obj,p1,p2,8,0.7);
+            %             [v,f] = SDK_smoothedges(obj,p1,p2,8,0.7);
             obj.v= v;
             obj.f = f;
             patch(obj)
@@ -150,7 +151,7 @@ classdef Obj < handle
         
         function simultaneoussubdividesurface_angle(obj,maxmaxedge,maxnumvertices,buldge)
             [v,f] = SDK_simultaneoussubdividesurface_angle(obj,maxmaxedge,maxnumvertices,8,buldge);
-%             [v,f] = SDK_smoothedges(obj,p1,p2,8,0.7);
+            %             [v,f] = SDK_smoothedges(obj,p1,p2,8,0.7);
             obj.v= v;
             obj.f = f;
             patch(obj)
@@ -168,11 +169,11 @@ classdef Obj < handle
                 thisVertex = vertexcoordinates(iVertex,:);
                 thisVertexNormal = vertexnormals(iVertex,:);
                 
-
+                
                 
                 totalsum = 0;
                 totalweight = 0;
-            
+                
                 
                 for iAttachment = 1:numel(attachments)
                     % get the normal
@@ -197,7 +198,7 @@ classdef Obj < handle
                     %update sum
                     totalsum = totalsum+(angle*weight);
                     totalweight = totalweight+weight;
-
+                    
                 end
                 
                 strains(iVertex) = totalsum;%/totalweight;
@@ -207,10 +208,10 @@ classdef Obj < handle
                 
             end
         end
-            
-            
-            
-              
+        
+        
+        
+        
         
         
     end

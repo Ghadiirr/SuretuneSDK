@@ -3,8 +3,8 @@ function [ changes ] = SDK_removecomments( folder,file )
 %   Detailed explanation goes here
         
     
-    fin = fopen([folder,file]);
-    fout = fopen([folder,file(1:end-4),'_nocomments',file(end-3:end)],'w+');
+    fin = fopen(fullfile(folder,file));
+    fout = fopen(fullfile(folder,[file(1:end-4),'_nocomments',file(end-3:end)]),'w+');
 
     changes = 0;
     
@@ -26,7 +26,7 @@ function [ changes ] = SDK_removecomments( folder,file )
     fclose(fout);
     
     if ~changes
-        delete([folder,file(1:end-4),'_nocomments',file(end-3:end)])
+        delete(fullfile(folder,[file(1:end-4),'_nocomments',file(end-3:end)]))
     end
 
 

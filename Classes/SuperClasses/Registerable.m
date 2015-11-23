@@ -174,6 +174,14 @@ classdef (Abstract) Registerable < handle
                 error('T has to be a 4x4 matrix')
             end
             
+                        
+            if all(transform(1:3,4) == [0;0;0]) && any(not(transform(4,1:3)==[0,0,0]))
+                %                 disp('[transposed transformation matrix]')
+                obj.session.addtolog('[transposed transformation matrix]')
+                transform = transform';
+                Tarray = reshape(transform,[1,16]);
+            end
+            
             
             %change the value in the object
             obj.transform = transform;
@@ -184,6 +192,8 @@ classdef (Abstract) Registerable < handle
             %--update its log
             
             XML_names = {'m11','m12','m13','m14','m21','m22','m23','m24','m31','m32','m33','m34','ox','oy','oz','m44'};
+        
+            
             
             if S.updateXml
                 for i = 1:16

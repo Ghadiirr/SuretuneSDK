@@ -36,8 +36,9 @@ classdef Session < handle_hidden
         echoLog = 1; %Flag: 1/0: do/don't echo logging to command window.
         updateXml = 0;
         sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
-        exportFolder = 'C:\MATLAB-Addons\Export\'; % Folder were sessions are exported.
+        exportFolder = fullfile('C:','MATLAB-Addons','Export'); % Folder were sessions are exported.
         homeFolder;
+        readable = 1;
         
     end
     
@@ -127,14 +128,14 @@ classdef Session < handle_hidden
             end
             
             %load xml
-            loadedXml = SDK_xml2struct([pathName,fileName]);
+            loadedXml = SDK_xml2struct(fullfile(pathName,fileName));
             
             % Check for any comments (they may obstruct XML parsing)
             if SDK_removecomments(pathName,fileName);
                 
                 % Comments have been removed. Load session:
                 fileName = [fileName(1:end-4),'_nocomments',fileName(end-3:end)];
-                loadedXml = SDK_xml2struct([pathName,fileName]);
+                loadedXml = SDK_xml2struct(fullfile(pathName,fileName));
             end
             
             % Check if there is only one Session. Otherwise throw warning.
@@ -179,8 +180,13 @@ classdef Session < handle_hidden
             thisdir = pwd;
             
             % Browse to therapy folders:
+            try
             cd(sessiondir)
             cd('Sessions')
+            catch
+                disp('could not find a Session directory')
+            end
+           
             
             if exist(obj.getsessionname(),'dir')
                 cd(obj.getsessionname());
@@ -190,7 +196,7 @@ classdef Session < handle_hidden
                 return;
             end
             
-            if exist([pwd,'/Leads'],'dir')
+            if exist(fullfile(pwd,'Leads'),'dir')
                 cd('Leads')
             else
                 disp('No TherapyPlans for this session');
@@ -243,7 +249,7 @@ classdef Session < handle_hidden
                     
                     
                     % Get the Stimplan data from therapyXML:
-                    VTA = obj.loadvta([thisLead,'\',thisPlan]);
+                    VTA = obj.loadvta(fullfile(thisLead,thisPlan));
                     label = thisPlan;
                     voltageBasedStimulation = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.voltageBasedStimulation.Attributes.value;
                     stimulationValue = str2double(therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.stimulationValue.Attributes.value);
@@ -328,7 +334,10 @@ classdef Session < handle_hidden
         
         function loadvolumes(thisSession,folder)
             thisDir = pwd;
-            cd(folder)
+            if ~exist(folder)
+                error('Volumes folder could not be found. Most likely something went wrong with unpacking the session file.')
+            end
+                cd(folder)
             
             
             volumeFolders = SDK_subfolders();

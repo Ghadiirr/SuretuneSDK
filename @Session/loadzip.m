@@ -21,7 +21,13 @@ end
 
 
 %Unzip
-eval(['!"',fullfile(obj.homeFolder,'thirdParty','7za.exe"'),' x -bd -y ',file,' -o',file(1:end-4)]);
+if ispc
+    eval(['!"',fullfile(obj.homeFolder,'thirdParty','7za.exe"'),' x -bd -y "',file,'" -o"',file(1:end-4),'"']);
+elseif isunix
+    eval(['!"',fullfile(obj.homeFolder,'thirdParty','unar"'),file,' -f -o',file(1:end-4)]);    
+else
+    error('Operating system is not supported')
+end
 
 obj.updateXml = 0;
 %Index Volumes
@@ -31,7 +37,7 @@ obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));
 obj.loadmeshes(fullfile(file(1:end-4),'Meshes'));
 
 %Load XML
-obj.loadxml([file(1:end-4),'\'],'SureTune2Sessions.xml')
+obj.loadxml(file(1:end-4),'SureTune2Sessions.xml')
 
 %Load Stimplans
 obj.loadtherapyplans(file(1:end-4));

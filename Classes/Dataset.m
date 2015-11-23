@@ -28,7 +28,7 @@ classdef Dataset < SessionComponent & Registerable
                 if numel(index)>1;index = index(1);end
                 obj.volume = obj.session.volumeStorage.list{index};
             end
-
+            
         end
         
         
@@ -47,9 +47,9 @@ classdef Dataset < SessionComponent & Registerable
             obj.label = label;
             
             
-
-             SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
-                
+            
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
+            
             
         end
         
@@ -60,12 +60,13 @@ classdef Dataset < SessionComponent & Registerable
             if ~ischar(volumeId)
                 warning('volumeId should be a string')
             end
-
-            %change object
-            obj.volumeId = volumeId;
             
-
+            if SDK_readabledialog(obj.session)
+                
+                %change object
+                obj.volumeId = volumeId;
                 SDK_updatexml(obj.session,obj,'.volumeId.Attributes.value',volumeId,'volumeId');
+            end
             
         end
         
@@ -76,8 +77,8 @@ classdef Dataset < SessionComponent & Registerable
             %change object
             obj.id = id;
             
-
-                SDK_updatexml(obj.session,obj,'.Attributes.id',id,'id for reference');
+            
+            SDK_updatexml(obj.session,obj,'.Attributes.id',id,'id for reference');
             
             
         end
@@ -89,12 +90,12 @@ classdef Dataset < SessionComponent & Registerable
             if strcmp(class(stf),'Stf')
                 warning('stf has to be an Stf object. >> stfObject = Stf(accepted,transform,type,localizerPoints)')
             end
-
+            
             
             %change object
             obj.stf = stf;
             
-           warning('Updating STF in xml has not been implemented yet')
+            warning('Updating STF in xml has not been implemented yet')
             
             
             

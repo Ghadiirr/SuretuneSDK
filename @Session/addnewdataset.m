@@ -47,8 +47,10 @@ if ischar(parent)
 end
 
 
+
+
 component_args = {path,obj};
-registerable_args = {parent,T,1,label}; %set accepted to true
+registerable_args = {parent,T,0,label}; %set accepted to true
 
 
 %Make dummy elements in XML
@@ -78,6 +80,14 @@ obj.volumeStorage.names{end+1} = label;
 obj.volumeStorage.list{end+1} = vObject;
 
 R = Dataset(component_args, registerable_args,label,volumeId,Id,stf);
+
+%Verify if a masterdatset is selected
+if any(ismember(fieldnames(obj.sessionData.SureTune2Sessions.Session.masterDataset),'Null'))
+    obj.sessionData.SureTune2Sessions.Session.masterDataset = [];
+    obj.sessionData.SureTune2Sessions.Session.masterDataset.ref.Attributes.id = parent.id;
+    obj.sessionData.SureTune2Sessions.Session.masterDataset.ref.Text = [];
+end
+    
 
 
 %Add to registerable list

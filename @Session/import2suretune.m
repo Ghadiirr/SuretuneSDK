@@ -23,18 +23,18 @@ for iMesh = 1:numel(obj.meshStorage.list);
     obj.meshStorage.list{iMesh}.savetofolder('Meshes')
     
     % Also save the mesh to meshstorage:
-    vertface2obj( obj.meshStorage.list{iMesh}.v, obj.meshStorage.list{iMesh}.f,[obj.sureTune,'MeshStorage/',obj.meshStorage.list{iMesh}.fileName])
+    vertface2obj( obj.meshStorage.list{iMesh}.v, obj.meshStorage.list{iMesh}.f,fullfile(obj.sureTune,'MeshStorage',obj.meshStorage.list{iMesh}.fileName))
 end
 
 % Save new Volumes
 for iVolume = 1:numel(obj.volumeStorage.list);
     
-    obj.volumeStorage.list{iVolume}.savetofolder(['Volumes/',obj.volumeStorage.names{iVolume}]);
+    obj.volumeStorage.list{iVolume}.savetofolder(fullfile('Volumes',obj.volumeStorage.names{iVolume}));
 end
 
 % Export log
 table = cell2table(obj.log,'VariableNames',{'datetime','action'});
-writetable(table,[obj.directory,'/Log.txt'],'Delimiter','\t')
+writetable(table,fullfile(obj.directory,'Log.txt'),'Delimiter','\t')
 
 % Zip session:
 disp('Zipping Session...')

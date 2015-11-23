@@ -29,13 +29,13 @@ voxelArray=spm_read_vols(niiFile);
 whiteValue = max(voxelArray_dcm(:));
 rescaleSlope = whiteValue/65535;
 
-[~,~,~] = mkdir(filePath,[fileName,'_SureTune\']);
-ExportBin(voxelArray_dcm,[filePath,fileName,'_SureTune\VoxelArray.bin'],rescaleSlope);  
+[~,~,~] = mkdir(filePath,[fileName,'_SureTune']);
+ExportBin(voxelArray_dcm,fullfile(filePath,[fileName,'_SureTune'],'VoxelArray.bin'),rescaleSlope);  
 
 %Generate InputArguments XML file
 XML = SDK_CreateXML(volumeOrientation_dcm,volumeDimensions, fileName, 1);
 %Save xml
-struct2xml(XML,[filePath,'\',fileName,'_SureTune\volume.xml']);
+struct2xml(XML,fullfile(filePath,[fileName,'_SureTune'],'volume.xml'));
 
 
 cd(filePath)
