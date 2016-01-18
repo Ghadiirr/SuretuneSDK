@@ -3,7 +3,11 @@ function [  ] = listen( obj )
 %   Detailed explanation goes here
 
 thisdir = fileparts(mfilename('fullpath'));
-exedir = fullfile(thisdir(1:strfind(thisdir,'@')-1),'thirdParty','Network','storescp');
+if ~exist(fullfile(obj.homeFolder,'thirdParty','Network'))
+    disp('Network add-on is not installed.')
+    return
+end
+exedir = fullfile(obj.homeFolder,'thirdParty','Network','storescp');
 
 
 
@@ -20,6 +24,9 @@ eval(['!',exedir,' -v 3010 -xcr "pskill storescp"']);
 
 filename = dir('RAW*');
 obj.loadsession(fullfile(pwd,filename.name))
+
+cd(obj.homeFolder);
+rmdir(tempfoldername,'s'); %also remove subdirs
 
 
 

@@ -41,7 +41,7 @@ if choice > numel(networkconfig.recipient)
     networkconfig.recipient(idx).label = input('Label: ','s');
     networkconfig.recipient(idx).id = input('IP: ','s');
     networkconfig.recipient(idx).port = input('Port: ');
-    save('networkconfig')
+    save(fullfile(obj.homeFolder,'@Session','networkconfig'),'networkconfig')
 end
 
 

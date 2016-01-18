@@ -15,16 +15,10 @@ if ischar(parent)
     if ~isempty(strfind(upper(parent),'ACPC'))
         T = T*parent.transform;
         parent = parent.parent;
-    end
-else
-    try
-        supercl = superclasses(parent);
-        if any(ismember(supercl,'SessionComponent'));
-            T = T*parent.transform;
-            parent = parent.parent;
-        end
-    end
-    
+    end  
+% elseif isa(parent,'ImportedStructure')
+%     T = T*parent.transform;
+%     parent = parent.parent;
     
 end
 %% Make ImportedStructure

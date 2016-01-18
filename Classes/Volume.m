@@ -9,7 +9,8 @@ classdef Volume <handle_hidden
     end
     
     properties (Hidden = true)
-        unsaved = 1;
+        modified = 1;
+        seriesInfo
         session
     end
     methods
@@ -57,7 +58,7 @@ classdef Volume <handle_hidden
             thisdir = pwd;
             %set unsaved to 0, because the volume is not created within
             %MATLAB
-            obj.unsaved = 0;
+            obj.modified = 0;
             
             if nargin == 1
                 
@@ -80,7 +81,7 @@ classdef Volume <handle_hidden
                 %repeat reading with new file
                 filename = 'volumeInfo_nocomments.xml';
                 xml = SDK_xml2struct(fullfile(pathname,filename));
-                disp('removed comments')
+%                 disp('removed comments')
             end
             
             
@@ -115,6 +116,17 @@ classdef Volume <handle_hidden
             
             obj.volumeInfo = I;
             
+           if isfield(xml.Volume.seriesInfo,'SeriesInfo')
+            obj.seriesInfo = xml.Volume.seriesInfo.SeriesInfo;
+           else
+               obj.seriesInfo = [];
+           end
+       
+            
+            
+            %Also read the remaining bits:
+            
+            
             
             
             
@@ -127,7 +139,9 @@ classdef Volume <handle_hidden
             obj.voxelArray = reshape(file,[I.dimensions(1),I.dimensions(2),I.dimensions(3)]);
             
             %check if thumbnail exists:
-            if exist(fullfile(pathname,'thumbnail.png'),'file' ) ~= 2
+            if exist(fullfile(pathname,'thumbnail.png'),'file' )==2
+                obj.thumbnail = imread(fullfile(pathname,'thumbnail.png'));
+            else
                 import = load('thumbnail.mat');
                 obj.thumbnail=import.thumbnail;
                 
@@ -140,7 +154,9 @@ classdef Volume <handle_hidden
         end
         
         function savetofolder(obj,folder)
-            %             if ~obj.unsaved;return;end;
+%             if ~obj.modified;
+%                 return;
+%             end;
             
             %save the voxel array
             [~,~] = mkdir(folder);
@@ -229,27 +245,31 @@ classdef Volume <handle_hidden
             V.generationRecipe.Attributes.value = 'MATLAB SDK';
             
             %%%SeriesInfo
-            S.seriesDate.Null = [];
-            
-            S.seriesNumber.Attributes.type = 'Int';
-            S.seriesNumber.Attributes.value = '0';
-            
-            S.seriesDescription.Null =[];
-            
-            S.modality.Attributes.type = 'String';
-            S.modality.Attributes.value = 'MR';
-            
-            S.studyDate.Attributes.type = 'DateTime';
-            S.studyDate.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
-            
-            S.studyDescription.Attributes.type = 'String';
-            S.studyDescription.Attributes.value = 'MATLAB import';
-            S.studyInstanceUid.Attributes.type = 'String';
-            S.studyInstanceUid.Attributes.value = 'MATLAB import';    %Nummer generator
-            S.seriesInstanceUid.Attributes.type = 'String';
-            S.seriesInstanceUid.Attributes.value = strrep(datestr(datetime),' ','_');
-            S.frameOfReferenceUid.Attributes.type = 'String';
-            S.frameOfReferenceUid.Attributes.value = 'Unknown';
+            if ~isempty(obj.seriesInfo)
+                S = obj.seriesInfo;
+            else
+                S.seriesDate.Null = [];
+
+                S.seriesNumber.Attributes.type = 'Int';
+                S.seriesNumber.Attributes.value = '0';
+
+                S.seriesDescription.Null =[];
+
+                S.modality.Attributes.type = 'String';
+                S.modality.Attributes.value = 'MR';
+
+                S.studyDate.Attributes.type = 'DateTime';
+                S.studyDate.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
+
+                S.studyDescription.Attributes.type = 'String';
+                S.studyDescription.Attributes.value = 'MATLAB import';
+                S.studyInstanceUid.Attributes.type = 'String';
+                S.studyInstanceUid.Attributes.value = 'MATLAB import';    %Nummer generator
+                S.seriesInstanceUid.Attributes.type = 'String';
+                S.seriesInstanceUid.Attributes.value = strrep(datestr(datetime),' ','_');
+                S.frameOfReferenceUid.Attributes.type = 'String';
+                S.frameOfReferenceUid.Attributes.value = 'Unknown';
+            end
             
             %%%patientinfo
             p.name.Attributes.type = 'String';

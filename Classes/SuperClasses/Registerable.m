@@ -10,7 +10,7 @@ classdef (Abstract) Registerable < handle
     end
     
     properties (Hidden = true)
-%         trackChanges
+        %         trackChanges
     end
     
     methods
@@ -47,13 +47,13 @@ classdef (Abstract) Registerable < handle
             % Initialize all registerables with trackChanges turned off. If
             % the registerable constructed trackChanges can be turned on.
             % This prevents echoing the original data.
-%             S.updateXml = 0;  
+            %             S.updateXml = 0;
             obj.matlabId = matlabId;
             obj.accepted = accepted;
             obj.parent = parent;
             obj.transform = transform;
             
-
+            
             %             obj.session = instance;
         end
         
@@ -68,7 +68,7 @@ classdef (Abstract) Registerable < handle
         function obj = set.accepted(obj,accepted)
             
             S = obj.session;
-              if ~S.updateXml;obj.accepted=accepted;return;end
+            if ~S.updateXml;obj.accepted=accepted;return;end
             
             switch class(accepted)
                 case 'logical'
@@ -109,7 +109,7 @@ classdef (Abstract) Registerable < handle
                 SDK_updatexml(S,obj,'.accepted.Attributes.value',newval,'accepted state');
             end
             
-
+            
             
             
         end
@@ -121,7 +121,7 @@ classdef (Abstract) Registerable < handle
             %  does it match with a registerable?
             
             S = obj.session;
-%             if ~S.updateXml;obj.parent=newParent;return;end
+            %             if ~S.updateXml;obj.parent=newParent;return;end
             
             
             if ischar(newParent);
@@ -154,19 +154,19 @@ classdef (Abstract) Registerable < handle
             %-- get the Session.
             S = obj.session;
             %--update its log
-
+            
             if S.updateXml;
                 SDK_updatexml(S,obj,'.parent.ref.Attributes.id',newParent,'Parent');
             end
-
-           
+            
+            
             
         end
         
         function obj = set.transform(obj,transform)
             
             S = obj.session;
-              if ~S.updateXml;obj.transform=transform;return;end
+            if ~S.updateXml;obj.transform=transform;return;end
             
             if ismatrix(transform) && numel(transform)==16
                 Tarray = reshape(transform,[1,16]);
@@ -174,7 +174,13 @@ classdef (Abstract) Registerable < handle
                 error('T has to be a 4x4 matrix')
             end
             
-                        
+            
+            
+            
+            
+            %change the value in the object
+            obj.transform = transform;
+            
             if all(transform(1:3,4) == [0;0;0]) && any(not(transform(4,1:3)==[0,0,0]))
                 %                 disp('[transposed transformation matrix]')
                 obj.session.addtolog('[transposed transformation matrix]')
@@ -182,9 +188,9 @@ classdef (Abstract) Registerable < handle
                 Tarray = reshape(transform,[1,16]);
             end
             
-            
-            %change the value in the object
-            obj.transform = transform;
+            if any(transform(1:3,4)) && any(transform(4,1:3))
+                obj.session.addtolog('[!!!!!!!!Invalid transformation matrix!!!!!!!!!!]')
+            end
             
             %write it in the log.
             %-- get the Session.
@@ -192,7 +198,7 @@ classdef (Abstract) Registerable < handle
             %--update its log
             
             XML_names = {'m11','m12','m13','m14','m21','m22','m23','m24','m31','m32','m33','m34','ox','oy','oz','m44'};
-        
+            
             
             
             if S.updateXml

@@ -240,7 +240,7 @@ classdef Session < handle_hidden
                     %find the correct one.
                     stimPlanIndex = 0;
                     for iStimPlan = 1:numel(therapyXml.stimPlans.Array.StimPlan)
-                        if strcmp(therapyXml.stimPlans.Array.StimPlan{iStimPlan}.label.Attributes.value,thisPlan)
+                        if strcmp(strrep(therapyXml.stimPlans.Array.StimPlan{iStimPlan}.label.Attributes.value,'.','_'),thisPlan)
                             stimPlanIndex = iStimPlan;
                             continue;
                         end
