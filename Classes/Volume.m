@@ -81,7 +81,7 @@ classdef Volume <handle_hidden
                 %repeat reading with new file
                 filename = 'volumeInfo_nocomments.xml';
                 xml = SDK_xml2struct(fullfile(pathname,filename));
-%                 disp('removed comments')
+                %                 disp('removed comments')
             end
             
             
@@ -98,30 +98,26 @@ classdef Volume <handle_hidden
             I.rescaleIntercept =xml.Volume.volumeInfo.VolumeInfo.rescaleIntercept.Attributes.value;
             I.scanDirection = xml.Volume.volumeInfo.VolumeInfo.scanDirection.Enum.Attributes.value;
             I.imageType = xml.Volume.volumeInfo.VolumeInfo.imageType.Enum.Attributes.value;
-            try
-                I.seriesNumber= xml.Volume.seriesInfo.SeriesInfo.seriesNumber.Attributes.value;
-                I.modality = xml.Volume.seriesInfo.SeriesInfo.modality.Attributes.value;
-                I.name = xml.Volume.patientInfo.PatientInfo.name.Attributes.value;
-                I.patientId = xml.Volume.patientInfo.PatientInfo.patientID.Attributes.value;
-                I.gender = xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value;
-                I.dateofbirth = xml.Volume.patientInfo.PatientInfo.dateOfBirth.Attributes.value;
-            catch
-                I.seriesNumber = [];
-                I.modality = [];
-                I.name = [];
-                I.patientId = [];
-                I.gender = [];
-                I.dateofbirth = [];
-            end
+            I.generateionRecipe = xml.Volume.volumeInfo.VolumeInfo.generationRecipe;
+            I.acquisitionDateTime = trytoget('xml.Volume.volumeInfo.VolumeInfo.acquisitionDateTime.Attributes.value','1900-01-01T00:00:00.0000000');
+            I.instanceNumbers = trytoget('xml.Volume.volumeInfo.VolumeInfo.instanceNumbers.IntArray.Text');
+            I.seriesNumber= trytoget('xml.Volume.seriesInfo.SeriesInfo.seriesNumber.Attributes.value');
+            I.modality = trytoget('xml.Volume.seriesInfo.SeriesInfo.modality.Attributes.value');
+            I.name = trytoget('xml.Volume.patientInfo.PatientInfo.name.Attributes.value');
+            I.patientId = trytoget('xml.Volume.patientInfo.PatientInfo.patientID.Attributes.value');
+            I.gender = trytoget('xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value');
+            I.dateofbirth = trytoget('xml.Volume.patientInfo.PatientInfo.dateOfBirth.Attributes.value','1900-01-01T00:00:00.0000000');
             
             obj.volumeInfo = I;
             
-           if isfield(xml.Volume.seriesInfo,'SeriesInfo')
-            obj.seriesInfo = xml.Volume.seriesInfo.SeriesInfo;
-           else
-               obj.seriesInfo = [];
-           end
-       
+            if isfield(xml.Volume.seriesInfo,'SeriesInfo')
+                obj.seriesInfo = xml.Volume.seriesInfo.SeriesInfo;
+            else
+                obj.seriesInfo = [];
+            end
+            
+            
+            
             
             
             %Also read the remaining bits:
@@ -148,15 +144,25 @@ classdef Volume <handle_hidden
             end
             
             
+            function value = trytoget(inputstring, default)
+                if nargin ==1
+                    default = [];
+                end
+                try value = eval(inputstring);
+                catch
+                    value = default;
+                end
+            end
+            
             
             
             
         end
         
         function savetofolder(obj,folder)
-%             if ~obj.modified;
-%                 return;
-%             end;
+            %             if ~obj.modified;
+            %                 return;
+            %             end;
             
             %save the voxel array
             [~,~] = mkdir(folder);
@@ -218,7 +224,7 @@ classdef Volume <handle_hidden
             
             %scanDirection
             V.scanDirection.Enum.Attributes.type='ScanDirection';
-            V.scanDirection.Enum.Attributes.value = 'Axial';
+            V.scanDirection.Enum.Attributes.value = I.scanDirection;
             
             %PatientOrientation
             V.patientOrientationX.Vector3D.Attributes.x = '1';
@@ -231,36 +237,36 @@ classdef Volume <handle_hidden
             
             %ImageType
             V.imageType.Enum.Attributes.type = 'ImageType';
-            V.imageType.Enum.Attributes.value = 'MR';
+            V.imageType.Enum.Attributes.value = I.imageType;
             
             %instanceNumbers
-            V.instanceNumbers.IntArray.Text = 1;
+            V.instanceNumbers.IntArray.Text = I.instanceNumbers ;
             
             %acquisitionDatetime
             V.acquisitionDateTime.Attributes.type = 'DateTime';
-            V.acquisitionDateTime.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
+            V.acquisitionDateTime.Attributes.value = I.acquisitionDateTime; %[SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
             
             
             V.generationRecipe.Attributes.type = 'String';
-            V.generationRecipe.Attributes.value = 'MATLAB SDK';
+            V.generationRecipe.Attributes.value = '';
             
             %%%SeriesInfo
             if ~isempty(obj.seriesInfo)
                 S = obj.seriesInfo;
             else
                 S.seriesDate.Null = [];
-
+                
                 S.seriesNumber.Attributes.type = 'Int';
                 S.seriesNumber.Attributes.value = '0';
-
+                
                 S.seriesDescription.Null =[];
-
+                
                 S.modality.Attributes.type = 'String';
                 S.modality.Attributes.value = 'MR';
-
+                
                 S.studyDate.Attributes.type = 'DateTime';
                 S.studyDate.Attributes.value = [SDK_datestr8601(clock,'*ymdHMS'),'.0000000'];
-
+                
                 S.studyDescription.Attributes.type = 'String';
                 S.studyDescription.Attributes.value = 'MATLAB import';
                 S.studyInstanceUid.Attributes.type = 'String';
@@ -289,7 +295,7 @@ classdef Volume <handle_hidden
             end
             
             p.gender.Enum.Attributes.type = 'GenderType';
-            p.gender.Enum.Attributes.value = 'Unknown';
+            p.gender.Enum.Attributes.value = I.gender;
             
             
             XML.Volume.volumeInfo.VolumeInfo = V;
@@ -311,7 +317,7 @@ classdef Volume <handle_hidden
         end
         
         function [x,y,z] = getndgrid(obj)
-                        dimensions = obj.volumeInfo.dimensions;
+            dimensions = obj.volumeInfo.dimensions;
             spacing = obj.volumeInfo.spacing;
             origin = obj.volumeInfo.origin;
             
@@ -483,19 +489,19 @@ classdef Volume <handle_hidden
                 
                 
             end
-                %if there are any numbers with a decimal, it is assumed
-                %that it is a 3D coordinate that has to be converted to a
-                %voxelindex
-                
-                if any(mod(leftdown,1)) || any(mod(rightup,1))
-                    leftdown_i = SDK_transform3d(leftdown,obj.gettransformtovoxelindices);
-                    rightup_i = SDK_transform3d(rightup,obj.gettransformtovoxelindices);
-                else
-                    leftdown_i = leftdown;
-                    rightup_i = rightup;
-                end
-                
-
+            %if there are any numbers with a decimal, it is assumed
+            %that it is a 3D coordinate that has to be converted to a
+            %voxelindex
+            
+            if any(mod(leftdown,1)) || any(mod(rightup,1))
+                leftdown_i = SDK_transform3d(leftdown,obj.gettransformtovoxelindices);
+                rightup_i = SDK_transform3d(rightup,obj.gettransformtovoxelindices);
+            else
+                leftdown_i = leftdown;
+                rightup_i = rightup;
+            end
+            
+            
             
             all = [leftdown_i;rightup_i];
             all = sort(all);
@@ -515,7 +521,7 @@ classdef Volume <handle_hidden
                 leftdown_i(1):rightup_i(1),...
                 leftdown_i(2):rightup_i(2),...
                 leftdown_i(3):rightup_i(3));
-                
+            
             croppedVolume = Volume;
             croppedVolume.volumeInfo = obj.volumeInfo;
             croppedVolume.voxelArray = newVoxelArray;

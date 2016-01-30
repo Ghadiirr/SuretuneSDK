@@ -147,6 +147,7 @@ classdef (Abstract) Registerable < handle
                 end
             end
             
+            
             %change the value in the object
             obj.parent = parentobj;
             
