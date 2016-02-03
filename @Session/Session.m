@@ -21,11 +21,7 @@ classdef Session < handle_hidden
     %       > Refers to a Volume Instance describing the VTA
     %
     %
-    
-    % Hallo Jonas
-    % 
-    
-    % Goeiemorgen
+
 
 %% properties    
     properties (Hidden = true)  %These properties are hidden to not bother the user.
