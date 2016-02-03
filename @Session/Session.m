@@ -24,6 +24,7 @@ classdef Session < handle_hidden
     
     % Hallo Jonas
     
+    % Goeiemorgen
 
 %% properties    
     properties (Hidden = true)  %These properties are hidden to not bother the user.
