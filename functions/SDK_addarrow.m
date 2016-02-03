@@ -42,7 +42,7 @@ wobjcone = read_wobj(['cone.obj']);
     Tarrow = eye(4);
     %rotation:
     z1 = SDK_unitvector(endVector - startVector)';
-    y1 = cross(z1,[1 1 1]');
+    y1 = cross(z1,SDK_unitvector([1 1 1])');
     x1 = cross(y1,z1);
     Tarrow(1:3,1:3) = [x1,y1,z1];
 %     Tarrow(4,1:3) = startVector;

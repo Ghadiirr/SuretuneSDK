@@ -16,7 +16,6 @@ classdef Volume <handle_hidden
     methods
         
         function Obj = Volume()
-            
             I.id = 'Noid';
             I.dimensions = [0 0 0];
             I.spacing = [0 0 0];
@@ -68,13 +67,15 @@ classdef Volume <handle_hidden
                     disp('Aborted by user')
                     return
                 end
+                
+                
             elseif nargin ~= 2
                 error('Invalid Input')
             end
             
             
             %load xml
-            xml = SDK_xml2struct(fullfile(pathname,'volumeInfo.xml'));
+            xml = SDK_xml2struct(pathname,'volumeInfo.xml'));
             
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(pathname,'volumeInfo.xml');

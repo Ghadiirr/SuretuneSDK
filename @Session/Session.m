@@ -28,17 +28,17 @@ classdef Session < handle_hidden
     properties (Hidden = true)  %These properties are hidden to not bother the user.
         originalSessionData %The original XML file
         directory %Directory of the loaded XML file
-        log %Changes are logged
-        %         ActiveSession = 1;
+        log
         activeDataset = 1;
         registerables %List of all Registerables
         master %Registerable tree starts with this dataset
-        echoLog = 1; %Flag: 1/0: do/don't echo logging to command window.
         updateXml = 0;
         sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = fullfile('C:','MATLAB-Addons','Export'); % Folder were sessions are exported.
         homeFolder;
-        readable = 1;
+        developerFlags %See line 115
+        
+        
         
     end
     
@@ -59,7 +59,7 @@ classdef Session < handle_hidden
             obj.log{end+1,1} = datestr(datetime);
             obj.log{end,2} = sprintf(varargin{:});
             
-            if ~obj.echoLog;return;end;
+            if ~obj.developerFlags.echoLog;return;end;
             fprintf([sprintf(varargin{:}),'\n']);
         end
         
@@ -109,6 +109,12 @@ classdef Session < handle_hidden
             %add home folder
             fullpath = mfilename('fullpath');
             obj.homeFolder = fullpath(1:findstr(fullpath,'@Session')-2);
+            
+            %developerFlags
+            obj.developerFlags.readable = 1;
+            obj.developerFlags.echoLog = 1; %Flag: 1/0: do/don't echo logging to command window.
+            obj.developerFlags.loadVolumes = 1;
+            
         end
         
         
@@ -188,7 +194,7 @@ classdef Session < handle_hidden
             end
            
             
-            if exist(obj.getsessionname(),'dir')
+            if exist(fullfile(pwd,obj.getsessionname()),'dir')
                 cd(obj.getsessionname());
             else
                 disp('No TherapyPlans for this session')
@@ -215,13 +221,20 @@ classdef Session < handle_hidden
                 
                 %find thislead in the sessiondata
                 [names,types] = obj.listregisterables;
-                leadNames = names(ismember(types,'Lead'));
+                leadIds = names(ismember(types,'Lead'));
+                
+                leadNames = {};
+                for leadId = 1:numel(leadIds)
+                    leadNames{leadId} = obj.getregisterable(leadIds{leadId}).label;
+                end
+                
                 if numel(leadNames)==0
                     return
                 end
                 
                 %Find Lead Object
-                leadObject = obj.getregisterable(leadNames{~cellfun(@isempty,strfind(leadNames,thisLead))});
+                
+                leadObject = obj.getregisterable(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))});
                 
                 
                 therapyPlanFolders = SDK_subfolders(thisLead);

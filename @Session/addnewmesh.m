@@ -42,15 +42,15 @@ end
 % check if the parent obj is of acpcih-class, in that case; use it's parent
 % as a parent.
 
-if isa(parent,'ACPCIH')
-    obj.addtolog('[avoided ACPC --> chose parent instead]')
-    disp(T)
-    T = T*parent.transform;
-    disp(T)
-    
-    parent = parent.parent;
-
-end
+% if isa(parent,'ACPCIH')
+%     obj.addtolog('[avoided ACPC --> chose parent instead]')
+%     disp(T)
+%     T = T*parent.transform;
+%     disp(T)
+%     
+%     parent = parent.parent;
+% 
+% end
 
 
 component_args = {path,obj};

@@ -31,7 +31,9 @@ end
 
 obj.updateXml = 0;
 %Index Volumes
-obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));
+if obj.developerFlags.loadVolumes
+    obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));
+end
 
 %Load Meshes
 obj.loadmeshes(fullfile(file(1:end-4),'Meshes'));
