@@ -37,8 +37,6 @@ dataset = S.getregisterable(datasetId);
     [gridOUTPUT] = VOXELISE(gridX,gridY,gridZ,fv,'xyz');
     
     
-    
-      
 
     %gridOUTPUT should be flipped left<->right and anterior<->superior
     gridOUTPUT = flip(gridOUTPUT,1);

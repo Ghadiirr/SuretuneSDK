@@ -19,7 +19,7 @@ fileName = 'MATLABinput.zip';
 cd(obj.sureTune)
 if exist(fileName,'file');delete(fileName);end
 if exist('MATLABinput','dir');rmdir('MATLABinput','s');end
-eval(['!SureplanArchive.exe /noencryption /patientname "',wildcard,'" /exportsessions ',fileName])
+eval(['!SuretuneArchive.exe /noencryption /patientname "',wildcard,'" /exportsessions ',fileName])
 
 obj.loadzip(fullfile(obj.sureTune,fileName))
 

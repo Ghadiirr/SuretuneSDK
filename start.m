@@ -11,7 +11,18 @@ if exist(fullfile(installationdir,'thirdParty','7za.exe.mdt'))
             fullfile(installationdir,'thirdParty','7za.exe'));
 end
 
+if exist(fullfile(installationdir,'thirdParty','Network','storescp.mdt'))
+    movefile(fullfile(installationdir,'thirdParty','Network','storescp.mdt'),...
+            fullfile(installationdir,'thirdParty','Network','storescp.exe'));
+end
+
+if exist(fullfile(installationdir,'thirdParty','Network','pskill.mdt'))
+    movefile(fullfile(installationdir,'thirdParty','Network','pskill.mdt'),...
+            fullfile(installationdir,'thirdParty','Network','pskill.exe'));
+end
+
+
 loadSDK
-% VNA2NIFTI_GUI
+VNA2NIFTI_GUI
 
 

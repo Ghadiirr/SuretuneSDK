@@ -31,10 +31,14 @@ end
 
 obj.updateXml = 0;
 %Index Volumes
-obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));
+if obj.developerFlags.loadVolumes
+    obj.loadvolumes(fullfile(file(1:end-4),'Volumes'));
+end
 
 %Load Meshes
 obj.loadmeshes(fullfile(file(1:end-4),'Meshes'));
+
+
 
 %Load XML
 obj.loadxml(file(1:end-4),'SureTune2Sessions.xml')
@@ -45,6 +49,7 @@ obj.loadtherapyplans(file(1:end-4));
 %Load Manual Segmentations
 %Load Meshes
 obj.loadmeshes(fullfile(file(1:end-4),'Sessions',obj.getsessionname,'Segmentations'));
+
 
 
 obj.updateXml = 1;

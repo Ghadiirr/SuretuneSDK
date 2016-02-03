@@ -20,14 +20,14 @@ cd(tempfoldername)
 
 %% Start listening
 disp('Listening...')
-eval(['! "',exedir,'"  -v 3010 -xcr "pskill storescp"']);
-%ORG: eval(['! ',exedir,'  -v 3010 -xcr "pskill storescp"']);
+eval(['!',exedir,' -v 3010 -xcr "pskill storescp"']);
 
 filename = dir('RAW*');
 obj.loadsession(fullfile(pwd,filename.name))
 
 cd(obj.homeFolder);
-rmdir(tempfoldername,'s');
+rmdir(tempfoldername,'s'); %also remove subdirs
+
 
 
 
