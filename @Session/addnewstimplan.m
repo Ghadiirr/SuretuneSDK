@@ -144,7 +144,7 @@ A.annotation.Attributes.value = annotation;
 SP = StimPlan(vta,lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
 
 %add to XML
-eval([path,' = A'])
+eval([path,' = A;'])
 
 
         
