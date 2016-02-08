@@ -75,7 +75,7 @@ classdef Volume <handle_hidden
             
             
             %load xml
-            xml = SDK_xml2struct(pathname,'volumeInfo.xml');
+            xml = SDK_xml2struct(fullfile(pathname,'volumeInfo.xml'));
             
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(pathname,'volumeInfo.xml');

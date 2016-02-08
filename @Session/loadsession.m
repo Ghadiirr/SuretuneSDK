@@ -1,9 +1,9 @@
-function loadsession(obj,file )
+function loadsession(obj,file)
 % LOADSEDSSION is a @Session function. It loads a zipped Session inside a DICOM to MATLAB.
 %   [] = SessionObject.loadsession()  <-- throws uigetfile dialog
 %   [] = SessionObject.loadsession(path)  <-- skips dialog
 %
-%   
+%
 
 %get PathName
 if nargin==1;
@@ -15,21 +15,15 @@ if nargin==1;
         return
     end
     file = fullfile(pathName,fileName);
-    
 end
 
-disp('Loading file..')
 
+
+disp('Loading file..')
 obj.loadzip(file)
 
-% Delete created folder
 disp('Deleting temporary folder...')
 [path, filename, ~] = fileparts(file);
-
-rmpath(genpath([path,'\',filename,'\']))
-rmdir([path,'\',filename,'\'],'s')
-
-
-
-disp('Done')
+[~,~] = rmdir(fullfile(path,filename),'s');
+cd(path);
 end
