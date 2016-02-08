@@ -1,4 +1,4 @@
-function loadsession(obj,file, includeVolumes, delFolderAfterLoading )
+function loadsession(obj,file, includeVolumes )
 % LOADSEDSSION is a @Session function. It loads a zipped Session inside a DICOM to MATLAB.
 %   [] = SessionObject.loadsession()  <-- throws uigetfile dialog
 %   [] = SessionObject.loadsession(path)  <-- skips dialog
@@ -8,8 +8,6 @@ function loadsession(obj,file, includeVolumes, delFolderAfterLoading )
 %get PathName
 if nargin==1;
     
-    
-   
     startingfolder = SDK_detectexternaldrive('load');
     [fileName,pathName] = uigetfile({'*.dcm;*.zip','SureTune Session Files (*.dcm,*.zip)'}, 'Pick a file',startingfolder);
     if not(fileName)
@@ -18,23 +16,15 @@ if nargin==1;
     end
     file = fullfile(pathName,fileName);
     
-% -- STEFAN EDIT
     includeVolumes = 1;
-    delFolderAfterLoading = 1;
+    
 elseif nargin==2
     includeVolumes = 1;
-    delFolderAfterLoading = 1;
-elseif nargin==3
-    delFolderAfterLoading = 1;
-    
-% -/- STEFAN EDIT
-    
     
 end
-
+    
 disp('Loading file..')
 
-% -- STEFAN EDIT
 obj.loadzip(file,includeVolumes)
 
 % Delete created folder
@@ -45,10 +35,6 @@ if delFolderAfterLoading ==1
     rmpath(genpath([path,'\',filename,'\']))
     rmdir([path,'\',filename,'\'],'s')
 end
-
-
-% -- STEFAN EDIT
-% obj.loadzip(file)
 
 disp('Done')
 end
