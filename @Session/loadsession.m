@@ -34,6 +34,7 @@ if delFolderAfterLoading ==1
     
     rmpath(genpath([path,'\',filename,'\']))
     rmdir([path,'\',filename,'\'],'s')
+    
 end
 
 disp('Done')
