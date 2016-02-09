@@ -32,7 +32,7 @@ classdef Session < handle_hidden
         registerables %List of all Registerables
         master %Registerable tree starts with this dataset
         updateXml = 0;
-        sureTune = 'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
+        sureTune = 'C:\Documents\Repos\SureTune\SureSuite\Output\'; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = fullfile('C:','MATLAB-Addons','Export'); % Folder were sessions are exported.
         homeFolder;
         developerFlags %See line 115
@@ -56,7 +56,7 @@ classdef Session < handle_hidden
             % varargin should be a cell array with strings
             
             obj.log{end+1,1} = datestr(datetime);
-            obj.log{end,2} = sprintf(varargin{:});
+            obj.log{end,2} = sprintf('%s ',varargin{:});
             
             if ~obj.developerFlags.echoLog;return;end;
             fprintf([sprintf(varargin{:}),'\n']);
@@ -131,16 +131,17 @@ classdef Session < handle_hidden
             elseif nargin~=3
                 error('Invalid Input')
             end
+            fullFileName = fullfile(pathName,fileName);
             
-            %load xml
-            loadedXml = SDK_xml2struct(fullfile(pathName,fileName));
-            
-            % Check for any comments (they may obstruct XML parsing)
-            if SDK_removecomments(pathName,fileName);
-                
-                % Comments have been removed. Load session:
-                fileName = [fileName(1:end-4),'_nocomments',fileName(end-3:end)];
-                loadedXml = SDK_xml2struct(fullfile(pathName,fileName));
+            %load xml          
+            % Check for any comments (they may obstruct XML parsing
+            if SDK_removecomments(fullFileName);
+              % Reading with new file          
+              fullFileName = [fullFileName(1:end-4),'_nocomments.xml'];
+              loadedXml = SDK_xml2struct(fullFileName);
+              disp('removed comments')
+            else
+              loadedXml = SDK_xml2struct(fullFileName);  
             end
             
             % Check if there is only one Session. Otherwise throw warning.
@@ -151,7 +152,7 @@ classdef Session < handle_hidden
             %add properties to object
             obj.originalSessionData = loadedXml;
             obj.sessionData = loadedXml;
-            obj.log = {datestr(datetime),['Load file:',pathName,fileName]};
+            obj.log = {datestr(datetime),['Load file:',fullFileName]};
             obj.directory = pathName;
             
             %print session Info

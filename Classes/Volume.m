@@ -75,8 +75,7 @@ classdef Volume <handle_hidden
             
             
             %load xml
-            xml = SDK_xml2struct(fullfile(pathname,'volumeInfo.xml'));
-            
+            fullFileName = fullfile(pathname,'volumeInfo.xml');          
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(pathname,'volumeInfo.xml');
                 %repeat reading with new file
@@ -88,12 +87,12 @@ classdef Volume <handle_hidden
             
             %extract data from xml:
             I.id = xml.Volume.volumeInfo.VolumeInfo.volumeIdentifier.Attributes.value;
-            I.dimensions = [str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nx.Attributes.value),...
-                str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.ny.Attributes.value),...
-                str2num(xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nz.Attributes.value)];
-            I.spacing = [str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sx.Attributes.value),...
-                str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sy.Attributes.value),...
-                str2num(xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sz.Attributes.value)];
+            I.dimensions = str2num([xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nx.Attributes.value ','...
+                xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.ny.Attributes.value ','...
+                xml.Volume.volumeInfo.VolumeInfo.dimension.Dimensions3d.nz.Attributes.value]); %#ok<ST2NM>
+            I.spacing = str2num([xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sx.Attributes.value ','...
+                xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sy.Attributes.value ','...
+                xml.Volume.volumeInfo.VolumeInfo.spacing.Spacing3d.sz.Attributes.value]); %#ok<ST2NM>
             I.origin = SDK_point3d2vector(xml.Volume.volumeInfo.VolumeInfo.origin.Point3D);
             I.rescaleSlope = xml.Volume.volumeInfo.VolumeInfo.rescaleSlope.Attributes.value;
             I.rescaleIntercept =xml.Volume.volumeInfo.VolumeInfo.rescaleIntercept.Attributes.value;
@@ -133,7 +132,7 @@ classdef Volume <handle_hidden
             fclose(fid);
             
             %reshape according to volumeInfo
-            obj.voxelArray = reshape(file,[I.dimensions(1),I.dimensions(2),I.dimensions(3)]);
+            obj.voxelArray = reshape(file,I.dimensions);
             
             %check if thumbnail exists:
             if exist(fullfile(pathname,'thumbnail.png'),'file' )==2

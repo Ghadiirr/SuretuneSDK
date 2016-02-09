@@ -250,9 +250,7 @@ while nochanges < size(Regs,2)
     
     
     %Check if current name is unique
-    nameindex = find(ismember(R.names,thisName));
-    
-    if isempty(nameindex) %unique
+    if  ~any(ismember(R.names,thisName))
         
         %check if parent already exists
         if ~ischar(Regs{5,index}) %if it is not a char, it must have been replaced with its parent already.
@@ -260,6 +258,7 @@ while nochanges < size(Regs,2)
         end
         
         parentName = strrep(Regs{5,index},' ','');
+        % MAJ: What if the child comes before the parent in Regs???
         parentindex = find(ismember(R.names,parentName));
         
         if isempty(parentindex)%parent does not exist
