@@ -9,24 +9,6 @@ ObjInstance = Obj(V,F,[label,'.obj']);
 ObjInstance.linktosession(obj);
 
 
-
-%% check parent
-if ischar(parent)
-    if ~isempty(strfind(upper(parent),'ACPC'))
-        T = T*parent.transform;
-        parent = parent.parent;
-    end
-else
-    try
-        supercl = superclasses(parent);
-        if any(ismember(supercl,'SessionComponent'));
-            T = T*parent.transform;
-            parent = parent.parent;
-        end
-    end
-    
-    
-end
 %% Make ImportedStructure
 
 %determine XML path

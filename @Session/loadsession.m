@@ -3,7 +3,7 @@ function loadsession(obj,file)
 %   [] = SessionObject.loadsession()  <-- throws uigetfile dialog
 %   [] = SessionObject.loadsession(path)  <-- skips dialog
 %
-%   
+%
 
 %get PathName
 if nargin==1;
@@ -17,7 +17,13 @@ if nargin==1;
     file = fullfile(pathName,fileName);
 end
 
+
+
 disp('Loading file..')
 obj.loadzip(file)
 
+disp('Deleting temporary folder...')
+[path, filename, ~] = fileparts(file);
+[~,~] = rmdir(fullfile(path,filename),'s');
+cd(path);
 end

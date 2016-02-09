@@ -37,7 +37,7 @@ writetable(table,fullfile('Log.txt'),'Delimiter','\t')
 
 % Zip session:
 disp('Zipping Session...')
-eval(['!',fullfile(obj.homeFolder,'thirdParty','7za.exe'),' a -tzip -r -bd -- session.zip ']); %-xr@Log.txt -xr@OriginalSession.xml
+eval(['! "',fullfile(obj.homeFolder,'thirdParty','7za.exe'),'" a -tzip -r -bd -- session.zip ']); %-xr@Log.txt -xr@OriginalSession.xml
 
 SDK_embedzipindicom(obj,tempfoldername);
 

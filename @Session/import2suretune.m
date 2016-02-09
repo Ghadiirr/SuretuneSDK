@@ -38,14 +38,14 @@ writetable(table,fullfile(obj.directory,'Log.txt'),'Delimiter','\t')
 
 % Zip session:
 disp('Zipping Session...')
-eval(['!',fullfile(obj.homeFolder,'7za.exe'),' a -tzip -r -bd -- session.zip ']); %-xr@Log.txt -xr@OriginalSession.xml
+eval(['!',fullfile(obj.homeFolder,'thirdParty','7za.exe'),' a -tzip -r -bd -- session.zip ']); %-xr@Log.txt -xr@OriginalSession.xml
 
 
 %Import
 disp('Importing Session To SureTune')
 cd(obj.sureTune)
 fclose all;
-eval(['!SureplanArchive.exe /noencryption /importsessions ',obj.directory,'session.zip'])
+eval(['!SuretuneArchive.exe /noencryption /importsessions ',fullfile(obj.directory,'session.zip')])
 cd(thisdir)
 
 end

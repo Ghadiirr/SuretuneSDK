@@ -34,6 +34,13 @@ switch class(name)
     case 'logical'
         ii = name;
         name = 'logicals';
+    otherwise
+        if any(ismember(superclasses(name),'Registerable'))
+            ii = find(ismember(obj.registerables.names,name.matlabId));
+            name = 'Registerable';
+        end
+        
+        
 end
 
 
