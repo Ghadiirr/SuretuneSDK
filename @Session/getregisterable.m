@@ -28,7 +28,7 @@ switch class(name)
     case 'double'
         ii = name;
         name = '';
-    case 'array'
+    case 'array'   % MAJ: class array doesn't exist in Matlab
         ii = name;
         name = 'array';
     case 'logical'
