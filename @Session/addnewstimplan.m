@@ -72,6 +72,7 @@ if ~ischar(pulseFrequency)
 end
 
 if ~ischar(activeRings) || ~numel(activeRings)==7
+    if isa(activeRings,'double') || isa(activeRings,'logical')
     error('activeRings should be 0 0 0 0 or 1 0 0 0 or 1 1 0 0 or any other string consisting of 4 booleans separated by spaces')
 end
 
