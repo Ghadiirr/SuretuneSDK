@@ -3,7 +3,7 @@ classdef Volume <handle_hidden
     %   Detailed explanation goes here
     
     properties
-        voxelArray3
+        voxelArray
         volumeInfo
         thumbnail
     end
