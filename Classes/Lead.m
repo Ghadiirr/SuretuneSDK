@@ -57,16 +57,16 @@ classdef Lead < SessionComponent & Registerable
         
         function obj = set.label(obj,label)
             S = obj.session;
-            if ~S.updateXml;obj.label = label; return;end
+            if ~S.updateXml;obj.label = label;return;end
             
-            if not(ischar(label));error('label has to be a string');end
+            %Check compatibility with STU
+            label = obj.CC_label(label);
             
-
-            %change the value in the object
+            %Update Object
             obj.label = label;
             
-            %update the XML
-%             SDK_updatexml(S,obj,'.label.Attributes.value',label,'lead label');
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label')
             
             
         end

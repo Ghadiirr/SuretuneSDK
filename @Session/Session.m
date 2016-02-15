@@ -113,6 +113,7 @@ classdef Session < handle_hidden
             obj.developerFlags.readable = 1;
             obj.developerFlags.echoLog = 1; %Flag: 1/0: do/don't echo logging to command window.
             obj.developerFlags.loadVolumes = 1;
+            obj.developerFlags.skipWarning = 0;
             
         end
         

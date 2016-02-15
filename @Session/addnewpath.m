@@ -15,20 +15,24 @@ if nargin==1
     return
 end
 
-Error('Function has not been made...')
+% Error('Function has not been made...')
 
 obj= varargin{1};
 label = varargin{2};
-volumeId = varargin{3};
-Id = varargin{4};
-stf = varargin{5};
-parent = varargin{6};
-T = varargin{7};
-vObject = varargin{8};
+target = varargin{3};
+entry = varargin{4};
+parent = varargin{5};
+T = varargin{6};
+
+opacity = 1;
+accepted = 0;
+marginRadius = 0;
+beyondTargetDistance = 0;
+
 
 warning('Build a check for unique names')
 %determine XML path
-genericPath = 'obj.sessionData.SureTune2Sessions.Session.datasets.Array.Dataset';
+genericPath = 'obj.sessionData.SureTune2Sessions.Session.paths.Array.Path';
 try
     index = numel(eval(genericPath)) +1;
 catch
@@ -42,7 +46,7 @@ if ischar(parent)
     parentindex = find(ismember(namelist,parent));
 
     if isempty(parentindex)
-        warning('Parent is not known. Mesh is added without correct reference')
+        warning('Parent is not known. Path is added without correct reference')
     else
         parent = obj.registerables.list{parentindex};
     end
@@ -57,40 +61,43 @@ registerable_args = {parent,T,0,label}; %set accepted to true
 
 %Make dummy elements in XML
 
-A.label.Text = '';
-A.label.Attributes.type = 'String';
-A.label.Attributes.value = label;
-A.volumeId.text='';
-A.volumeId.Attributes.type='String';
 A.accepted.Attributes.type = 'Bool';
+A.accepted.Attributes.value = accepted;
+
+A.accepted.Attributes.Text = '';
 
 A.parent.ref.Text = '';
 A.parent.ref.Attributes.id = parent;
 A.transform.Matrix3D.Text = '';
 
-A.stf.Null.Text = [];
+A.transform.Matrix3D.Text = '';
 
+A.label.Text = '';
+A.label.Attributes.type = 'String';
+A.label.Attributes.value = label;
 
-A.Attributes.id = label; %#ok<STRNU>
+A.target.Point3D.Text = '';
+A.target.Point3D = SDK_vector2point3d(target);
+
+A.entry.Point3D.Text = '';
+A.entry.Point3D = SDK_vector2point3d(entry);
+
+A.opacity.Text = '';
+A.opacity.Attributes.type = 'Double';
+A.opacity.value = opacity;
+
+A.marginRadius.Text = '';
+A.marginRadius.Attributes.type = 'Double';
+A.marginRadius.Attributes.value = marginRadius;
+
+A.beyondTargetDistance.Text = '';
+A.beyondTargetDistance.Attributes.type = 'Double';
+A.beyondTargetDistance.Attributes.value = beyondTargetDistance;
 
 %add dummy elements
-eval([path,' = A'])
+eval([path,' = A;'])
 
-
-%Add volume to volume list
-obj.volumeStorage.names{end+1} = label;
-obj.volumeStorage.list{end+1} = vObject;
-
-R = Dataset(component_args, registerable_args,label,volumeId,Id,stf);
-
-%Verify if a masterdatset is selected
-if any(ismember(fieldnames(obj.sessionData.SureTune2Sessions.Session.masterDataset),'Null'))
-    obj.sessionData.SureTune2Sessions.Session.masterDataset = [];
-    obj.sessionData.SureTune2Sessions.Session.masterDataset.ref.Attributes.id = parent.id;
-    obj.sessionData.SureTune2Sessions.Session.masterDataset.ref.Text = [];
-end
-    
-
+R = Path(component_args, registerable_args,label,target,entry,opacity,marginRadius,beyondTargetDistance);
 
 %Add to registerable list
 obj.registerables.names{end+1} = label;

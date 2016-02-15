@@ -37,10 +37,17 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
         end
         
         function obj = set.label(obj,label)
+            S = obj.session;
+            if ~S.updateXml;obj.label = label;return;end
+            
+            %Check compatibility with STU
+            label = obj.CC_label(label);
+            
+            %Update Object
             obj.label = label;
             
-            %update the XML;
-            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'Label');
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label')
         end
         
         function obj = set.opacity(obj,opacity)

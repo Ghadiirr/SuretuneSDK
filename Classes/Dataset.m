@@ -37,18 +37,14 @@ classdef Dataset < SessionComponent & Registerable
             S = obj.session;
             if ~S.updateXml;obj.label = label;return;end
             
-            if isempty(label)
-                label = 'NoLabel';
-            end
+            %Check compatibility with STU
+            label = obj.CC_label(label);
             
-            if ~ischar(label)
-                error('Label has to be a string')
-            end
+            %Update Object
             obj.label = label;
             
-            
-            
-            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label');
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label')
             
             
         end
@@ -94,7 +90,6 @@ classdef Dataset < SessionComponent & Registerable
             
             %change object
             obj.stf = stf;
-            
             warning('Updating STF in xml has not been implemented yet')
             
             

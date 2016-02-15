@@ -16,7 +16,7 @@ classdef StimPlan
         
     end
     
-   properties (Hidden=true)
+    properties (Hidden=true)
         session
         
         
@@ -45,6 +45,21 @@ classdef StimPlan
             %Also link to session
             obj.session = leadObject.session;
             obj.session.therapyPlanStorage{end+1} = obj;
+        end
+        
+        function obj = label(obj,label)
+            
+            S = obj.session;
+            if ~S.updateXml;obj.label = label;return;end
+            
+            %Check compatibility with STU
+            label = obj.CC_label(label);
+            
+            %Update Object
+            obj.label = label;
+            
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label')
         end
         
     end

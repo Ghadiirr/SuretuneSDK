@@ -5,6 +5,19 @@ function loadsession(obj,file)
 %
 %
 
+
+%Check if this object already has session data.
+if ~isempty(obj.sessionData)
+    if SDK_proceeddialog(obj,'You are about to overwrite your matlab-session. Do you wish to proceed?')
+        obj = Session;
+    else
+        disp('Aborted by user')
+        return
+    end
+end
+
+
+
 %get PathName
 if nargin==1;
     
@@ -16,6 +29,8 @@ if nargin==1;
     end
     file = fullfile(pathName,fileName);
 end
+
+
 
 
 
