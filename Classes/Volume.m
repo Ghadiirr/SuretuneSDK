@@ -76,14 +76,14 @@ classdef Volume <handle_hidden
             
             %load xml
             
-            fullFileName = fullfile(pathname,'volumeInfo.xml');   
+            fullFileName = fullfile(pwd,pathname,'volumeInfo.xml');   
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(fullFileName);
                 %repeat reading with new file
                 filename = 'volumeInfo_nocomments.xml';
-                xml = SDK_xml2struct(fullfile(pathname,filename));
+                xml = SDK_xml2struct(fullfile(pwd,pathname,filename));
             else
-                xml = SDK_xml2struct(fullfile(pathname,'volumeInfo.xml'));
+                xml = SDK_xml2struct(fullfile(pwd,pathname,'volumeInfo.xml'));
                 %                 disp('removed comments')
             end
             
