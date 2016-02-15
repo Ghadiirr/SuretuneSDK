@@ -71,14 +71,23 @@ if ~ischar(pulseFrequency)
     end
 end
 
-if ~ischar(activeRings) || ~numel(activeRings)==4
+if (isnumeric(activeRings) || islogical(activeRings)) && numel(activeRings)==4
+    activeRings = num2str(activeRings);
+    
+elseif ~ischar(activeRings) || ~numel(activeRings)==7
     if isa(activeRings,'double') || isa(activeRings,'logical')
     error('activeRings should be 0 0 0 0 or 1 0 0 0 or 1 1 0 0 or any other string consisting of 4 booleans separated by spaces')
+    end
 end
 
       
-if ~ischar(contactsGrounded) || ~numel(contactsGrounded)==7
+if (isnumeric(contactsGrounded) || islogical(contactsGrounded))  && numel(contactsGrounded)==4
+    contactsGrounded = num2str(contactsGrounded);
+    
+elseif ~ischar(contactsGrounded) || ~numel(contactsGrounded)==7
+    if isa(contactsGrounded,'double') || isa(contactsGrounded,'logical')
     error('contactsGrounded should be 0 0 0 0 or 1 0 0 0 or 1 1 0 0 or any other string consisting of 4 booleans separated by spaces')
+    end
 end
             
 if ~ischar(annotation) || numel(annotation)==0
@@ -141,8 +150,9 @@ A.annotation.Text ='';
 A.annotation.Attributes.type = 'String';
 A.annotation.Attributes.value = annotation;
 
+component_args = {path,obj};
 
-SP = StimPlan(vta,lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
+SP = StimPlan(component_args,vta,lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
 
 %add to XML
 eval([path,' = A;'])

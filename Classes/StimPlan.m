@@ -1,4 +1,4 @@
-classdef StimPlan
+classdef StimPlan  < SessionComponent 
     %STIMPLAN Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -16,14 +16,12 @@ classdef StimPlan
         
     end
     
-    properties (Hidden=true)
-        session
-        
-        
-    end
     
     methods
-        function obj = StimPlan(VTA,Lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation)
+        function obj = StimPlan(component_args,VTA,Lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation)
+            obj@SessionComponent(component_args{:});
+
+            
             obj.vta = VTA;
             obj.lead = Lead;
             obj.label = label;
@@ -43,17 +41,16 @@ classdef StimPlan
             leadObject.stimPlan{end+1} = obj;
             
             %Also link to session
-            obj.session = leadObject.session;
             obj.session.therapyPlanStorage{end+1} = obj;
         end
         
-        function obj = label(obj,label)
+        function obj = set.label(obj,label)
             
             S = obj.session;
             if ~S.updateXml;obj.label = label;return;end
             
             %Check compatibility with STU
-            label = obj.CC_label(label);
+            label = CC_label(obj,label);
             
             %Update Object
             obj.label = label;

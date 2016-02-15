@@ -33,14 +33,20 @@ else
 end
 
 
+%if it is not a registerable (such as a stimplan) no matlab Id exists
+if ~isfield(Component,'matlabId')
+    Id = '';
+else 
+    Id = Component.matlabId;
+end
 
 if nargin==4
-    obj.addtolog('Changed %s from %s to %s for %s (%s).',field_address,oldValue,num2str(newValue),Component.matlabId,class(Component));
+    obj.addtolog('Changed %s from %s to %s for %s (%s).',field_address,oldValue,num2str(newValue),Id,class(Component));
 else
     
 
 %Update Log
-obj.addtolog('Changed %s from %s to %s for %s (%s).',description,oldValue,num2str(newValue),Component.matlabId,class(Component));
+obj.addtolog('Changed %s from %s to %s for %s (%s).',description,oldValue,num2str(newValue),Id,class(Component));
 end
 end
 
