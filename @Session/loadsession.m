@@ -16,7 +16,7 @@ if ~isempty(obj.sessionData)
     end
 end
 
-
+return
 
 %get PathName
 if nargin==1;
