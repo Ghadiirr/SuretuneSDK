@@ -6,7 +6,7 @@ button = questdlg(sprintf('You are about to reclone the lastest version of the S
             !git stash pop
         case 'No'
             !git reset --hard
-            !git pull origin master
+            !git pull origin master 
         case 'Cancel'
             error('Script aborted - User pressed cancel.')
         case ''
