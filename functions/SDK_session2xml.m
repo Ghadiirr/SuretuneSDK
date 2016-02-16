@@ -160,8 +160,7 @@ function [] = parseStruct(s,docNode,curNode,pName)
 end
 
 %----- Subfunction val2str -----
-function [str,succes] = val2str(val)
-    
+function [str,succes] = val2str(val)  
     succes = true;
     str = [];
     

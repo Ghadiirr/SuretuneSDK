@@ -42,7 +42,7 @@ registerable_args = {parent,T,0,label}; %set accepted to false
 
 
 A.parent.ref.Text = '';
-A.parent.ref.Attributes.id = parent;
+A.parent.ref.Attributes.id = parent.id;
 A.transform.Matrix3D.Text = '';
 A.label.Text = '';
 A.label.Attributes.type = 'String';

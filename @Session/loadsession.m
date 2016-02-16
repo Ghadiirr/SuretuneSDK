@@ -5,6 +5,7 @@ function loadsession(obj,file)
 %
 %
 
+hoi jonas
 
 %Check if this object already has session data.
 if ~isempty(obj.sessionData)
@@ -15,8 +16,6 @@ if ~isempty(obj.sessionData)
         return
     end
 end
-
-
 
 %get PathName
 if nargin==1;
