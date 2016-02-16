@@ -5,7 +5,6 @@ function loadsession(obj,file)
 %
 %
 
-hoi jonas
 
 %Check if this object already has session data.
 if ~isempty(obj.sessionData)
