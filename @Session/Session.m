@@ -262,6 +262,17 @@ classdef Session < handle_hidden
                     if stimPlanIndex==0;warning(['No matching stimplan in SessionData for ',thisPlan]);return;end
                     
                     
+                    %get stimplan_path:
+                      %determine XML path
+                    genericPath = [leadObject.path,'.stimPlans.Array.StimPlan'];
+                    try
+                        index = numel(eval(genericPath)) +1;
+                    catch
+                        index =1;
+                    end
+                    path = [genericPath,'{',num2str(index),'}'];
+                    
+                    
                     % Get the Stimplan data from therapyXML:
                     VTA = obj.loadvta(fullfile(thisLead,thisPlan));
                     label = thisPlan;
@@ -272,9 +283,9 @@ classdef Session < handle_hidden
                     activeRings = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.activeRings.BoolArray.Text;
                     contactsGrounded = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.contactsGrounded.BoolArray.Text;
                     annotation = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.annotation.Attributes.value;
-                    
+                    component_args = {path,obj};
                     % Make a StimPlan Instance:
-                    stimPlanObject = StimPlan(VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
+                    stimPlanObject = StimPlan(component_args,VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
                     
 %                     %Add the therapy object to Lead.StimPlan{end+1}
 %                     stimPlanObject.linktolead(leadObject)
