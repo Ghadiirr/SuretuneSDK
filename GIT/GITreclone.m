@@ -4,7 +4,7 @@ if ~exist('Session','class')
     catch
         error('Please add the SDK to your path, then try again.')
     end
-else
+end
     
 %go to the installation directory    
 installationDirSession = Session;
