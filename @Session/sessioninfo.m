@@ -17,7 +17,6 @@ function output = trytoget(path)
         output = eval(path);
     catch
         output = 'empty';
-        eval([path,'=''empty'';'])
     end
 end
 

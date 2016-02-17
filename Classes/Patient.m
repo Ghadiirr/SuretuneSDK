@@ -14,14 +14,21 @@ classdef Patient < SessionComponent
     end
     
     methods
-        function obj = Patient(path,session,name,patientID,dateOfBirth,gender)
+        function obj = Patient(path,session)%,name,patientID,dateOfBirth,gender)
             
             obj@SessionComponent(path,session);
-            obj.name = name;
-            obj.patientID = patientID;
-            obj.dateOfBirth = dateOfBirth;
-            obj.gender = gender;
+            obj.name = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.name.Attributes.value');
+            obj.patientID = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.patientID.Attributes.value');
+            obj.dateOfBirth = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.dateOfBirth.Attributes.value');
+            obj.gender = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.gender.Enum.Attributes.value');
             
+            function output = trytoget(path)
+                try
+                    output = eval(path);
+                catch
+                    output = 'empty';
+                end
+            end
             
         end
         
@@ -62,8 +69,17 @@ classdef Patient < SessionComponent
             %change the value in the object
             obj.dateOfBirth = dateOfBirth;
             
+            if ischar(dateOfBirth)
+                if strcmp(dateOfBirth,'empty')
+                    structure.Null.Text = [];
+                    SDK_updatexml(S,obj,'.dateOfBirth',structure,'date of birth');
+                end
+            end
+            
+            
+            
             %update the XML
-            SDK_updatexml(S,obj,'..dateOfBirth.Attributes.value',dateOfBirth,'date of birth');
+            SDK_updatexml(S,obj,'.dateOfBirth.Attributes.value',dateOfBirth,'date of birth');
         end
         
         
@@ -77,6 +93,9 @@ classdef Patient < SessionComponent
             %update the XML
             SDK_updatexml(S,obj,'.gender.Enum.Attributes.value',gender,'gender');
         end
+        
+        
+        
         
     end
     

@@ -165,11 +165,8 @@ classdef Session < handle_hidden
             %find registerables
             %             obj.noLog = 1;
             obj.registerables = SDK_findregistrables(obj);
-            obj.patient = Patient('obj.sessionData.SureTune2Sessions.Session.patient.Patient',obj,...
-                obj.sessionData.SureTune2Sessions.Session.patient.Patient.name.Attributes.value,...
-                obj.sessionData.SureTune2Sessions.Session.patient.Patient.patientID.Attributes.value,...
-                obj.sessionData.SureTune2Sessions.Session.patient.Patient.dateOfBirth.Attributes.value,...
-                obj.sessionData.SureTune2Sessions.Session.patient.Patient.gender.Enum.Attributes.value);
+            obj.patient = Patient('obj.sessionData.SureTune2Sessions.Session.patient.Patient',obj);%removed redundant input arguments
+  
             %             obj.noLog = 0;
             %             O.Master = O.SessionData.
             
