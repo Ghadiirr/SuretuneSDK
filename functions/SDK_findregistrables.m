@@ -311,4 +311,8 @@ function debug(string)
 if false    %set to true for debugging
     disp(string)
 end
+
+% if ~isempty(findstr(string,'Manual'))
+%     disp('HIER')
+% end
 end
