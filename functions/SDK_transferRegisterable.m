@@ -8,6 +8,7 @@ switch class(R)
         SDK_transferImportedSturcture
     case 'Dataset'
         disp('dataset')
+        SDK_transferDataset
     otherwise
         error(['This function does not (yet) support registerables of type:',class(R)])
 end
@@ -56,6 +57,43 @@ end
         disp('Imported Structure has been transfered succesfully')
         
     end
+
+    function SDK_transferDataset
+        [names,~] = to.listregisterables;
+        
+        %see if name already exists, then get unique name
+        uniquename = R.matlabId;
+        while any(ismember(names,uniquename))
+            uniquename = [uniquename,'_copy'];
+        end
+        
+        %see if parent exists, otherwise ask userinput     
+        if ischar(R.parent)
+            if strcmp(R.parent,'ROOT');
+                R.parent = to.getregisterable(1);
+                R.transform = eye(4);
+            end
+        end
+        if ~any(ismember(names,R.parent.matlabId))
+            disp(['No registerable was found named ',R.parent.matlabId])
+            disp('Please select parent from list')
+            R.parent = to.getregisterable;
+        end
+        
+        
+        % Make new Volume        
+
+        V = Volume;
+        V.newvolume(R.volume.volumeInfo,R.volume.voxelArray,to)
+        
+        %Make new Dataset
+        to.addnewdataset(uniquename,R.volumeId,R.volumeId,R.stf,R.parent,R.transform,V);
+        
+        Rout = to.getregisterable(uniquename);
+        
+        
+    end
+        
 
 
 end
