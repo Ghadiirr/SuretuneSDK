@@ -38,6 +38,14 @@ else
     eval('! copy /b header.bin + sizebin.bin + session.zip newSession.dcm') 
 end
 
+if ~isempty(obj.sureTune)
+    disp('Upgrading Session')
+    thisdir = pwd;
+    cd(obj.sureTune)
+    [~,~] = system(['SureTuneArchive.exe',' /upgradesessions "',fullfile(thisdir,'newSession.dcm'),'"']);
+    cd(thisdir)
+    
+end
 
 
 end
