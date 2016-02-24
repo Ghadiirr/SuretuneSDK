@@ -32,7 +32,7 @@ classdef Session < handle_hidden
         registerables %List of all Registerables
         master %Registerable tree starts with this dataset
         updateXml = 0;
-        sureTune = 'C:\Documents\Repos\SureTune\SureSuite\Output\'; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
+        sureTune = ''; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
         exportFolder = fullfile('C:','MATLAB-Addons','Export'); % Folder were sessions are exported.
         homeFolder;
         developerFlags %See line 115
@@ -108,6 +108,12 @@ classdef Session < handle_hidden
             %add home folder
             fullpath = mfilename('fullpath');
             obj.homeFolder = fullpath(1:findstr(fullpath,'@Session')-2);
+            
+            %try to add suretunefolder
+            if exist(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'),'file')
+                [suretunepath] = textread(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'),'%s');
+                obj.sureTune = suretunepath{1};
+            end
             
             %developerFlags
             obj.developerFlags.readable = 1;
