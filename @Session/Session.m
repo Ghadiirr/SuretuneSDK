@@ -156,6 +156,13 @@ classdef Session < handle_hidden
             obj.log = {datestr(datetime),['Load file:',fullFileName]};
             obj.directory = pathName;
             
+            %add SDK version
+            [version] = textread('@Session/version.txt','%s');
+            obj.sessionData.SureTune2Sessions.Attributes.version = [obj.sessionData.SureTune2Sessions.Attributes.version,'(SDK: ',version{1},')'];
+            
+            
+            
+            
             %print session Info
             obj.sessioninfo();
             

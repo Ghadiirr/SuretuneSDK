@@ -11,5 +11,8 @@ cd (installationdir)
 if isempty(strfind(message,'[up to date]'))
     GITreclone
 end
+
+
+
     cd(thisdir)
 
