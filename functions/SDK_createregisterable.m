@@ -134,6 +134,41 @@ switch RegType
         R = ImportedMeshPart(component_args, registerable_args,meshId,color,opacity);
         R = []; %don't add all meshParts to the registerable list.
         
+    case 'MerAnnotation'
+        XML = eval(path);
+        
+        merTable = XML.merTable.ref.Attributes.id;
+        orientationReference = XML.orientationReference.ref.Attributes.id;
+        radius = XML.radius.Attributes.value;
+        
+        R  = MerAnnotation(component_args,registerable_args,merTable,orientationReference,radius);
+        
+%     case 'merTable'
+%         XML = eval(path);
+%         
+%         label = XML.label.Attributes.value;
+%         isBensGunAlignedWithOrientationReference = XML.isBensGunAlignedWithOrientationReference.Attributes.value;
+%         targetSide = XML.targetSide.Enum.Attributes.value;
+%         middleC0ChannelDepth = XML.middleC0ChannelDepth; %MerChannelDepthObject
+%         targetChannelDepth = XML.targetChannelDepth; %MerChannelDepthObject
+%         merDepths = XML.merDepths;
+%         
+%         id = XML.Attributes.id;
+%         R = [];
+% %         warning('Make merTable object')
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
     otherwise
         warning(['Class ',RegType,' not defined.'])

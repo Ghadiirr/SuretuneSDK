@@ -92,6 +92,9 @@ if any(strcmp({'accepted','parent','transfom'},thisChild))
         elseif strcmp(RegisterableType,'ACPCIH')
 
                 id = 'acpcCoordinateSystem';
+                
+        elseif strcmp(RegisterableType,'MerAnnotation')
+                id = ['MerAnnotation_',eval([link,'.merTable.ref.Attributes.id'])];
 
             
         else

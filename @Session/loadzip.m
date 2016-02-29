@@ -38,8 +38,6 @@ end
 %Load Meshes
 obj.loadmeshes(fullfile(file(1:end-4),'Meshes'));
 
-
-
 %Load XML
 obj.loadxml(file(1:end-4),'SureTune2Sessions.xml')
 

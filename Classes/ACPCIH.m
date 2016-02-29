@@ -29,37 +29,48 @@ classdef ACPCIH < SessionComponent & Registerable
         end
         
         function obj = set.ac(obj,ac)
-            if ~obj.session.updateXml;obj.ac = ac; return;end
+            S = obj.session;
+            if ~S.updateXml;obj.ac = ac;return;end
             
-
-            if ~(ismatrix(ac));error('Input has to be a 3D vector');end
-            if ~(numel(ac)==3);error('Input has to be a 3D vector');end
+            %Check compatibility with STU
+            [ac,Point3D] = CC_vector(obj,ac);
             
- warning('ACPCIH object has not been made yet')
+            %Update Object
+            obj.ac = ac;
             
-%             %-- get the Session.
-%             S = obj.session;
-%             
-%             %change the value in the object
-%             obj.ac = ac;
-%             
-%             %update the XML
-%             SDK_updatexml(S,obj,'.accepted.Attributes.value',newval,'AC');
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.ac',Point3D,'Anterior Commisure')
             
             
         end
         
         
         function obj = set.pc(obj,pc)
-            obj.pc = pc; 
+            S = obj.session;
+            if ~S.updateXml;obj.pc = pc;return;end
             
-            warning('ACPCIH object has not been made yet')
+            %Check compatibility with STU
+            [pc,Point3D] = CC_vector(obj,pc);
+            
+            %Update Object
+            obj.pc = pc;
+            
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.pc',Point3D,'Posterior Commisure')
         end
         
         function obj = set.ih(obj,ih)
+            S = obj.session;
+            if ~S.updateXml;obj.ih = ih;return;end
+            
+            %Check compatibility with STU
+            [ih,Point3D] = CC_vector(obj,ih);
+            
+            %Update Object
             obj.ih = ih;
             
-            warning('ACPCIH object has not been made yet')
+            %Update XML
+            SDK_updatexml(obj.session,obj,'.ih',Point3D,'Inter Hemispheral Plane')
         end
         
         function acpcihSpace = makeCoordinateSystem(obj)
@@ -73,7 +84,7 @@ classdef ACPCIH < SessionComponent & Registerable
             transform = [x(1),y(1),z(1),origin(1);...
                 x(2),y(2),z(2),origin(2);...
                 x(3),y(3),z(3),origin(3);...
-                0,0,0,1]'
+                0,0,0,1]';
             
             S = obj.session;
             S.addnewmesh('acpcCoordinateSystem',0,'Dataset0',transform)

@@ -21,9 +21,9 @@ classdef Session < handle_hidden
     %       > Refers to a Volume Instance describing the VTA
     %
     %
-
-
-%% properties    
+    
+    
+    %% properties
     properties (Hidden = true)  %These properties are hidden to not bother the user.
         originalSessionData %The original XML file
         directory %Directory of the loaded XML file
@@ -46,10 +46,11 @@ classdef Session < handle_hidden
         volumeStorage %list that contains all Volume Objects (the actual voxeldata)
         meshStorage %list that contains all Mesh Objects (the actual faces and vertices)
         therapyPlanStorage %TBD
+        merTableStorage
         patient
     end
     
-%% methods hidden
+    %% methods hidden
     methods (Hidden = true)
         
         function addtolog(obj,varargin)
@@ -99,6 +100,8 @@ classdef Session < handle_hidden
             obj.meshStorage.names = {};
             obj.registerables.names = {};
             obj.registerables.list = {};
+            obj.merTableStorage.list = {};
+            obj.merTableStorage.names = {};
             
             % Make export dir of not already exist:
             if ~exist(obj.exportFolder,'dir')
@@ -120,12 +123,13 @@ classdef Session < handle_hidden
             obj.developerFlags.echoLog = 1; %Flag: 1/0: do/don't echo logging to command window.
             obj.developerFlags.loadVolumes = 1;
             obj.developerFlags.skipWarning = 0;
+            obj.developerFlags.upgrade = 1;
             
         end
         
         
         
-  %% loading functions
+        %% loading functions
         function loadxml(obj,pathName,fileName)
             % Input should be pathname and filename, otherwise a dialog
             % appears.
@@ -140,15 +144,15 @@ classdef Session < handle_hidden
             end
             fullFileName = fullfile(pathName,fileName);
             
-            %load xml          
+            %load xml
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(fullFileName);
-              % Reading with new file          
-              fullFileName = [fullFileName(1:end-4),'_nocomments.xml'];
-              loadedXml = SDK_xml2struct(fullFileName);
-              disp('removed comments')
+                % Reading with new file
+                fullFileName = [fullFileName(1:end-4),'_nocomments.xml'];
+                loadedXml = SDK_xml2struct(fullFileName);
+                disp('removed comments')
             else
-              loadedXml = SDK_xml2struct(fullFileName);  
+                loadedXml = SDK_xml2struct(fullFileName);
             end
             
             % Check if there is only one Session. Otherwise throw warning.
@@ -175,11 +179,14 @@ classdef Session < handle_hidden
             %set flag
             obj.activeDataset = 1;
             
+            %find merTables
+            obj.loadmertables()
+            
             %find registerables
             %             obj.noLog = 1;
             obj.registerables = SDK_findregistrables(obj);
             obj.patient = Patient('obj.sessionData.SureTune2Sessions.Session.patient.Patient',obj);%removed redundant input arguments
-  
+            
             %             obj.noLog = 0;
             %             O.Master = O.SessionData.
             
@@ -191,19 +198,58 @@ classdef Session < handle_hidden
         
         
         
-        
+        function loadmertables(obj)
+            
+            %Return if no merTables are found
+            if ~isfield(obj.sessionData.SureTune2Sessions.Session,'merTables')
+                disp('This session contains no MER data')
+                return
+            end
+            
+            if ~isfield(obj.sessionData.SureTune2Sessions.Session.merTables.Array,'MerTable')
+                disp('This session contains no MER data')
+                return
+            end
+            
+            
+            
+            
+            for iMerTable = 1:numel(obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable)
+                obj.merTableStorage.names{end+1} = obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable{iMerTable}.Attributes.id;
+                
+                XML = obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable{iMerTable};
+                component_args = {'obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable{iMerTable}',obj};
+                
+                label = XML.label.Attributes.value;
+                isBensGunAlignedWithOrientationReference = XML.isBensGunAlignedWithOrientationReference.Attributes.value;
+                targetSide = XML.targetSide.Enum.Attributes.value;
+                middleC0ChannelDepth = XML.middleC0ChannelDepth;
+                targetChannelDepth = XML.targetChannelDepth;
+                merDepths = XML.merDepths.Array;
+                id = XML.Attributes.id;
+                
+                
+                obj.merTableStorage.list{end+1} = merTable(component_args,label,isBensGunAlignedWithOrientationReference,targetSide,middleC0ChannelDepth,targetChannelDepth,merDepths,id);
+            end
+            
+            
+            
+            
+            
+            
+        end
         
         function loadtherapyplans(obj,sessiondir)
             thisdir = pwd;
             
             % Browse to therapy folders:
             try
-            cd(sessiondir)
-            cd('Sessions')
+                cd(sessiondir)
+                cd('Sessions')
             catch
                 disp('could not find a Session directory')
             end
-           
+            
             
             if exist(fullfile(pwd,obj.getsessionname()),'dir')
                 cd(obj.getsessionname());
@@ -273,7 +319,7 @@ classdef Session < handle_hidden
                     
                     
                     %get stimplan_path:
-                      %determine XML path
+                    %determine XML path
                     genericPath = [leadObject.path,'.stimPlans.Array.StimPlan'];
                     try
                         index = numel(eval(genericPath)) +1;
@@ -297,8 +343,8 @@ classdef Session < handle_hidden
                     % Make a StimPlan Instance:
                     stimPlanObject = StimPlan(component_args,VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
                     
-%                     %Add the therapy object to Lead.StimPlan{end+1}
-%                     stimPlanObject.linktolead(leadObject)
+                    %                     %Add the therapy object to Lead.StimPlan{end+1}
+                    %                     stimPlanObject.linktolead(leadObject)
                     
                 end
             end
@@ -367,12 +413,13 @@ classdef Session < handle_hidden
             
         end
         
+        
         function loadvolumes(thisSession,folder)
             thisDir = pwd;
             if ~exist(folder)
                 error('Volumes folder could not be found. Most likely something went wrong with unpacking the session file.')
             end
-                cd(folder)
+            cd(folder)
             
             
             volumeFolders = SDK_subfolders();
@@ -402,7 +449,7 @@ classdef Session < handle_hidden
         
         
         
-     
+        
         
         
         
@@ -418,7 +465,7 @@ classdef Session < handle_hidden
         %             obj.getSessions
         %         end
         
-
+        
         
         %             function listdatasets(obj)
         %             % Function may be obselete.
@@ -438,7 +485,7 @@ classdef Session < handle_hidden
         %             end
         %
         
-
+        
         
         %Name
         %             function setpatientname(obj,val)
@@ -468,9 +515,9 @@ classdef Session < handle_hidden
         %
         %             end
         
-                    function val = getsessionname(obj)
-                        val = obj.sessionData.SureTune2Sessions.Session.id.Attributes.value;
-                    end
+        function val = getsessionname(obj)
+            val = obj.sessionData.SureTune2Sessions.Session.id.Attributes.value;
+        end
         
         
         %             %PatientID
@@ -543,7 +590,7 @@ classdef Session < handle_hidden
         %                 val = obj.ActiveDataset;
         %             end
         %
-
+        
         
         
     end
