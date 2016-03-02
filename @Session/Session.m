@@ -112,6 +112,8 @@ classdef Session < handle_hidden
             fullpath = mfilename('fullpath');
             obj.homeFolder = fullpath(1:findstr(fullpath,'@Session')-2);
             
+            obj.versioncontrol()
+            
             %try to add suretunefolder
             if exist(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'),'file')
                 [suretunepath] = textread(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'),'%s');
@@ -126,13 +128,15 @@ classdef Session < handle_hidden
             obj.developerFlags.upgrade = 1;
             
             
-            obj.versioncontrol()
+
         end
         
         
-        function versioncontrol(~)
+        function versioncontrol(obj)
             %% write hash for version control
-            fileID = fopen(fullfile('@Session','version.txt'), 'w+');
+            fileID = fopen(fullfile(obj.homeFolder,'@Session','version.txt'), 'w+');
+            
+            
             
             [~,hash] = system('git rev-list --max-count=1 HEAD');
             hash = strrep(hash,sprintf('\n'),'');
