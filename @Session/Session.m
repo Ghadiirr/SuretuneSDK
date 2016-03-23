@@ -156,6 +156,7 @@ classdef Session < handle_hidden
                 fprintf(fileID, '%s', pathname);
                 fclose(fileID);
             end
+            cd(curDir)
             
         end
         %% loading functions
