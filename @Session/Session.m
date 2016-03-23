@@ -130,8 +130,10 @@ classdef Session < handle_hidden
         end
         
         
-        function versioncontrol(~)
+        function versioncontrol(obj)
             %% write hash for version control
+            curDir = pwd;
+            cd(obj.homeFolder)
             fileID = fopen(fullfile('@Session','version.txt'), 'w+');
             
             [~,hash] = system('git rev-list --max-count=1 HEAD');
@@ -152,6 +154,7 @@ classdef Session < handle_hidden
                 fprintf(fileID, '%s', pathname);
                 fclose(fileID);
             end
+            cd(curDir)
             
         end
         %% loading functions
