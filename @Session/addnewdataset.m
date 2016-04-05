@@ -26,7 +26,7 @@ vObject = varargin{8};
 
 warning('Build a check for unique names')
 %determine XML path
-genericPath = 'obj.sessionData.SureTune2Sessions.Session.datasets.Array.Dataset';
+genericPath = ['obj.sessionData.',obj.ver,'.Session.datasets.Array.Dataset'];
 try
     index = numel(eval(genericPath)) +1;
 catch
@@ -82,10 +82,10 @@ obj.volumeStorage.list{end+1} = vObject;
 R = Dataset(component_args, registerable_args,label,volumeId,Id,stf);
 
 %Verify if a masterdatset is selected
-if any(ismember(fieldnames(obj.sessionData.SureTune2Sessions.Session.masterDataset),'Null'))
-    obj.sessionData.SureTune2Sessions.Session.masterDataset = [];
-    obj.sessionData.SureTune2Sessions.Session.masterDataset.ref.Attributes.id = parent.id;
-    obj.sessionData.SureTune2Sessions.Session.masterDataset.ref.Text = [];
+if any(ismember(fieldnames(obj.sessionData.(obj.ver).Session.masterDataset),'Null'))
+    obj.sessionData.(obj.ver).Session.masterDataset = [];
+    obj.sessionData.(obj.ver).Session.masterDataset.ref.Attributes.id = parent.id;
+    obj.sessionData.(obj.ver).Session.masterDataset.ref.Text = [];
 end
     
 

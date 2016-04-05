@@ -38,8 +38,12 @@ end
 %Load Meshes
 obj.loadmeshes(fullfile(file(1:end-4),'Meshes'));
 
+%detectsuretuneversion
+ver = detectsuretuneversion(file(1:end-4));
+obj.ver = ver;
+
 %Load XML
-obj.loadxml(file(1:end-4),'SureTune2Sessions.xml')
+obj.loadxml(file(1:end-4),[ver,'.xml'])
 
 %Load Stimplans
 obj.loadtherapyplans(file(1:end-4));
@@ -50,6 +54,18 @@ obj.loadmeshes(fullfile(file(1:end-4),'Sessions',obj.getsessionname,'Segmentatio
 
 
 
+
 obj.updateXml = 1;
+
+    function ver = detectsuretuneversion(folder)
+        if exist(fullfile(folder,'SureTune2Sessions.xml'),'file')
+            ver = 'SureTune2Sessions';
+        elseif exist(fullfile(folder,'SureTune3Sessions.xml'),'file')
+            ver = 'SureTune3Sessions';
+        else
+            error('Could not find Session Data')
+        end
+        
+    end
 
 end

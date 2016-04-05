@@ -17,10 +17,10 @@ classdef Patient < SessionComponent
         function obj = Patient(path,session)%,name,patientID,dateOfBirth,gender)
             
             obj@SessionComponent(path,session);
-            obj.name = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.name.Attributes.value');
-            obj.patientID = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.patientID.Attributes.value');
-            obj.dateOfBirth = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.dateOfBirth.Attributes.value');
-            obj.gender = trytoget('session.sessionData.SureTune2Sessions.Session.patient.Patient.gender.Enum.Attributes.value');
+            obj.name = trytoget(['session.sessionData.',obj.ver,'.Session.patient.Patient.name.Attributes.value']);
+            obj.patientID = trytoget('[session.sessionData.',obj.ver,'.Session.patient.Patient.patientID.Attributes.value']);
+            obj.dateOfBirth = trytoget(['session.sessionData.',obj.ver,'.Session.patient.Patient.dateOfBirth.Attributes.value']);
+            obj.gender = trytoget(['session.sessionData.',obj.ver,'.Session.patient.Patient.gender.Enum.Attributes.value']);
             
             function output = trytoget(path)
                 try

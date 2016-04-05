@@ -12,7 +12,7 @@ ObjInstance.linktosession(obj);
 %% Make ImportedStructure
 
 %determine XML path
-genericPath = 'obj.sessionData.SureTune2Sessions.Session.importedMeshes.Array.ImportedStructure';
+genericPath = ['obj.sessionData.',obj.ver,'.Session.importedMeshes.Array.ImportedStructure'];
 
 try
     index = numel(eval(genericPath)) +1;

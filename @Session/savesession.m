@@ -11,7 +11,7 @@ cd(tempfoldername)
 
 
 % Save Sessions:
-SDK_session2xml(obj.sessionData,'SureTune2Sessions.xml')
+SDK_session2xml(obj.sessionData,[obj.ver,'.xml'])
 SDK_session2xml(obj.originalSessionData,'OriginalSession.xml')
 
 % Save Meshes:

@@ -26,7 +26,7 @@ parent = varargin{10};
 
 warning('Build a check for unique names')
 %determine XML path
-genericPath = 'obj.sessionData.SureTune2Sessions.Session.structureSegmentations.Array.ImageBasedStructureSegmentation';
+genericPath = ['obj.sessionData.',obj.ver,'.Session.structureSegmentations.Array.ImageBasedStructureSegmentation'];
 try
     index = numel(eval(genericPath)) +1;
 catch

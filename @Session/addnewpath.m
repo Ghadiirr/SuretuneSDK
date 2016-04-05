@@ -32,7 +32,7 @@ beyondTargetDistance = 0;
 
 warning('Build a check for unique names')
 %determine XML path
-genericPath = 'obj.sessionData.SureTune2Sessions.Session.paths.Array.Path';
+genericPath = ['obj.sessionData.',obj.ver,'.Session.paths.Array.Path'];
 try
     index = numel(eval(genericPath)) +1;
 catch

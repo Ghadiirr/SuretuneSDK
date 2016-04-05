@@ -36,6 +36,7 @@ classdef Session < handle_hidden
         exportFolder = fullfile('C:','MATLAB-Addons','Export'); % Folder were sessions are exported.
         homeFolder;
         developerFlags %See line 115
+        ver
         
         
         
@@ -48,6 +49,7 @@ classdef Session < handle_hidden
         therapyPlanStorage %TBD
         merTableStorage
         patient
+ 
     end
     
     %% methods hidden
@@ -102,6 +104,7 @@ classdef Session < handle_hidden
             obj.registerables.list = {};
             obj.merTableStorage.list = {};
             obj.merTableStorage.names = {};
+            
             
             % Make export dir of not already exist:
             if ~exist(obj.exportFolder,'dir')
@@ -197,7 +200,7 @@ classdef Session < handle_hidden
             
             %add SDK version
             [version] = textread('@Session/version.txt','%s');
-            obj.sessionData.SureTune2Sessions.Attributes.version = [obj.sessionData.SureTune2Sessions.Attributes.version,'(SDK: ',version{1},')'];
+            obj.sessionData.(obj.ver).Attributes.version = [obj.sessionData.(obj.ver).Attributes.version,'(SDK: ',version{1},')'];
             
             
             
@@ -214,7 +217,7 @@ classdef Session < handle_hidden
             %find registerables
             %             obj.noLog = 1;
             obj.registerables = SDK_findregistrables(obj);
-            obj.patient = Patient('obj.sessionData.SureTune2Sessions.Session.patient.Patient',obj);%removed redundant input arguments
+            obj.patient = Patient(['obj.sessionData.',obj.ver,'.Session.patient.Patient'],obj);%removed redundant input arguments
             
             %             obj.noLog = 0;
             %             O.Master = O.SessionData.
@@ -230,12 +233,12 @@ classdef Session < handle_hidden
         function loadmertables(obj)
             
             %Return if no merTables are found
-            if ~isfield(obj.sessionData.SureTune2Sessions.Session,'merTables')
+            if ~isfield(obj.sessionData.(obj.ver).Session,'merTables')
                 disp('This session contains no MER data')
                 return
             end
             
-            if ~isfield(obj.sessionData.SureTune2Sessions.Session.merTables.Array,'MerTable')
+            if ~isfield(obj.sessionData.(obj.ver).Session.merTables.Array,'MerTable')
                 disp('This session contains no MER data')
                 return
             end
@@ -243,11 +246,11 @@ classdef Session < handle_hidden
             
             
             
-            for iMerTable = 1:numel(obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable)
-                obj.merTableStorage.names{end+1} = obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable{iMerTable}.Attributes.id;
+            for iMerTable = 1:numel(obj.sessionData.(obj.ver).Session.merTables.Array.MerTable)
+                obj.merTableStorage.names{end+1} = obj.sessionData.(obj.ver).Session.merTables.Array.MerTable{iMerTable}.Attributes.id;
                 
-                XML = obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable{iMerTable};
-                component_args = {'obj.sessionData.SureTune2Sessions.Session.merTables.Array.MerTable{iMerTable}',obj};
+                XML = obj.sessionData.(obj.ver).Session.merTables.Array.MerTable{iMerTable};
+                component_args = {['obj.sessionData.',obj.ver,'.Session.merTables.Array.MerTable{iMerTable}'],obj};
                 
                 label = XML.label.Attributes.value;
                 isBensGunAlignedWithOrientationReference = XML.isBensGunAlignedWithOrientationReference.Attributes.value;
@@ -545,7 +548,7 @@ classdef Session < handle_hidden
         %             end
         
         function val = getsessionname(obj)
-            val = obj.sessionData.SureTune2Sessions.Session.id.Attributes.value;
+            val = obj.sessionData.(obj.ver).Session.id.Attributes.value;
         end
         
         

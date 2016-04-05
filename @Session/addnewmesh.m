@@ -19,7 +19,7 @@ T = varargin{5};
 
 warning('Build a check for unique names')
 %determine XML path
-genericPath = 'obj.sessionData.SureTune2Sessions.Session.importedMeshes.Array.ImportedStructure';
+genericPath = ['obj.sessionData.',obj.ver,'.Session.importedMeshes.Array.ImportedStructure'];
 try
     index = numel(eval(genericPath)) +1;
 catch
