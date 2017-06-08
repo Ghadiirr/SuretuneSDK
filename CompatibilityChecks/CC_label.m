@@ -2,7 +2,7 @@ function [ output ] = CC_label( obj,label )
 %CC_LABEL Summary of this function goes here
 %   Detailed explanation goes here
 
-S = obj.session;
+
 
 if isempty(label)
     label = 'NoLabel';
@@ -13,6 +13,10 @@ if ~ischar(label)
 end
 
 
+label = strrep(label,'(','');
+label = strrep(label,')','');
+label = strrep(label,':','');
+label = strrep(label,' ','_');
 output = label;
 
 

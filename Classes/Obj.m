@@ -32,7 +32,7 @@ classdef Obj < handle
         
         function obj = set.v(obj,v)
             if size(v,2)~=3
-                error('vertex list needs to have 3 columns')
+                warning('vertex list needs to have 3 columns')
             end
             obj.v = v;
         end

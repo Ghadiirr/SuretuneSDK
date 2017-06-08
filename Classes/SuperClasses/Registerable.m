@@ -177,6 +177,7 @@ classdef (Abstract) Registerable < handle
             
             
             
+            transform(abs(transform) < 0.0001) = round(transform(abs(transform)< 0.0001));
             
             
             %change the value in the object

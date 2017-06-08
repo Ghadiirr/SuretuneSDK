@@ -57,9 +57,12 @@ classdef Session < handle_hidden
         
         function addtolog(obj,varargin)
             % varargin should be a cell array with strings
-            
+            try
             obj.log{end+1,1} = datestr(datetime);
             obj.log{end,2} = sprintf('%s ',varargin{:});
+            catch
+                warning('Could not log')
+            end
             
             if ~obj.developerFlags.echoLog;return;end;
             fprintf([sprintf(varargin{:}),'\n']);
@@ -141,21 +144,21 @@ classdef Session < handle_hidden
             
             
             
-            [~,hash] = system('git rev-list --max-count=1 HEAD');
-            hash = strrep(hash,sprintf('\n'),'');
-            %any changes after last commit?
-            if system('git diff --no-ext-diff --quiet')
-                hash = [hash,'-dirty'];
-            end
-            
-            fprintf(fileID, '%s', hash);
-            fclose(fileID);
+%             [~,hash] = system('git rev-list --max-count=1 HEAD');
+%             hash = strrep(hash,sprintf('\n'),'');
+%             %any changes after last commit?
+% %             if system('git diff --no-ext-diff --quiet')
+% %                 hash = [hash,'-dirty'];
+% %             end
+%             
+%             fprintf(fileID, '%s', hash);
+%             fclose(fileID);
             
             %% get SureTune installation directory
             
             if ~exist(fullfile('@Session','SureTuneInstallationDirectory.txt'),'file')
                 pathname = uigetdir('C:\','One time only: where is your SureTune.exe?');
-                fileID = fopen(fullfile('@Session','SureTuneInstallationDirectory.txt'), 'w+');
+                fileID = fopen(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'), 'w+');
                 fprintf(fileID, '%s', pathname);
                 fclose(fileID);
             end
@@ -200,7 +203,7 @@ classdef Session < handle_hidden
             
             %add SDK version
             [version] = textread('@Session/version.txt','%s');
-            obj.sessionData.(obj.ver).Attributes.version = [obj.sessionData.(obj.ver).Attributes.version,'(SDK: ',version{1},')'];
+%             obj.sessionData.(obj.ver).Attributes.version = [obj.sessionData.(obj.ver).Attributes.version,'(SDK: ',version{1},')'];
             
             
             
@@ -210,9 +213,11 @@ classdef Session < handle_hidden
             
             %set flag
             obj.activeDataset = 1;
+            obj.developerFlags.upgrade =0;
             
             %find merTables
-            obj.loadmertables()
+%             obj.loadmertables()
+            warning('do not load MER')
             
             %find registerables
             %             obj.noLog = 1;
@@ -322,9 +327,19 @@ classdef Session < handle_hidden
                 end
                 
                 %Find Lead Object
-                
+                try
+                    thisLead = strrep(thisLead,'%28','(');
+                    thisLead = strrep(thisLead,'%29',')');
+                    thisLead = strrep(thisLead,'%2e','.');
+                    
                 leadObject = obj.getregisterable(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))});
                 
+                if isempty(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))})
+                    warning('no matching lead names?')
+                end
+                catch
+                    warning('?')
+                end
                 
                 therapyPlanFolders = SDK_subfolders(thisLead);
                 

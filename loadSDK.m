@@ -7,10 +7,10 @@ fprintf('SDK is ready to use!\nTo get started run helpSDK.\n\n~ Kind regards, Jo
 
 thisdir = pwd;
 cd (installationdir)
-[~,message] = system('git fetch --verbose');
-if isempty(strfind(message,'[up to date]'))
-    GITreclone
-end
+% [~,message] = system('git fetch --verbose');
+% if isempty(strfind(message,'[up to date]'))
+%     GITreclone
+% end
 
 
 

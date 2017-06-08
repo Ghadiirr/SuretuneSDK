@@ -16,13 +16,14 @@ end
 obj= varargin{1};
 label = varargin{2};
 opacity = varargin{3};
-threshold = varargin{4};
-thresholdType = varargin{5};
-blurEnabled = varargin{6};
-boundingbox = varargin{7};
-includeSeeds = varargin{8};
-excludeSeeds = varargin{9};
-parent = varargin{10};
+color = varargin{4};
+threshold = varargin{5};
+thresholdType = varargin{6};
+blurEnabled = varargin{7};
+boundingbox = varargin{8};
+includeSeeds = varargin{9};
+excludeSeeds = varargin{10};
+parent = varargin{11};
 
 warning('Build a check for unique names')
 %determine XML path
@@ -78,12 +79,16 @@ A.threshold.Attributes.type = 'Double';
 A.threshold.Attributes.value = 5000;
 
 A.thresholdType.Enum.Text = '';
-A.thresholdType.Enum.Attribues.type = 'ThresholdType';
-A.thresholdType.Enum.Attribues.value = 'Light';
+A.thresholdType.Enum.Attributes.type = 'ThresholdType';
+A.thresholdType.Enum.Attributes.value = 'Light';
 
 A.blurEnabled.Text = '';
 A.blurEnabled.Attributes.type = 'Bool';
 A.blurEnabled.Attributes.value = blurEnabled;
+
+A.accepted.Tex = '';
+A.accepted.Attributes.type = 'Bool';
+A.accepted.Attributes.type = 'False';
 
 A.boundingBox.BoundingBox.leftDown.Point3D.Text = '';
 A.boundingBox.BoundingBox.leftDown.Point3D.Attributes.x = boundingbox.leftDown(1);
@@ -103,7 +108,7 @@ eval([path,' = A'])
 
 
 
-R = ImageBasedStructureSegmentation(component_args,registerable_args,label, opacity, color, threshold, thresholdType, blurEnabled,boundingBox, includeSeeds, excludeSeeds);
+R = ImageBasedStructureSegmentation(component_args,registerable_args,label, opacity, color, threshold, thresholdType, blurEnabled,boundingbox, includeSeeds, excludeSeeds);
 
 %Add to registerable list
 obj.registerables.names{end+1} = label;

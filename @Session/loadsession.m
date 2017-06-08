@@ -5,6 +5,7 @@ function loadsession(obj,file)
 %
 %
 
+currentpath = pwd;
 
 %Check if this object already has session data.
 if ~isempty(obj.sessionData)
@@ -35,8 +36,11 @@ end
 disp('Loading file..')
 obj.loadzip(file)
 
+
+
 disp('Deleting temporary folder...')
+cd(currentpath);
 [path, filename, ~] = fileparts(file);
 [~,~] = rmdir(fullfile(path,filename),'s');
-cd(path);
+
 end

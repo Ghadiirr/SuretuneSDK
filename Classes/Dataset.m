@@ -38,7 +38,7 @@ classdef Dataset < SessionComponent & Registerable
             if ~S.updateXml;obj.label = label;return;end
             
             %Check compatibility with STU
-            label = CC_label(obj,label);
+            label = label;% CC_label(obj,label);
             
             %Update Object
             obj.label = label;

@@ -47,7 +47,7 @@ classdef Lead < SessionComponent & Registerable
             
             
             %write it in the log.
-
+            
             
             %update the XML
             SDK_updatexml(S,obj,'.leadType.Enum.Attributes.value',leadType,'leadType');
@@ -60,7 +60,7 @@ classdef Lead < SessionComponent & Registerable
             if ~S.updateXml;obj.label = label;return;end
             
             %Check compatibility with STU
-            label = obj.CC_label(label);
+            %             label = obj.CC_label(label);
             
             %Update Object
             obj.label = label;
@@ -70,6 +70,46 @@ classdef Lead < SessionComponent & Registerable
             
             
         end
+        function obj = set.proximal(obj,proximal)
+            S = obj.session;
+            if ~S.updateXml;obj.proximal = proximal; return;end
+            
+            
+            
+            %change the value in the object
+            obj.proximal = proximal;
+            
+            
+            %write it in the log.
+            
+            
+            %update the XML
+            SDK_updatexml(S,obj,'.proximal',SDK_vector2point3d(proximal),'leadType');
+            
+            
+        end
+        
+        function obj = set.distal(obj,distal)
+            S = obj.session;
+            if ~S.updateXml;obj.distal = distal; return;end
+            
+            
+            
+            %change the value in the object
+            obj.distal = distal;
+            
+            
+            %write it in the log.
+            
+            
+            %update the XML
+            SDK_updatexml(S,obj,'.distal',SDK_vector2point3d(distal),'leadType');
+            
+            
+        end
+        
+        
+        
     end
     
 end

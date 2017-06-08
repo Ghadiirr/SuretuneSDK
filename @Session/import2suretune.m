@@ -45,7 +45,7 @@ eval(['!',fullfile(obj.homeFolder,'thirdParty','7za.exe'),' a -tzip -r -bd -- se
 disp('Importing Session To SureTune')
 cd(obj.sureTune)
 fclose all;
-eval(['!SuretuneArchive.exe /noencryption /importsessions ',fullfile(obj.directory,'session.zip')])
+eval(['!SuretuneArchive.exe /importsessions ',fullfile(obj.directory,'session.zip')])
 cd(thisdir)
 
 end

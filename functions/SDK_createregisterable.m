@@ -105,7 +105,7 @@ switch RegType
         XML = eval(path);
         
         opacity = XML.opacity.Attributes.value;
-        color = XML.color.Attributes.value;
+        color = XML.rgbColor.Color.Attributes.value;
         contourStacks = XML.contourStacks.HashTable;
         label = XML.label.Attributes.value;
         

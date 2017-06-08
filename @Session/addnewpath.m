@@ -84,7 +84,7 @@ A.entry.Point3D = SDK_vector2point3d(entry);
 
 A.opacity.Text = '';
 A.opacity.Attributes.type = 'Double';
-A.opacity.value = opacity;
+A.opacity.Attributes.value = opacity;
 
 A.marginRadius.Text = '';
 A.marginRadius.Attributes.type = 'Double';

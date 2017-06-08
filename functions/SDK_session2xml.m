@@ -162,7 +162,7 @@ end
 %----- Subfunction val2str -----
 function [str,succes] = val2str(val)  
     succes = true;
-    str = [];
+    str = '';
     
     if (isempty(val))
         return; %bugfix from H. Gsenger

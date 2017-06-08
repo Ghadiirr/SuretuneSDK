@@ -42,7 +42,7 @@ if ~isempty(obj.sureTune) &&  obj.developerFlags.upgrade
     disp('Upgrading Session')
     thisdir = pwd;
     cd(obj.sureTune)
-    [~,text] = system(['SureTuneArchive.exe',' /upgradesessions "',fullfile(thisdir,'newSession.dcm'),'"']);
+    [~,text] = system(['SureTuneArchive.exe',' /stu2 /upgradesessions "',fullfile(thisdir,'newSession.dcm'),'"']);
     disp(text)
     cd(thisdir)
     

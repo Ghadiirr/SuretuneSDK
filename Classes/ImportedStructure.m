@@ -45,13 +45,14 @@ classdef ImportedStructure < SessionComponent & Registerable
             if ~S.updateXml;obj.label = label;return;end
             
             %Check compatibility with STU
-            label = CC_label(obj,label);
+%             label = CC_label(obj,label);
             
             %Update Object
             obj.label = label;
             
             %Update XML
             SDK_updatexml(obj.session,obj,'.label.Attributes.value',label,'label')
+%             SDK_updatexml(obj.session,obj,'.tag.Attributes.value',label,'tag')
             
         end
         

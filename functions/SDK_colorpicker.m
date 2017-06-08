@@ -4,8 +4,11 @@ function varargout = SDK_colorpicker(varargin)
 % plots the selected data in the axes.
 
 colors = {'ffcc99','ccff99','99ffcc','ccffff','ccccff','ffbbff','ffcccc','ffffcc','f0f0f0','ff0000','00ff00','0000ff'};
-SS
 if numel(varargin)==1;
+    if isnumeric(varargin{1})
+        varargout{1} = SDK_hex2rgb(colors{varargin{1}+1});
+        return
+    end
     height = 330;
 else
     height = 300;

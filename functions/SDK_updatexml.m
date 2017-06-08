@@ -46,7 +46,11 @@ else
     
 
 %Update Log
+try
 obj.addtolog('Changed %s from %s to %s for %s (%s).',description,oldValue,num2str(newValue),Id,class(Component));
+catch
+    warning('Could not log')
+end
 end
 end
 

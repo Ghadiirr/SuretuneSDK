@@ -41,7 +41,7 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
             if ~S.updateXml;obj.label = label;return;end
             
             %Check compatibility with STU
-            label = obj.CC_label(label);
+            label = CC_label(S,label);
             
             %Update Object
             obj.label = label;
@@ -106,6 +106,9 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
         end
         
         function obj = set.includeSeeds(obj,includeSeeds)
+            if isempty(includeSeeds)
+                return
+            end
             obj.includeSeeds = includeSeeds;
             
             block = SDK_vector2point3d( includeSeeds );
@@ -116,6 +119,9 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
         end
         
         function obj = set.excludeSeeds(obj,excludeSeeds)
+            if isempty(excludeSeeds)
+                return
+            end
             obj.excludeSeeds = excludeSeeds;
             
             block = SDK_vector2point3d( excludeSeeds );
@@ -130,10 +136,10 @@ classdef ImageBasedStructureSegmentation < SessionComponent & Registerable
             [X,Y,Z] = cropped.getndgrid;
             Z = Z/10;
             
-            threshold  = (str2double(obj.threshold) - str2double(cropped.volumeInfo.rescaleIntercept))*str2double(cropped.volumeInfo.rescaleSlope);
+            threshold  = (str2double(obj.threshold) - str2double(cropped.volumeInfo.rescaleIntercept))/str2double(cropped.volumeInfo.rescaleSlope);
             
 
-            FV = isosurface(X,Y,Z,smooth3(flip(cropped.voxelArray)),threshold);
+            FV = isosurface(X,Y,Z,smooth3(cropped.voxelArray),threshold);
             v = FV.vertices;
             v(:,3) = v(:,3)*10;
             newObj = Obj(v,FV.faces,'');

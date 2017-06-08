@@ -106,11 +106,19 @@ classdef Volume <handle_hidden
             I.instanceNumbers = trytoget('xml.Volume.volumeInfo.VolumeInfo.instanceNumbers.IntArray.Text');
             I.seriesNumber= trytoget('xml.Volume.seriesInfo.SeriesInfo.seriesNumber.Attributes.value');
             I.modality = trytoget('xml.Volume.seriesInfo.SeriesInfo.modality.Attributes.value');
-            I.name = trytoget('xml.Volume.patientInfo.PatientInfo.name.Attributes.value');
-            I.patientId = trytoget('xml.Volume.patientInfo.PatientInfo.patientID.Attributes.value');
-            I.gender = trytoget('xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value');
-            I.dateofbirth = trytoget('xml.Volume.patientInfo.PatientInfo.dateOfBirth.Attributes.value','1900-01-01T00:00:00.0000000');
             
+            if isfield(xml.Volume.patientInfo,'Patient')
+                I.name = trytoget('xml.Volume.patientInfo.Patient.name.Attributes.value');
+                I.patientId = trytoget('xml.Volume.patientInfo.Patient.patientID.Attributes.value');
+                I.gender = trytoget('xml.Volume.patientInfo.Patient.gender.Enum.Attributes.value');
+                I.dateofbirth = trytoget('xml.Volume.patientInfo.Patient.dateOfBirth.Attributes.value','1900-01-01T00:00:00.0000000');
+            else
+                I.name = trytoget('xml.Volume.patientInfo.PatientInfo.name.Attributes.value');
+                I.patientId = trytoget('xml.Volume.patientInfo.PatientInfo.patientID.Attributes.value');
+                I.gender = trytoget('xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value');
+                I.dateofbirth = trytoget('xml.Volume.patientInfo.PatientInfo.dateOfBirth.Attributes.value','1900-01-01T00:00:00.0000000');
+            end
+                
             obj.volumeInfo = I;
             
             if isfield(xml.Volume.seriesInfo,'SeriesInfo')
@@ -170,7 +178,11 @@ classdef Volume <handle_hidden
             %save the voxel array
             [~,~] = mkdir(folder);
             fid = fopen(fullfile(folder,'voxelArray.bin'),'w+');
+            try
             fwrite(fid, obj.voxelArray, 'uint16');
+            catch
+                warning('cannot write')
+            end
             fclose(fid);
             
             %generate XML

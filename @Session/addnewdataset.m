@@ -80,6 +80,7 @@ obj.volumeStorage.names{end+1} = label;
 obj.volumeStorage.list{end+1} = vObject;
 
 R = Dataset(component_args, registerable_args,label,volumeId,Id,stf);
+R.volume = vObject;
 
 %Verify if a masterdatset is selected
 if any(ismember(fieldnames(obj.sessionData.(obj.ver).Session.masterDataset),'Null'))
