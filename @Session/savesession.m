@@ -1,6 +1,10 @@
-function savesession(obj,folder)
+function savesession(obj,destination)
 if nargin==1
     folder = 0;
+end
+
+if nargin==2
+    [folder,filename] = fileparts(destination);
 end
     
 
@@ -46,12 +50,14 @@ SDK_embedzipindicom(obj,tempfoldername);
 if ~folder
     folder = SDK_detectexternaldrive('save');
 end
-if ~folder;
+if ~folder
     folder = uigetdir('Select, or make, a DICOM folder on a removable drive.');
 end
-
-copyfile(fullfile(tempfoldername,'newSession.dcm'),fullfile(folder,[obj.patient.patientID,'_',strrep(strrep(datestr(datetime),':',''),' ','_'),'.dcm']));
-
+if isempty(filename)
+copyfile(fullfile(tempfoldername,'newSession.dcm'),fullfile(folder,[obj.patient.name,'_',strrep(strrep(datestr(datetime),':',''),' ','_'),'.dcm']));
+else
+    copyfile(fullfile(tempfoldername,'newSession.dcm'),fullfile(folder,[filename,'.dcm']));
+end
 fclose('all');
 
 cd(folder);

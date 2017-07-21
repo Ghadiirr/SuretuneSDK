@@ -20,7 +20,7 @@ end
 
 
 
-
+ii = [];
 
 switch class(name)
     case 'char'

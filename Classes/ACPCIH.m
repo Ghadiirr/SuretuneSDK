@@ -12,6 +12,7 @@ classdef ACPCIH < SessionComponent & Registerable
     
     properties (Hidden = true)
         %         noSet
+        label = 'ACPCIH';
     end
     
     methods

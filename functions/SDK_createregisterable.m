@@ -18,6 +18,7 @@ registerable_args = {parent,T,accepted,id};
 
 % Every registerable types has its own class
 
+
 switch RegType
     case 'Dataset'
         XML = eval(path);
@@ -133,6 +134,20 @@ switch RegType
         
         R = ImportedMeshPart(component_args, registerable_args,meshId,color,opacity);
         R = []; %don't add all meshParts to the registerable list.
+        
+    case 'Atlas'
+        XML = eval(path);
+        
+        atlasId = XML.Attributes.id;
+        hemisphere = XML.hemisphere.Enum.Attributes.value;
+        if isfield(XML.atlasDefinition,'AtlasDefinition')
+            group = XML.atlasDefinition.AtlasDefinition.atlasGroup.Enum.Attributes.value;
+        else
+            group = XML.atlasDefinition.ref.Attributes.id;
+        end
+            
+        
+        R = Atlas(component_args, registerable_args,atlasId,hemisphere,group);
         
     case 'MerAnnotation'
         XML = eval(path);

@@ -35,6 +35,7 @@ end
 
 disp('Loading file..')
 obj.loadzip(file)
+obj.fixatlas; 
 
 
 

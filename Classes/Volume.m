@@ -378,7 +378,7 @@ classdef Volume <handle_hidden
             
         end
         
-        function exportnifti(obj)
+        function exportnifti(obj,varargin)
             img = obj.voxelArray;
             voxel_size = obj.volumeInfo.spacing;
             origin = obj.volumeInfo.origin;
@@ -421,17 +421,30 @@ classdef Volume <handle_hidden
             else
                 exportfolder = obj.session.exportFolder;
             end
-            cd(exportfolder)
-            if strcmp(obj.volumeInfo.modality,'MR')
-                name = [obj.volumeInfo.imageType, obj.volumeInfo.scanDirection,'.nii'];
-                %                 name = 'anat.nii';
-            elseif strcmp(obj.volumeInfo.modality,'CT')
-                name = [obj.volumeInfo.imageType, obj.volumeInfo.scanDirection,'.nii'];
-                %                 name = 'postop_ct.nii';
+            
+            if nargin==1
+                cd(exportfolder)
+                if strcmp(obj.volumeInfo.modality,'MR')
+                    name = [obj.volumeInfo.imageType, obj.volumeInfo.scanDirection,'.nii'];
+                    %                 name = 'anat.nii';
+                elseif strcmp(obj.volumeInfo.modality,'CT')
+                    name = [obj.volumeInfo.imageType, obj.volumeInfo.scanDirection,'.nii'];
+                    %                 name = 'postop_ct.nii';
+                end
+                [~,~]=mkdir(obj.volumeInfo.patientId);
+                cd(obj.volumeInfo.patientId)
+                save_nii(nii,name)
+            else
+                totalpath = varargin{1};
+                [exportdir,filename] = fileparts(totalpath);
+                thisdir = pwd;
+                cd(exportdir)
+                save_nii(nii,[filename,'.nii'])
+                cd(thisdir)
             end
-            [~,~]=mkdir(obj.volumeInfo.patientId);
-            cd(obj.volumeInfo.patientId)
-            save_nii(nii,name)
+                
+                
+            
             
             
             
