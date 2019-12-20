@@ -15,10 +15,11 @@ if nargin==1;
     file = fullfile(pathName,fileName);
 end
 
-if ~exist(fullfile(obj.homeFolder,'thirdParty','7za.exe'))
-    error('7zip could not be found!')
+if ispc
+    if ~exist(fullfile(obj.homeFolder,'thirdParty','7za.exe'))
+        error('7zip could not be found!')
+    end
 end
-
 
 %Unzip
 if ispc
