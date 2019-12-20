@@ -37,7 +37,7 @@ elseif ismac
     
 
     
-    str =  ['! "/Users/jonas/MatlabTemp/p7zip_16.02/bin/7za"',' x -bd -y "',fullfile(unzipFolder,name,[name,'.dcm']),'" -o"',fullfile(unzipFolder,name),'"'];
+    str =  ['! "',unzipFolder,'/p7zip_16.02/bin/7za"',' x -bd -y "',fullfile(unzipFolder,name,[name,'.dcm']),'" -o"',fullfile(unzipFolder,name),'"'];
     [a,b ]= system(str);
     unpackedDir = fullfile(unzipFolder,name);
     disp('unzipping...')
