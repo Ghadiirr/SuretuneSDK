@@ -28,6 +28,7 @@ if ispc
 elseif ismac
     %msgbox('Please select the folder with the unzipped version of this session')
     %get file location
+
     [filepath,name,ext] = fileparts(file);
     unzipFolder = '/Users/jonas/MatlabTemp';
     mkdir(fullfile(unzipFolder,name))

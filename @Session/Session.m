@@ -93,6 +93,15 @@ classdef Session < handle_hidden
             % Constructor. No input is required. Creates an empty Session
             % Instance
             
+            %Check if Settings exist (aka, tool is installed)
+            if exist('SDKsettings.mat','file')
+                load('SDKsettings.mat')
+            else
+                waitfor(msgbox('Select or make folder for unzipping sessions'))
+                unzipsessiondir = uigetdir();
+            end
+                
+            
             if nargin > 0
                 warning('No input arguments are required. Run ''myFirstSession.m'' for examples.')
             end
