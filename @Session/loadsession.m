@@ -38,10 +38,10 @@ obj.loadzip(file)
 obj.fixatlas; 
 
 
-
+if ispc
 disp('Deleting temporary folder...')
 cd(currentpath);
 [path, filename, ~] = fileparts(file);
 [~,~] = rmdir(fullfile(path,filename),'s');
-
+end
 end

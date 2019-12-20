@@ -76,7 +76,7 @@ classdef Volume <handle_hidden
             
             %load xml
             
-            fullFileName = fullfile(pwd,pathname,'volumeInfo.xml');   
+            fullFileName = fullfile(pwd,pathname,'volumeInfo.xml');
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(fullFileName);
                 %repeat reading with new file
@@ -118,7 +118,7 @@ classdef Volume <handle_hidden
                 I.gender = trytoget('xml.Volume.patientInfo.PatientInfo.gender.Enum.Attributes.value');
                 I.dateofbirth = trytoget('xml.Volume.patientInfo.PatientInfo.dateOfBirth.Attributes.value','1900-01-01T00:00:00.0000000');
             end
-                
+            
             obj.volumeInfo = I;
             
             if isfield(xml.Volume.seriesInfo,'SeriesInfo')
@@ -179,7 +179,7 @@ classdef Volume <handle_hidden
             [~,~] = mkdir(folder);
             fid = fopen(fullfile(folder,'voxelArray.bin'),'w+');
             try
-            fwrite(fid, obj.voxelArray, 'uint16');
+                fwrite(fid, obj.voxelArray, 'uint16');
             catch
                 warning('cannot write')
             end
@@ -378,8 +378,26 @@ classdef Volume <handle_hidden
             
         end
         
-        function exportnifti(obj,varargin)
+        function nii = exportnifti(obj,varargin)
             img = obj.voxelArray;
+            
+            
+            %rescale slope
+            if ischar(obj.volumeInfo.rescaleSlope)
+                slope = str2double(obj.volumeInfo.rescaleSlope);
+            else
+                slope = obj.volumeInfo.rescaleSlope;
+            end
+            
+            if ischar(obj.volumeInfo.rescaleIntercept)
+                intercept = str2double(obj.volumeInfo.rescaleIntercept);
+            else
+                intercept = obj.volumeInfo.rescaleIntercept;
+            end
+            img = img*slope+intercept;
+            
+
+            
             voxel_size = obj.volumeInfo.spacing;
             origin = obj.volumeInfo.origin;
             
@@ -397,14 +415,26 @@ classdef Volume <handle_hidden
             %flip Y
             img = flip(img,2);
             
+%             %mirror origin
+%             width = size(img).*voxel_size;
+%             flippedorigin = width+2*origin;
+%             origin(1:2) = flippedorigin(1:2);
+            
             
             nii = make_nii(img, voxel_size, origin, 4, obj.volumeInfo.patientId);
             %add some more data in the header
-            nii.hdr.dime.scl_slope = obj.volumeInfo.rescaleSlope;
-            nii.hdr.dime.scl_inter = obj.volumeInfo.rescaleIntercept;
-            nii.hdr.hist.srow_x = [0.5 0 0 nii.hdr.hist.originator(1)];
-            nii.hdr.hist.srow_y = [0 0.5 0 nii.hdr.hist.originator(2)];
-            nii.hdr.hist.srow_z = [0 0 1 nii.hdr.hist.originator(3)];
+            nii.hdr.dime.scl_slope = 0;%slope;
+            nii.hdr.dime.scl_inter = 0;%intercept;
+            
+           LPS2RAS_originator = -1*(size(img).*voxel_size-voxel_size + nii.hdr.hist.originator(1:3));
+           %  LPS2RAS_originator = -1*(size(img).*voxel_size           + nii.hdr.hist.originator(1:3));
+            
+            nii.hdr.hist.srow_x = [voxel_size(1) 0 0 LPS2RAS_originator(1)];
+            nii.hdr.hist.srow_y = [0 voxel_size(2) 0 LPS2RAS_originator(2)];
+            nii.hdr.hist.srow_z = [0 0 voxel_size(3) nii.hdr.hist.originator(3)];
+            nii.hdr.hist.sform_code = 4;
+            nii.hdr.dime.glmax = 0;
+            
             
             nii.hdr.dime.vox_offset = 352;
             
@@ -442,8 +472,8 @@ classdef Volume <handle_hidden
                 save_nii(nii,[filename,'.nii'])
                 cd(thisdir)
             end
-                
-                
+            
+            
             
             
             

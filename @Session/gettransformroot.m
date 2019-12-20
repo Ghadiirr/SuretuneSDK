@@ -19,8 +19,12 @@ else
     Tcell = {};
     
     T = eye(4);
-    T = T*obj.registerables.list{index}.transform;
-    
+   % T = T*obj.registerables.list{index}.transform;
+    try 
+T = T*obj.registerables.list{index}.transform;
+catch
+keyboard
+end
     %in case nargout = 2, export all steps.
     Tcell{1} =  T;
     namecell{1} = name;

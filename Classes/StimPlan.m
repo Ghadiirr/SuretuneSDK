@@ -13,12 +13,13 @@ classdef StimPlan  < SessionComponent
         activeRings
         contactsGrounded
         annotation
+        strucAnnotation
         
     end
     
     
     methods
-        function obj = StimPlan(component_args,VTA,Lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation)
+        function obj = StimPlan(component_args,VTA,Lead,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation,strucAnnotation)
             obj@SessionComponent(component_args{:});
 
             
@@ -32,6 +33,7 @@ classdef StimPlan  < SessionComponent
             obj.activeRings = activeRings;
             obj.contactsGrounded = contactsGrounded;
             obj.annotation = annotation;
+            obj.strucAnnotation = strucAnnotation;
             
             obj.linktolead(Lead)
             

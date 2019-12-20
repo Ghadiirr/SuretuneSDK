@@ -33,9 +33,19 @@ copyfile(fullfile(obj.homeFolder,'functions','dcmtemplate.dcm'),fullfile(tempfol
 
 fclose('all');
 if addending
-    eval('! copy /b header.bin + sizebin.bin + session.zip + ending.bin newSession.dcm') 
+    if ispc
+        eval('! copy /b header.bin + sizebin.bin + session.zip + ending.bin newSession.dcm') 
+        elseif ismac
+        pause(2)
+        eval('! cat header.bin sizebin.bin session.zip ending.bin > newSession.dcm')
+    end
 else
+    if ispc
     eval('! copy /b header.bin + sizebin.bin + session.zip newSession.dcm') 
+    elseif ismac
+        pause(2)
+        eval('! cat header.bin sizebin.bin session.zip > newSession.dcm')
+    end
 end
 
 if ~isempty(obj.sureTune) &&  obj.developerFlags.upgrade
@@ -48,6 +58,6 @@ if ~isempty(obj.sureTune) &&  obj.developerFlags.upgrade
     
 end
 
-
+if not(exist('newSession.dcm'));keyboard;end
 end
 

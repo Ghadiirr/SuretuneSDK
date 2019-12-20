@@ -5,6 +5,8 @@ function vertface2obj(v,f,name)
 %     f is a Mx3 matrix of vertex indices. 
 %     fname is the filename to save the obj file.
 
+[folder,filename,extension] = fileparts(name);
+
 if ~isdir('Meshes')
     mkdir('Meshes')
 end
@@ -15,9 +17,9 @@ for i=1:size(v,1)
 fprintf(fid,'v %f %f %f\n',v(i,1),v(i,2),v(i,3));
 end
 
-fprintf(fid,'g foo\n');
+fprintf(fid,['g ',filename,'\n']);
 
-for i=1:size(f,1);
+for i=1:size(f,1)
 fprintf(fid,'f %d %d %d\n',f(i,1),f(i,2),f(i,3));
 end
 fprintf(fid,'g\n');

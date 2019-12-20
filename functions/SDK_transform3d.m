@@ -14,7 +14,7 @@ end
 % T  has to be designed for row multiciplication
 if ~(round(T(1:3,4),5)==[0;0;0])
    if (round(T(4,1:3),5)==[0,0,0]) 
-       warning('T was probably transposed. This automatically repaired.')
+       warning('T was probably transposed. This is automatically repaired.')
        T = T';
    else
        disp(T)

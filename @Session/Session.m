@@ -33,7 +33,7 @@ classdef Session < handle_hidden
         master %Registerable tree starts with this dataset
         updateXml = 0;
         sureTune = ''; %'C:\Suresuit\Blue5\';%'C:\GIT\SureSuite\Output\'; %'C:\Suresuit\Blue4(Bill)';% ' %'C:\Suresuit\Blue4(Bill)' 'C:\GIT\SureSuite\Output\';% Folder where SureTune is installed 'C:\Suresuit\Blue3\' %
-        exportFolder = fullfile('C:','MATLAB-Addons','Export'); % Folder were sessions are exported.
+        exportFolder = fullfile(fileparts(fileparts(mfilename('fullpath'))),'Export'); % Folder were sessions are exported.
         homeFolder;
         developerFlags %See line 115
         ver
@@ -202,7 +202,7 @@ classdef Session < handle_hidden
             obj.directory = pathName;
             
             %add SDK version
-            [version] = textread('@Session/version.txt','%s');
+            %[version] = textread('@Session/version.txt','%s');
 %             obj.sessionData.(obj.ver).Attributes.version = [obj.sessionData.(obj.ver).Attributes.version,'(SDK: ',version{1},')'];
             
             
@@ -313,6 +313,13 @@ classdef Session < handle_hidden
             for iSubFolder = 1:numel(leadFolders)
                 thisLead = leadFolders{iSubFolder};
                 
+                %%NEW SURETUNE3.0 FIX
+                if ~isnan(str2double(thisLead))
+                    STUversion = 3;
+                else
+                    STUversion = 2.99;
+                end
+                
                 %find thislead in the sessiondata
                 [names,types] = obj.listregisterables;
                 leadIds = names(ismember(types,'Lead'));
@@ -332,16 +339,27 @@ classdef Session < handle_hidden
                     thisLead = strrep(thisLead,'%29',')');
                     thisLead = strrep(thisLead,'%2e','.');
                     
-                leadObject = obj.getregisterable(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))});
-                
-                if isempty(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))})
-                    warning('no matching lead names?')
-                end
+                    %%NEW STU FIX
+                    if STUversion==3 %in this case the folders do not have a name but index number
+                        thisLead = str2double(thisLead); %index starts at 0
+                        leadObject = obj.getregisterable(leadIds{thisLead+1});
+                    else
+                        leadObject = obj.getregisterable(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))});
+                        
+                        
+                        if isempty(leadIds{~cellfun(@isempty,strfind(leadNames,thisLead))})
+                            warning('no matching lead names?')
+                        end
+                    end
                 catch
                     warning('?')
                 end
                 
-                therapyPlanFolders = SDK_subfolders(thisLead);
+                if STUversion==3
+                    therapyPlanFolders = SDK_subfolders(num2str(thisLead));
+                else
+                    therapyPlanFolders = SDK_subfolders(thisLead);
+                end
                 
                 %For all therapy plans make a Therapy Object.
                 for iTherapyPlanFolder = 1:numel(therapyPlanFolders)
@@ -355,14 +373,21 @@ classdef Session < handle_hidden
                     
                     %there may be multiple stimplans in the session data,
                     %find the correct one.
-                    stimPlanIndex = 0;
-                    for iStimPlan = 1:numel(therapyXml.stimPlans.Array.StimPlan)
-                        if strcmp(strrep(therapyXml.stimPlans.Array.StimPlan{iStimPlan}.label.Attributes.value,'.','_'),thisPlan)
-                            stimPlanIndex = iStimPlan;
-                            continue;
+                    
+                    %%STU3fix
+                    if STUversion == 3
+                        stimPlanIndex = str2double(thisPlan)+1;
+                    else
+                        
+                        stimPlanIndex = 0;
+                        for iStimPlan = 1:numel(therapyXml.stimPlans.Array.StimPlan)
+                            if strcmp(strrep(therapyXml.stimPlans.Array.StimPlan{iStimPlan}.label.Attributes.value,'.','_'),thisPlan)
+                                stimPlanIndex = iStimPlan;
+                                continue;
+                            end
                         end
+                        if stimPlanIndex==0;warning(['No matching stimplan in SessionData for ',thisPlan]);return;end
                     end
-                    if stimPlanIndex==0;warning(['No matching stimplan in SessionData for ',thisPlan]);return;end
                     
                     
                     %get stimplan_path:
@@ -377,8 +402,14 @@ classdef Session < handle_hidden
                     
                     
                     % Get the Stimplan data from therapyXML:
-                    VTA = obj.loadvta(fullfile(thisLead,thisPlan));
-                    label = thisPlan;
+                    if STUversion==3
+                        VTA = obj.loadvta(fullfile(num2str(thisLead),thisPlan));
+                        label = strrep(therapyXml.stimPlans.Array.StimPlan{str2double(thisPlan)+1}.label.Attributes.value,'.','_');
+                    else
+                        VTA = obj.loadvta(fullfile(thisLead,thisPlan));
+                                            label = thisPlan;
+                    end
+
                     voltageBasedStimulation = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.voltageBasedStimulation.Attributes.value;
                     stimulationValue = str2double(therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.stimulationValue.Attributes.value);
                     pulseWidth = str2double(therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.pulseWidth.Attributes.value);
@@ -386,9 +417,10 @@ classdef Session < handle_hidden
                     activeRings = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.activeRings.BoolArray.Text;
                     contactsGrounded = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.contactsGrounded.BoolArray.Text;
                     annotation = therapyXml.stimPlans.Array.StimPlan{stimPlanIndex}.annotation.Attributes.value;
+                    StrucAnnotation = SDK_getStructuredAnnotation(therapyXml.stimPlans.Array.StimPlan{stimPlanIndex});
                     component_args = {path,obj};
                     % Make a StimPlan Instance:
-                    stimPlanObject = StimPlan(component_args,VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation);
+                    stimPlanObject = StimPlan(component_args,VTA,leadObject,label,voltageBasedStimulation,stimulationValue,pulseWidth,pulseFrequency,activeRings,contactsGrounded,annotation,StrucAnnotation);
                     
                     %                     %Add the therapy object to Lead.StimPlan{end+1}
                     %                     stimPlanObject.linktolead(leadObject)
@@ -399,6 +431,9 @@ classdef Session < handle_hidden
             % Revert to original directory:
             cd(thisdir)
         end
+        
+
+        
         
         function vta = loadvta(obj,folder)
             thisDir = pwd;
@@ -423,7 +458,7 @@ classdef Session < handle_hidden
         function loadmeshes(thisSession,folder)
             thisdir = pwd;
             try cd(folder);
-            catch disp([folder,' does not exist']);return
+            catch;return
             end
             
             

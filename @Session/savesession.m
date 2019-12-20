@@ -9,6 +9,7 @@ end
     
 
 % make a temp dir
+
 tempfoldername = tempname;
 mkdir(tempfoldername)
 cd(tempfoldername)
@@ -19,7 +20,7 @@ SDK_session2xml(obj.sessionData,[obj.ver,'.xml'])
 SDK_session2xml(obj.originalSessionData,'OriginalSession.xml')
 
 % Save Meshes:
-for iMesh = 1:numel(obj.meshStorage.list);
+for iMesh = 1:numel(obj.meshStorage.list)
     obj.meshStorage.list{iMesh}.savetofolder('Meshes')
     
     % Also save the mesh to meshstorage:
@@ -41,9 +42,18 @@ writetable(table,fullfile('Log.txt'),'Delimiter','\t')
 
 % Zip session:
 disp('Zipping Session...')
+if ispc
 eval(['! "',fullfile(obj.homeFolder,'thirdParty','7za.exe'),'" a -tzip -r -bd -- session.zip ']); %-xr@Log.txt -xr@OriginalSession.xml
+elseif ismac
+    eval('! /Users/jonas/MatlabTemp/p7zip_16.02/bin/./7za a -tzip -r -bd -x!7za -- session.zip '); %-xr@Log.txt -xr@OriginalSession.xml
+end
 
+disp('embedzip will start shortly')
+cd(tempfoldername)
+pause(5)
 SDK_embedzipindicom(obj,tempfoldername);
+cd(tempfoldername)
+
 
 
 % copy dicom to removable drive
