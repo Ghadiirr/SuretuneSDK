@@ -30,7 +30,7 @@ elseif ismac
     %get file location
 
     [filepath,name,ext] = fileparts(file);
-    unzipFolder = '/Users/jonas/MatlabTemp';
+    unzipFolder = obj.settings.unzipdir;%'/Users/jonas/MatlabTemp';
     mkdir(fullfile(unzipFolder,name))
    
     copyfile(fullfile(filepath,[name,'.dcm']),fullfile(unzipFolder,name,[name,'.dcm']));
