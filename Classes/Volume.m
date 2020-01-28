@@ -328,7 +328,16 @@ classdef Volume <handle_hidden
             [x,y,z] = meshgrid(origin(1):spacing(1):origin(1)+(dimensions(1)-1)*spacing(1),...
                 origin(2):spacing(2):origin(2)+(dimensions(2)-1)*spacing(2),...
                 origin(3):spacing(3):origin(3)+(dimensions(3)-1)*spacing(3));
+        end
+        
+        function [x,y,z] = getmeshgrid_yx(obj)
+            dimensions = obj.volumeInfo.dimensions;
+            spacing = obj.volumeInfo.spacing;
+            origin = obj.volumeInfo.origin;
             
+            [x,y,z] = meshgrid(origin(2):spacing(2):origin(2)+(dimensions(2)-1)*spacing(2),...
+                origin(1):spacing(1):origin(1)+(dimensions(1)-1)*spacing(1),...
+                origin(3):spacing(3):origin(3)+(dimensions(3)-1)*spacing(3));
         end
         
         function [x,y,z] = getndgrid(obj)
@@ -352,6 +361,16 @@ classdef Volume <handle_hidden
             z =  [origin(3):spacing(3):origin(3)+(dimensions(3)-1)*spacing(3)];
         end
         
+        
+        function [x,y,z] = getlinspace_yx(obj)
+            dimensions = obj.volumeInfo.dimensions;
+            spacing = obj.volumeInfo.spacing;
+            origin = obj.volumeInfo.origin;
+            
+            x =    [origin(2):spacing(2):origin(2)+(dimensions(2)-1)*spacing(2)];
+            y = [origin(1):spacing(1):origin(1)+(dimensions(1)-1)*spacing(1)];
+            z =  [origin(3):spacing(3):origin(3)+(dimensions(3)-1)*spacing(3)];
+        end
         
         
         function linktosession(obj,session)
