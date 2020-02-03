@@ -875,6 +875,9 @@ for iDataset = 1:numel(burninDatasets)+1
     
 end
 
+disp('Note: SPM will start shortly')
+disp('This may take a couple of minutes. It will say when it''s ready')
+
 matlabbatch{1}.spm.spatial.normalise.estwrite.subj.vol ={[sourceDir,',1']};
 matlabbatch{1}.spm.spatial.normalise.estwrite.subj.resample = otherDir';
 matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.biasreg = 0.0001;
