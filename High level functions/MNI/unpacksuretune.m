@@ -619,9 +619,12 @@ VNAs = GUI.handles(2).listboxVNA.Value;
 Atlases = GUI.handles(2).listboxAtlas.Value;
 IBSs = GUI.handles(2).listboxIBS.Value;
 MBSs = GUI.handles(2).listboxMBS.Value;
+Leads = find(contains(alltypes,'Lead')); %export all leads, no matter what.
+
+
 
 % number of total iterations
-nOutputFiles = (numel(burninDatasets)+1)*(numel(VNAs)+numel(Atlases)+numel(IBSs)+numel(MBSs));
+nOutputFiles = (numel(burninDatasets)+1)*(numel(VNAs)+numel(Atlases)+numel(IBSs)+numel(MBSs)+numel(Leads));
 box on
 
 
@@ -678,6 +681,71 @@ for iDataset = 1:numel(burninDatasets)+1
         SPM = 0;
     end
     
+    %export leads
+    for iLead = 1:numel(Leads)
+        thisLead = GUI.session.getregisterable(Leads(iLead));
+        counter = counter +1;
+        leadname = thisLead.label;
+        % print text to GUI
+        GUIstring = sprintf('Making: %s --> %s',leadname,datasetname);
+        % update waitbar
+        set(GUI.handles(5).details,'string',GUIstring)
+        % update waitbar
+        set(GUI.handles(5).details,'string',GUIstring)
+        
+        
+        cla
+        rectangle('Position',[0,0,(round(1000*counter/nOutputFiles))+1,20],'FaceColor','b');
+        text(482,10,[num2str(round(100*counter/nOutputFiles)),'%']);
+        
+        drawnow()
+        
+        %Get the Transformationmatrix of the Lead to root
+        T = GUI.session.gettransformfromto(thisLead,thisDataset);
+        
+        contacts = [0 0 0; 0 0 3];
+        switch thisLead.leadType
+            case 'Medtronic3389'
+                spacing = 2;
+            case 'BostonScientific'
+                spacing = 2;
+            otherwise
+                keyboard %look up spacing and add it to the list please!
+        end
+        %apply spacing
+        contacts = contacts*spacing;
+        contactsInDatasetSpace = SDK_transform3d(contacts,T);
+        
+        %generate imref
+        f = thisDataset.volume.volumeInfo;
+        a = 1;b = 2;c = 3;
+        Rfrom = imref3d(f.dimensions([2 1 3]),f.spacing(a),f.spacing(b),f.spacing(c));
+    Rfrom.XWorldLimits = Rfrom.XWorldLimits+f.origin(a)-f.spacing(a);%-Rfrom.ImageExtentInWorldX;
+    Rfrom.YWorldLimits = Rfrom.YWorldLimits+f.origin(b)-f.spacing(b);%-Rfrom.ImageExtentInWorldY;
+    Rfrom.ZWorldLimits = Rfrom.ZWorldLimits+f.origin(c)-f.spacing(c);%-Rfrom.ImageExtentInWorldZ;
+    
+        [tipX,tipY,tipZ] = Rfrom.worldToIntrinsic(contactsInDatasetSpace(1,1),contactsInDatasetSpace(1,2),contactsInDatasetSpace(1,3));
+        [topX,topY,topZ] = Rfrom.worldToIntrinsic(contactsInDatasetSpace(2,1),contactsInDatasetSpace(2,2),contactsInDatasetSpace(2,3));
+        
+        voxelArray = zeros(size(thisVolume.voxelArray));
+        voxelArray(round(tipX),round(tipY),round(tipZ)) = 100;
+        voxelArray(round(topX),round(topY),round(topZ)) = 200;
+        
+        thisVolume.voxelArray = voxelArray;
+        thisVolume.volumeInfo.rescaleSlope = 1;
+        thisVolume.volumeInfo.rescaleIntercept = 0;
+        thisfilename = fullfile(objectdir,[leadname,'_tiptop_',modality,'.nii']);
+        thisfilename = strrep(thisfilename,' ','_');
+        thisVolume.exportnifti(thisfilename)
+        
+        %Update SPM file list
+        if SPM
+            otherDir{end+1} = [thisfilename,',1'];
+        end
+        
+        
+    end
+    
     %export VNAs
     for iVNA = 1:numel(VNAs)
         thisVNA = GUI.session.therapyPlanStorage{VNAs(iVNA)};
@@ -703,7 +771,7 @@ for iDataset = 1:numel(burninDatasets)+1
         
         %Get the Transformationmatrix of the VTA to root
         lead = thisVNA.lead;
-        T = GUI.session.gettransformfromto(lead,rootdataset);
+        T = GUI.session.gettransformfromto(lead,thisDataset);
         voxelarray  = resliceDataset(thisVNA.vta.Medium,thisDataset, T);
         thisVolume.voxelArray = voxelarray;
         thisfilename = fullfile(objectdir,[lead.label,'_',thisVNA.label,'_',modality,'.nii']);
