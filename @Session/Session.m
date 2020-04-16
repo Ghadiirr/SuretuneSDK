@@ -100,7 +100,7 @@ classdef Session < handle_hidden
             end
             
         load('SDKsettings.mat')
-        obj.settings.unzipdir = settings.unzipdir
+        obj.settings.unzipdir = settings.unzipdir;
             
             if nargin > 0
                 warning('No input arguments are required. Run ''myFirstSession.m'' for examples.')
@@ -127,7 +127,6 @@ classdef Session < handle_hidden
             fullpath = mfilename('fullpath');
             obj.homeFolder = fullpath(1:findstr(fullpath,'@Session')-2);
             
-            obj.versioncontrol()
             
             %try to add suretunefolder
             if exist(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'),'file')
@@ -147,32 +146,20 @@ classdef Session < handle_hidden
         end
         
         
-        function versioncontrol(obj)
-            %% write hash for version control
-            fileID = fopen(fullfile(obj.homeFolder,'@Session','version.txt'), 'w+');
+        function update(obj)
+            currentpath = pwd;
+            cd(fileparts(mfilename('fullpath')))
+            try
+                disp('does not work yet')
+            %!git pull
             
-            
-            
-%             [~,hash] = system('git rev-list --max-count=1 HEAD');
-%             hash = strrep(hash,sprintf('\n'),'');
-%             %any changes after last commit?
-% %             if system('git diff --no-ext-diff --quiet')
-% %                 hash = [hash,'-dirty'];
-% %             end
-%             
-%             fprintf(fileID, '%s', hash);
-%             fclose(fileID);
-            
-            %% get SureTune installation directory
-            
-            if ~exist(fullfile('@Session','SureTuneInstallationDirectory.txt'),'file')
-                pathname = uigetdir('C:\','One time only: where is your SureTune.exe?');
-                fileID = fopen(fullfile(obj.homeFolder,'@Session','SureTuneInstallationDirectory.txt'), 'w+');
-                fprintf(fileID, '%s', pathname);
-                fclose(fileID);
+            catch
+                cd(currentpath)
             end
             
+            cd(currentpath)
         end
+        
         %% loading functions
         function loadxml(obj,pathName,fileName)
             % Input should be pathname and filename, otherwise a dialog
