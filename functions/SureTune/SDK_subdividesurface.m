@@ -209,7 +209,7 @@ while  size(triangles.Points,1)<=maxVertices
     % see if the longest edge is small enough, then quit.
     edgeInfo = edges(maxLengthEdge,:);
     if maxLength < maxMaxEdgeLength
-        disp('Done.');break
+        disp('Done. Edges are small enough');break
     end
     
     % Edges are not allowed to get bigger.
@@ -231,8 +231,8 @@ end
 
 
 % optimization step
-p = improvedlaplaciansmoothing(triangles,variableVertices);
-% p = triangles.Points;
+%p = improvedlaplaciansmoothing(triangles,variableVertices);
+ p = triangles.Points;
 
 close(h)
 

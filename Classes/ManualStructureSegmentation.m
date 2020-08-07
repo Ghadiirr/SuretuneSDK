@@ -75,8 +75,9 @@ classdef ManualStructureSegmentation < SessionComponent & Registerable
             contours = obj.getallcontours;
             allpoints = horzcat(contours{:});
             vertices = vertcat(allpoints{:});
+            
             mesh = Obj(vertices,convhull(vertices),'temp');
-
+            
             %mesh.subdividesurface(0.1,2000,1)
             
         end
