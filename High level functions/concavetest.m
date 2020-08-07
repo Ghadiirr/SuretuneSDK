@@ -97,6 +97,7 @@ nonBreakableEdges = zeros(size(edges,1),1);
 while iteration < 10
     iteration = iteration+1;
     
+    
     %find the longest edge
     maxLengthEdge = computelongestedge(nonBreakableEdges,'cartesian');
     

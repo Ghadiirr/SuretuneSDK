@@ -66,7 +66,7 @@ switch RegType
         
         label = XML.label.Attributes.value;
         opacity = XML.opacity.Attributes.value;
-        color = XML.color.Attributes.value;
+        color = XML.rgbColor.Color.Attributes.value;
         threshold = XML.threshold.Attributes.value;
         thresholdType = XML.thresholdType.Enum.Attributes.value;
         blurEnabled = XML.blurEnabled.Attributes.value;
