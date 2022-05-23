@@ -97,6 +97,8 @@ obj.updateXml = 1;
             ver = 'SureTune2Sessions';
         elseif exist(fullfile(folder,'SureTune3Sessions.xml'),'file')
             ver = 'SureTune3Sessions';
+        elseif exist(fullfile(folder,'SureTune4Sessions.xml'),'file')
+            ver = 'SureTune4Sessions';
         else
             error('Could not find Session Data')
         end
