@@ -42,7 +42,20 @@ elseif ismac
     unpackedDir = fullfile(unzipFolder,name);
     disp('unzipping...')
 elseif isunix
-    eval(['!"',fullfile(obj.homeFolder,'thirdParty','unar"'),file,' -f -o',file(1:end-4)]);    
+    %eval(['!"',fullfile(obj.homeFolder,'thirdParty','unar"'),file,' -f -o',file(1:end-4)]);   
+    % Get the file location
+    [filepath, name, ext] = fileparts(file);
+    unzipFolder = obj.settings.unzipdir; % Set the directory for unzipped files
+    mkdir(fullfile(unzipFolder, name)); % Create the directory if it doesn't exist
+    % Copy the file to the new directory
+    copyfile(fullfile(filepath, [name, '.dcm']), fullfile(unzipFolder, name, [name, '.dcm']));
+    % Construct the system command to unzip the file
+    %str = ['unzip -o "', fullfile(unzipFolder, name, [name, '.dcm']), '" -d "', fullfile(unzipFolder, name), '"'];
+    str = ['! "7z" x -bd -y "',fullfile(unzipFolder,name,[name,'.dcm']),'" -o"',fullfile(unzipFolder,name),'"']
+    [a, b] = system(str); % Execute the system command
+    unpackedDir = fullfile(unzipFolder, name); % Set the output directory
+    disp('Unzipping...');
+
 else
     error('Operating system is not supported')
 end

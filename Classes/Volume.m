@@ -34,7 +34,7 @@ classdef Volume <handle_hidden
             
             Obj.volumeInfo = I;
             Obj.voxelArray = [];
-            Obj.thumbnail = imread('thumbnail.png');
+            Obj.thumbnail = imread('Thumbnail.png');
         end
         
         function newvolume(obj,volumeInfo,voxelArray,session)
@@ -61,7 +61,7 @@ classdef Volume <handle_hidden
             
             if nargin == 1
                 
-                %ask user for directory
+             %ask user for directory
                 [pathname] = uigetdir();
                 if not(pathname)
                     disp('Aborted by user')
@@ -76,14 +76,14 @@ classdef Volume <handle_hidden
             
             %load xml
             
-            fullFileName = fullfile(pwd,pathname,'volumeInfo.xml');
+            fullFileName = fullfile(pwd,pathname,'VolumeInfo.xml');
             % Check for any comments (they may obstruct XML parsing
             if SDK_removecomments(fullFileName);
                 %repeat reading with new file
-                filename = 'volumeInfo_nocomments.xml';
+                filename = 'VolumeInfo_nocomments.xml';
                 xml = SDK_xml2struct(fullfile(pwd,pathname,filename));
             else
-                xml = SDK_xml2struct(fullfile(pwd,pathname,'volumeInfo.xml'));
+                xml = SDK_xml2struct(fullfile(pwd,pathname,'VolumeInfo.xml'));
                 %                 disp('removed comments')
             end
             
@@ -138,7 +138,7 @@ classdef Volume <handle_hidden
             
             
             %Read voxelArray
-            fid = fopen(fullfile(pathname,'voxelArray.bin'));
+            fid = fopen(fullfile(pathname,'VoxelArray.bin'));
             file = fread(fid, 'uint16');
             fclose(fid);
             
@@ -146,8 +146,8 @@ classdef Volume <handle_hidden
             obj.voxelArray = reshape(file,I.dimensions);
             
             %check if thumbnail exists:
-            if exist(fullfile(pathname,'thumbnail.png'),'file' )==2
-                obj.thumbnail = imread(fullfile(pathname,'thumbnail.png'));
+            if exist(fullfile(pathname,'Thumbnail.png'),'file' )==2
+                obj.thumbnail = imread(fullfile(pathname,'Thumbnail.png'));
             else
                 import = load('thumbnail.mat');
                 obj.thumbnail=import.thumbnail;
@@ -177,7 +177,7 @@ classdef Volume <handle_hidden
             
             %save the voxel array
             [~,~] = mkdir(folder);
-            fid = fopen(fullfile(folder,'voxelArray.bin'),'w+');
+            fid = fopen(fullfile(folder,'VoxelArray.bin'),'w+');
             try
                 fwrite(fid, obj.voxelArray, 'uint16');
             catch
@@ -187,10 +187,10 @@ classdef Volume <handle_hidden
             
             %generate XML
             XML = exportxml(obj);
-            SDK_session2xml(XML,fullfile(folder,'volumeInfo.xml'))
+            SDK_session2xml(XML,fullfile(folder,'VolumeInfo.xml'))
             
             %save thumbnail
-            imwrite(obj.thumbnail,fullfile(folder,'thumbnail.png'),'png')
+            imwrite(obj.thumbnail,fullfile(folder,'Thumbnail.png'),'png')
             
         end
         
